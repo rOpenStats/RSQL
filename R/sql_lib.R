@@ -15,6 +15,15 @@ if (!exists("contadorDML"))
 if (!exists("sql_inserts"))
   sql_inserts<-data.frame(sql="",stringsAsFactors=FALSE)
 
+#' The class that provides the SQL functionality
+#'
+#' @importFrom R6 R6Class
+#' @export
+RSQL.class <- R6::R6Class(
+  'RSQL',
+  public=list())
+
+
 #' sql_execute_insert
 #'
 #' @import futile.logger
