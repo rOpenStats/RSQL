@@ -21,7 +21,9 @@ if (!exists("sql_inserts"))
 #' @export
 RSQL.class <- R6::R6Class(
   'RSQL',
-  public=list())
+  public=list(
+
+  ))
 
 
 #' sql_execute_insert
@@ -40,7 +42,7 @@ sql_execute_insert<-function(id_procesamiento,sql_insert,
   if ("db" %in% export){
     ret <- dbSendQuery(dbconn,sql_insert)
     dbSendQuery
-    flog.info(sql_insert)
+    futile.logger::flog.info(sql_insert)
 
     #data<-fetch(rs,n=-1)
     #print(res)
@@ -84,7 +86,7 @@ sql_execute_delete<-function(id_procesamiento,sql_delete,dbconn=NULL,debug_level
   sql_delete<-gsub(",NA",",NULL",sql_delete)
   sql_delete<-gsub(", NA",",NULL",sql_delete)
   ret<-dbGetQuery(dbconn,sql_delete)
-  flog.info(sql_delete)
+  futile.logger::flog.info(sql_delete)
   ret
 
 }
@@ -320,7 +322,7 @@ sql_gen_where<-function(where_fields,where_values,debug_level=0){
         #if there is at least one value character in column
         #remove ' for normalization and adding after
         new.values<-paste("'",sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'","\\1",where_values[,col]),"'",sep="")
-        flog.info(paste("col",col,"is character. Replacing values",
+        futile.logger::flog.info(paste("col",col,"is character. Replacing values",
                           paste(where_values[,col],collapse=","),"with values",
                           paste(new.values,collapse=",")))
         where_values[,col]<-new.values
@@ -461,7 +463,7 @@ sql_gen_insert<-function(table, insert_fields,values=c(),debug_level=0){
       sql_values_row<-paste(sql_values_row,separator, value,sep="")
       separator<-", "
     }
-    flog.info(sql_values_row)
+    futile.logger::flog.info(sql_values_row)
     sql_values<-paste(sql_values,separator_rows, "(",sql_values_row,")")
     separator_rows<-", "
   }
@@ -607,12 +609,12 @@ sql_retrieve_insert<-function(id_procesamiento,
     select_statement<-sql_gen_select("id",table,where_fields = fields_id,where_values = value_id)
 
     #debug
-    flog.info(paste("verifying",select_statement,":"))
+    futile.logger::flog.info(paste("verifying",select_statement,":"))
     insert_statement<-sql_gen_insert(table,insert_fields = c(fields_id,fields),values=values_insert)
     row<-sql_execute_select(id_procesamiento,select_statement,dbconn=dbconn,debug_level = debug_level)
-    flog.info(paste(row,"rows"))
+    futile.logger::flog.info(paste(row,"rows"))
     if (nrow(row)==0){
-      flog.info(paste("executing",insert_statement))
+      futile.logger::flog.info(paste("executing",insert_statement))
       res<-sql_execute_insert(id_procesamiento,insert_statement,dbconn=dbconn,debug_level = debug_level)
       row<-sql_execute_select(id_procesamiento,select_statement,dbconn=dbconn,debug_level = debug_level)
     }
