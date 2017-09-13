@@ -6,10 +6,10 @@
 \title{sql_execute_update}
 \usage{
 sql_execute_update(id_procesamiento, sql_insert, dbconn = NULL,
-  export = c("db", "df"), debug_level = 0)
+  export = c("db", "df"))
 
 sql_execute_update(id_procesamiento, sql_insert, dbconn = NULL,
-  export = c("db", "df"), debug_level = 0)
+  export = c("db", "df"))
 }
 \arguments{
 \item{id_procesamiento}{TEST}
@@ -20,15 +20,11 @@ sql_execute_update(id_procesamiento, sql_insert, dbconn = NULL,
 
 \item{export}{TEST}
 
-\item{debug_level}{TEST}
-
 \item{sql_update}{TEST}
 
 \item{id_procesamiento}{TEST}
 
 \item{export}{TEST}
-
-\item{debug_level}{TEST}
 }
 \description{
 sql_execute_update

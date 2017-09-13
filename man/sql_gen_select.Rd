@@ -5,8 +5,7 @@
 \title{sql_gen_select}
 \usage{
 sql_gen_select(select_fields, table, where_fields = NULL,
-  where_values = NULL, group_by = c(), order_by = c(), top = 0,
-  debug_level = 0)
+  where_values = NULL, group_by = c(), order_by = c(), top = 0)
 }
 \arguments{
 \item{select_fields}{TEST}
@@ -22,8 +21,6 @@ sql_gen_select(select_fields, table, where_fields = NULL,
 \item{order_by}{TEST}
 
 \item{top}{TEST}
-
-\item{debug_level}{TEST}
 }
 \description{
 sql_gen_select

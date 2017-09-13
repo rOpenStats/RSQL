@@ -4,14 +4,12 @@
 \alias{sql_gen_where_list}
 \title{sql_gen_where_list}
 \usage{
-sql_gen_where_list(where_fields, where_values, debug_level = 0)
+sql_gen_where_list(where_fields, where_values)
 }
 \arguments{
 \item{where_fields}{TEST}
 
 \item{where_values}{TEST}
-
-\item{debug_level}{TEST}
 }
 \description{
 sql_gen_where_list

@@ -4,8 +4,7 @@
 \alias{sql_gen_update}
 \title{sql_execute_update}
 \usage{
-sql_gen_update(table, update_fields, values, fields_id, values_id,
-  debug_level = 0)
+sql_gen_update(table, update_fields, values, fields_id, values_id)
 }
 \arguments{
 \item{table}{TEST}
@@ -17,8 +16,6 @@ sql_gen_update(table, update_fields, values, fields_id, values_id,
 \item{fields_id}{TEST}
 
 \item{values_id}{TEST}
-
-\item{debug_level}{TEST}
 }
 \description{
 sql_execute_update

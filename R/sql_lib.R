@@ -22,7 +22,9 @@ if (!exists("sql_inserts"))
 RSQL.class <- R6::R6Class(
   'RSQL',
   public=list(
-
+    dbconn = NA,
+    initialize = function() {
+    }
   ))
 
 
@@ -32,10 +34,9 @@ RSQL.class <- R6::R6Class(
 #' @param id_procesamiento TEST
 #' @param sql_insert TEST
 #' @param export TEST
-#' @param debug_level TEST
 #' @export
 sql_execute_insert<-function(id_procesamiento,sql_insert,
-                             dbconn=NULL,export=c("db","df"),debug_level=0){
+                             dbconn=NULL,export=c("db","df")){
   sql_insert<-gsub(",NA",",NULL",sql_insert)
   sql_insert<-gsub(", NA",",NULL",sql_insert)
   sql_insert<-paste(sql_insert,";",sep="")
@@ -68,10 +69,9 @@ sql_execute_insert<-function(id_procesamiento,sql_insert,
 #' @param id_procesamiento TEST
 #' @param sql_update TEST
 #' @param export TEST
-#' @param debug_level TEST
 #' @export
 sql_execute_update<-function(id_procesamiento,sql_update,
-                             dbconn=NULL,export=c("db","df"),debug_level=0){
+                             dbconn=NULL,export=c("db","df")){
   stop("Not implemented")
 }
 
@@ -80,9 +80,8 @@ sql_execute_update<-function(id_procesamiento,sql_update,
 #'
 #' @param id_procesamiento TEST
 #' @param sql_insert TEST
-#' @param debug_level TEST
 #' @export
-sql_execute_delete<-function(id_procesamiento,sql_delete,dbconn=NULL,debug_level=0){
+sql_execute_delete<-function(id_procesamiento,sql_delete,dbconn=NULL){
   sql_delete<-gsub(",NA",",NULL",sql_delete)
   sql_delete<-gsub(", NA",",NULL",sql_delete)
   ret<-dbGetQuery(dbconn,sql_delete)
@@ -96,9 +95,8 @@ sql_execute_delete<-function(id_procesamiento,sql_delete,dbconn=NULL,debug_level
 #' @param id_procesamiento TEST
 #' @param sql_select TEST
 #' @param dbconn TEST
-#' @param debug_level TEST
 #' @export
-sql_execute_select<-function(id_procesamiento,sql_select,dbconn=NULL,debug_level=0){
+sql_execute_select<-function(id_procesamiento,sql_select,dbconn=NULL){
   #debug
   #sql_select<-"select price from v_quotes_id_completed where symbol="alua" order by date DESC LIMIT 1"
   #sql_select<-"select * from v_quotes"
@@ -264,19 +262,17 @@ sql_gen_delete<-function(table, where_fields="",
 #' @param group_by TEST
 #' @param order_by TEST
 #' @param top TEST
-#' @param debug_level TEST
 #' @export
 sql_gen_select<-function(select_fields, table, where_fields=NULL,
                          where_values=NULL,group_by=c(),
-                         order_by=c(),top=0,
-                         debug_level=0){
+                         order_by=c(),top=0){
   separator<-""
   sql_select_fields<-""
   for (f in select_fields){
     sql_select_fields<-paste(sql_select_fields,separator,f,sep="")
     separator<-", "
   }
-  sql_where<-sql_gen_where(where_fields,where_values,debug_level=debug_level)
+  sql_where<-sql_gen_where(where_fields,where_values)
   sql_order_by<-paste(order_by,collapse=",")
   sql_group_by<-""
   if (length(group_by)>0){
@@ -300,9 +296,8 @@ sql_gen_select<-function(select_fields, table, where_fields=NULL,
 #'
 #' @param where_fields TEST
 #' @param where_values TEST
-#' @param debug_level TEST
 #' @export
-sql_gen_where<-function(where_fields,where_values,debug_level=0){
+sql_gen_where<-function(where_fields,where_values){
   ret<-""
   if (!is.null(where_fields)&!is.null(where_values)){
     #Asserts with values
@@ -334,9 +329,9 @@ sql_gen_where<-function(where_fields,where_values,debug_level=0){
     if (length(where_fields)>0 & !(length(where_fields)==1 & nchar(where_fields[1])==0)){
       where_values<-as.data.frame(where_values,nrow=nrow(where_values)/length(where_fields),stringsAsFactors = FALSE)
       if (nrow(where_values)>2)
-        ret<-sql_gen_where_list(where_fields,where_values,debug_level=debug_level)
+        ret<-sql_gen_where_list(where_fields,where_values)
       else
-        ret<-sql_gen_where_or(where_fields,where_values,debug_level=debug_level)
+        ret<-sql_gen_where_or(where_fields,where_values)
     }
   }
   else{
@@ -352,9 +347,8 @@ sql_gen_where<-function(where_fields,where_values,debug_level=0){
 #'
 #' @param where_fields TEST
 #' @param where_values TEST
-#' @param debug_level TEST
 #' @export
-sql_gen_where_list<-function(where_fields,where_values,debug_level=0){
+sql_gen_where_list<-function(where_fields,where_values){
   sql_where<-""
   if (length(where_fields)>0){
     separator<-""
@@ -397,9 +391,8 @@ sql_gen_where_list<-function(where_fields,where_values,debug_level=0){
 #'
 #' @param where_fields TEST
 #' @param where_values TEST
-#' @param debug_level TEST
 #' @export
-sql_gen_where_or<-function(where_fields,where_values,debug_level=0){
+sql_gen_where_or<-function(where_fields,where_values){
   sql_where<-""
   if (length(where_fields)>0){
     sql_where<-"where"
@@ -433,9 +426,8 @@ sql_gen_where_or<-function(where_fields,where_values,debug_level=0){
 #' @param table TEST
 #' @param insert_fields TEST
 #' @param values TEST
-#' @param debug_level TEST
 #' @export
-sql_gen_insert<-function(table, insert_fields,values=c(),debug_level=0){
+sql_gen_insert<-function(table, insert_fields,values=c()){
   values<-as.data.frame(values,stringsAsFactors = FALSE)
   if (length(insert_fields)!=ncol(values)){
     stop(paste("incompatible fields and data:", length(insert_fields),"!=",ncol(values), paste(insert_fields,collapse=";"),paste(values,collapse=";")))
@@ -477,10 +469,9 @@ sql_gen_insert<-function(table, insert_fields,values=c(),debug_level=0){
 #' @param sql_insert TEST
 #' @param dbconn TEST
 #' @param export TEST
-#' @param debug_level TEST
 #' @export
 sql_execute_update<-function(id_procesamiento,sql_insert,
-                             dbconn=NULL,export=c("db","df"),debug_level=0){
+                             dbconn=NULL,export=c("db","df")){
   stop("Not implemented")
 }
 
@@ -491,14 +482,12 @@ sql_execute_update<-function(id_procesamiento,sql_insert,
 #' @param values TEST
 #' @param fields_id TEST
 #' @param values_id TEST
-#' @param debug_level TEST
 #' @export
 sql_gen_update<-function(table,
                          update_fields,
                          values,
                          fields_id,
-                         values_id,
-                         debug_level=0){
+                         values_id){
   stop("Not implemented")
   ret<-paste("update ",table, " set (",sql_update_fields,")=(",sql_values, ") where ",sep="")
   ret
@@ -510,11 +499,6 @@ sql_gen_update<-function(table,
 #' Returns string w/o leading whitespace
 #'
 #' @param x TEST
-#' @param update_fields TEST
-#' @param values TEST
-#' @param fields_id TEST
-#' @param values_id TEST
-#' @param debug_level TEST
 #' @export
 trim.leading <- function (x)  sub("^\\s+", "", x)
 
@@ -523,11 +507,6 @@ trim.leading <- function (x)  sub("^\\s+", "", x)
 #' Returns string w/o trailing whitespace
 #'
 #' @param x TEST
-#' @param update_fields TEST
-#' @param values TEST
-#' @param fields_id TEST
-#' @param values_id TEST
-#' @param debug_level TEST
 #' @export
 trim.trailing <- function (x) sub("\\s+$", "", x)
 
@@ -586,11 +565,10 @@ df_verify<-function(dataframe,columns){
 #' @param fields TEST
 #' @param values TEST
 #' @param dbconn TEST
-#' @param debug_level TEST
 #' @export
 sql_retrieve_insert<-function(id_procesamiento,
                               table,fields_id,values_id,fields=NULL, values=NULL,
-                              dbconn=NULL,debug_level=0){
+                              dbconn=NULL){
   ret<-NULL
   values_id<-as.data.frame(values_id,stringsAsFactors = FALSE)
   values<-as.data.frame(values,stringsAsFactors = FALSE)
@@ -611,12 +589,12 @@ sql_retrieve_insert<-function(id_procesamiento,
     #debug
     futile.logger::flog.info(paste("verifying",select_statement,":"))
     insert_statement<-sql_gen_insert(table,insert_fields = c(fields_id,fields),values=values_insert)
-    row<-sql_execute_select(id_procesamiento,select_statement,dbconn=dbconn,debug_level = debug_level)
+    row<-sql_execute_select(id_procesamiento,select_statement,dbconn=dbconn)
     futile.logger::flog.info(paste(row,"rows"))
     if (nrow(row)==0){
       futile.logger::flog.info(paste("executing",insert_statement))
-      res<-sql_execute_insert(id_procesamiento,insert_statement,dbconn=dbconn,debug_level = debug_level)
-      row<-sql_execute_select(id_procesamiento,select_statement,dbconn=dbconn,debug_level = debug_level)
+      res<-sql_execute_insert(id_procesamiento,insert_statement,dbconn=dbconn)
+      row<-sql_execute_select(id_procesamiento,select_statement,dbconn=dbconn)
     }
     ret<-c(ret,as.numeric(row$id))
     i<-i+1
@@ -633,7 +611,7 @@ sql_retrieve_insert<-function(id_procesamiento,
 #' @export
 sql_gen_joined_query<-function(dw_definition,recipe,indicator_fields){
 #  sql_gen_select<-function(select_fields, table, where_fields="",
-#                           where_values=NULL,group_by=c(),debug_level=0){
+#                           where_values=NULL,group_by=c()){
     sql_select_fields<-rep("",length(indicator_fields))
     sql_from<-""
     sql_where<-""

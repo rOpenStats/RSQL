@@ -5,7 +5,7 @@
 \title{sql_execute_insert}
 \usage{
 sql_execute_insert(id_procesamiento, sql_insert, dbconn = NULL,
-  export = c("db", "df"), debug_level = 0)
+  export = c("db", "df"))
 }
 \arguments{
 \item{id_procesamiento}{TEST}
@@ -13,8 +13,6 @@ sql_execute_insert(id_procesamiento, sql_insert, dbconn = NULL,
 \item{sql_insert}{TEST}
 
 \item{export}{TEST}
-
-\item{debug_level}{TEST}
 }
 \description{
 sql_execute_insert

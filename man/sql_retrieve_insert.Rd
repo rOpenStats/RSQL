@@ -5,7 +5,7 @@
 \title{sql_retrieve_insert}
 \usage{
 sql_retrieve_insert(id_procesamiento, table, fields_id, values_id,
-  fields = NULL, values = NULL, dbconn = NULL, debug_level = 0)
+  fields = NULL, values = NULL, dbconn = NULL)
 }
 \arguments{
 \item{id_procesamiento}{TEST}
@@ -19,8 +19,6 @@ sql_retrieve_insert(id_procesamiento, table, fields_id, values_id,
 \item{values}{TEST}
 
 \item{dbconn}{TEST}
-
-\item{debug_level}{TEST}
 }
 \description{
 sql_retrieve_insert

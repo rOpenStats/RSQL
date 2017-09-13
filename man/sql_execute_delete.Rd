@@ -4,13 +4,10 @@
 \alias{sql_execute_delete}
 \title{sql_execute_delete}
 \usage{
-sql_execute_delete(id_procesamiento, sql_delete, dbconn = NULL,
-  debug_level = 0)
+sql_execute_delete(id_procesamiento, sql_delete, dbconn = NULL)
 }
 \arguments{
 \item{id_procesamiento}{TEST}
-
-\item{debug_level}{TEST}
 
 \item{sql_insert}{TEST}
 }

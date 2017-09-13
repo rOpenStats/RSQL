@@ -8,16 +8,6 @@ trim.leading(x)
 }
 \arguments{
 \item{x}{TEST}
-
-\item{update_fields}{TEST}
-
-\item{values}{TEST}
-
-\item{fields_id}{TEST}
-
-\item{values_id}{TEST}
-
-\item{debug_level}{TEST}
 }
 \description{
 Returns string w/o leading whitespace

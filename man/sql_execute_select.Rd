@@ -4,8 +4,7 @@
 \alias{sql_execute_select}
 \title{sql_execute_select}
 \usage{
-sql_execute_select(id_procesamiento, sql_select, dbconn = NULL,
-  debug_level = 0)
+sql_execute_select(id_procesamiento, sql_select, dbconn = NULL)
 }
 \arguments{
 \item{id_procesamiento}{TEST}
@@ -13,8 +12,6 @@ sql_execute_select(id_procesamiento, sql_select, dbconn = NULL,
 \item{sql_select}{TEST}
 
 \item{dbconn}{TEST}
-
-\item{debug_level}{TEST}
 }
 \description{
 sql_execute_select

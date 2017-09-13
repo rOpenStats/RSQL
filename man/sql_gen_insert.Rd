@@ -4,7 +4,7 @@
 \alias{sql_gen_insert}
 \title{sql_gen_insert}
 \usage{
-sql_gen_insert(table, insert_fields, values = c(), debug_level = 0)
+sql_gen_insert(table, insert_fields, values = c())
 }
 \arguments{
 \item{table}{TEST}
@@ -12,8 +12,6 @@ sql_gen_insert(table, insert_fields, values = c(), debug_level = 0)
 \item{insert_fields}{TEST}
 
 \item{values}{TEST}
-
-\item{debug_level}{TEST}
 }
 \description{
 sql_gen_insert
