@@ -2,12 +2,12 @@
 % Please edit documentation in R/sql_lib.R
 \name{trim}
 \alias{trim}
-\title{trim_leading}
+\title{Returns string w/o leading or trailing whitespace}
 \usage{
 trim(x)
 }
 \arguments{
-\item{x}{TEST}
+\item{x}{The string}
 }
 \description{
 Returns string w/o leading or trailing whitespace

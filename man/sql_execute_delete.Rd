@@ -4,13 +4,13 @@
 \alias{sql_execute_delete}
 \title{sql_execute_delete}
 \usage{
-sql_execute_delete(id_procesamiento, sql_delete, dbconn = NULL)
+sql_execute_delete(sql_delete, dbconn = NULL)
 }
 \arguments{
-\item{id_procesamiento}{TEST}
+\item{sql_delete}{The delete SQL}
 
-\item{sql_insert}{TEST}
+\item{dbconn}{The Database Connection to run the query against}
 }
 \description{
-sql_execute_delete
+Executes a delete on the Database
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/sql_lib.R
 \name{sql_gen_joined_query}
 \alias{sql_gen_joined_query}
-\title{sql_gen_joined_query}
+\title{Generates a Joined Query}
 \usage{
 sql_gen_joined_query(dw_definition, recipe, indicator_fields)
 }
@@ -14,5 +14,5 @@ sql_gen_joined_query(dw_definition, recipe, indicator_fields)
 \item{indicator_fields}{TEST}
 }
 \description{
-sql_gen_joined_query
+Generates a Joined Query
 }

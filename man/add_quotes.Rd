@@ -2,13 +2,13 @@
 % Please edit documentation in R/sql_lib.R
 \name{add_quotes}
 \alias{add_quotes}
-\title{add_quotes}
+\title{Adds quotes to a string}
 \usage{
 add_quotes(text)
 }
 \arguments{
-\item{text}{TEST}
+\item{text}{The string to quote}
 }
 \description{
-add_quotes
+Adds quotes to a string
 }

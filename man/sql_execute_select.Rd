@@ -2,17 +2,17 @@
 % Please edit documentation in R/sql_lib.R
 \name{sql_execute_select}
 \alias{sql_execute_select}
-\title{sql_execute_select}
+\title{Executes a select on the database}
 \usage{
-sql_execute_select(id_procesamiento, sql_select, dbconn = NULL)
+sql_execute_select(sql_select, dbconn = NULL)
 }
 \arguments{
-\item{id_procesamiento}{TEST}
+\item{sql_select}{The delete SQL}
 
-\item{sql_select}{TEST}
+\item{dbconn}{The Database Connection to run the query against}
 
 \item{dbconn}{TEST}
 }
 \description{
-sql_execute_select
+Executes a select on the database
 }

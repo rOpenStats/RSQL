@@ -2,15 +2,15 @@
 % Please edit documentation in R/sql_lib.R
 \name{rm_quotes}
 \alias{rm_quotes}
-\title{rm_quotes}
+\title{Removes quotes from the String}
 \usage{
 rm_quotes(text, quotes = "'")
 }
 \arguments{
-\item{text}{TEST}
+\item{text}{The string to remove quotes from}
 
-\item{quotes}{TEST}
+\item{quotes}{Quote characters}
 }
 \description{
-rm_quotes
+Removes quotes from the String
 }

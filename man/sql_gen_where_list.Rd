@@ -2,15 +2,15 @@
 % Please edit documentation in R/sql_lib.R
 \name{sql_gen_where_list}
 \alias{sql_gen_where_list}
-\title{sql_gen_where_list}
+\title{Generates a where list statement to be used on a SQL statement.}
 \usage{
 sql_gen_where_list(where_fields, where_values)
 }
 \arguments{
-\item{where_fields}{TEST}
+\item{where_fields}{The fields used in the where section}
 
-\item{where_values}{TEST}
+\item{where_values}{The values used in the where section}
 }
 \description{
-sql_gen_where_list
+Generates a where list statement to be used on a SQL statement.
 }

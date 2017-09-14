@@ -2,8 +2,7 @@
 % Please edit documentation in R/sql_lib.R
 \name{\%IN\%}
 \alias{\%IN\%}
-\title{%IN%
-Operator IN for multiple columns}
+\title{Operator IN for multiple columns}
 \usage{
 x \%IN\% y
 }
@@ -13,6 +12,5 @@ x \%IN\% y
 \item{y}{TEST}
 }
 \description{
-%IN%
 Operator IN for multiple columns
 }

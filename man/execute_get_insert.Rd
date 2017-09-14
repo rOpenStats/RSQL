@@ -2,17 +2,15 @@
 % Please edit documentation in R/sql_lib.R
 \name{execute_get_insert}
 \alias{execute_get_insert}
-\title{execute_get_insert}
+\title{Executes the insert statement}
 \usage{
-execute_get_insert(id_procesamiento, sql_select, sql_insert, ...)
+execute_get_insert(sql_select, sql_insert, ...)
 }
 \arguments{
-\item{id_procesamiento}{TEST}
+\item{sql_select}{The SQL select query}
 
-\item{sql_select}{TEST}
-
-\item{sql_insert}{TEST}
+\item{sql_insert}{The SQL insert query}
 }
 \description{
-execute_get_insert
+Executes the insert statement
 }

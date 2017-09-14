@@ -2,17 +2,21 @@
 % Please edit documentation in R/sql_lib.R
 \name{sql_gen_insert}
 \alias{sql_gen_insert}
-\title{sql_gen_insert}
+\title{Generates an insert statement.}
 \usage{
 sql_gen_insert(table, insert_fields, values = c())
 }
 \arguments{
-\item{table}{TEST}
+\item{table}{The table to be affected}
 
-\item{insert_fields}{TEST}
+\item{insert_fields}{The fields to insert}
 
-\item{values}{TEST}
+\item{values}{The values to insert}
+
+\item{where_fields}{The fields used in the where section}
+
+\item{where_values}{The values used in the where section}
 }
 \description{
-sql_gen_insert
+Generates an insert statement.
 }

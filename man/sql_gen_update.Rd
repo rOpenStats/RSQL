@@ -2,21 +2,21 @@
 % Please edit documentation in R/sql_lib.R
 \name{sql_gen_update}
 \alias{sql_gen_update}
-\title{sql_execute_update}
+\title{Generates an update statement}
 \usage{
 sql_gen_update(table, update_fields, values, fields_id, values_id)
 }
 \arguments{
-\item{table}{TEST}
+\item{table}{The table to update}
 
-\item{update_fields}{TEST}
+\item{update_fields}{The fields to update}
 
-\item{values}{TEST}
+\item{values}{The values to update}
 
-\item{fields_id}{TEST}
+\item{fields_id}{The fields id}
 
-\item{values_id}{TEST}
+\item{values_id}{The values id}
 }
 \description{
-sql_execute_update
+Generates an update statement
 }

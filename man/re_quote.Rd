@@ -2,15 +2,15 @@
 % Please edit documentation in R/sql_lib.R
 \name{re_quote}
 \alias{re_quote}
-\title{re_quote}
+\title{TODO: WHAT IS THIS FUNCTION DOING AGAIN?}
 \usage{
 re_quote(text, quotes = "'")
 }
 \arguments{
-\item{text}{TEST}
+\item{text}{The string}
 
-\item{quotes}{TEST}
+\item{quotes}{The quotes}
 }
 \description{
-re_quote
+TODO: WHAT IS THIS FUNCTION DOING AGAIN?
 }

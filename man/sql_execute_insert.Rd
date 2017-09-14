@@ -2,18 +2,17 @@
 % Please edit documentation in R/sql_lib.R
 \name{sql_execute_insert}
 \alias{sql_execute_insert}
-\title{sql_execute_insert}
+\title{Extecutes a statement on the database.}
 \usage{
-sql_execute_insert(id_procesamiento, sql_insert, dbconn = NULL,
-  export = c("db", "df"))
+sql_execute_insert(sql_insert, dbconn = NULL, export = c("db", "df"))
 }
 \arguments{
-\item{id_procesamiento}{TEST}
+\item{sql_insert}{The SQL String}
 
-\item{sql_insert}{TEST}
+\item{dbconn}{The Database Connection to run the query against}
 
-\item{export}{TEST}
+\item{export}{The export type (either 'db' or 'df')}
 }
 \description{
-Extecutes a statement on the database
+Extecutes a statement on the database.
 }

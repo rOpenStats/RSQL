@@ -2,15 +2,15 @@
 % Please edit documentation in R/sql_lib.R
 \name{df_verify}
 \alias{df_verify}
-\title{df_verify}
+\title{Checks that the columns are in the data.frame}
 \usage{
 df_verify(dataframe, columns)
 }
 \arguments{
-\item{dataframe}{TEST}
+\item{dataframe}{The data.frame}
 
-\item{columns}{TEST}
+\item{columns}{The colums to check}
 }
 \description{
-df_verify
+Checks that the columns are in the data.frame
 }

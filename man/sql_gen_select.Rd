@@ -2,26 +2,26 @@
 % Please edit documentation in R/sql_lib.R
 \name{sql_gen_select}
 \alias{sql_gen_select}
-\title{sql_gen_select}
+\title{Generates a Select Statement}
 \usage{
 sql_gen_select(select_fields, table, where_fields = NULL,
   where_values = NULL, group_by = c(), order_by = c(), top = 0)
 }
 \arguments{
-\item{select_fields}{TEST}
+\item{select_fields}{The fields to be selected}
 
-\item{table}{TEST}
+\item{table}{The table to be used in the select}
 
-\item{where_fields}{TEST}
+\item{where_fields}{The fields used in the where section}
 
-\item{where_values}{TEST}
+\item{where_values}{The values used in the where section}
 
-\item{group_by}{TEST}
+\item{group_by}{Group by fields}
 
-\item{order_by}{TEST}
+\item{order_by}{Order by fields}
 
-\item{top}{TEST}
+\item{top}{Retrieve top records}
 }
 \description{
-sql_gen_select
+Generates a Select Statement
 }

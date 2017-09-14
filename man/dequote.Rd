@@ -2,13 +2,13 @@
 % Please edit documentation in R/sql_lib.R
 \name{dequote}
 \alias{dequote}
-\title{dequote}
+\title{Removes the quotes from the string}
 \usage{
 dequote(text)
 }
 \arguments{
-\item{text}{TEST}
+\item{text}{The string to remove the quotes from.}
 }
 \description{
-dequote
+Removes the quotes from the string
 }

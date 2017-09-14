@@ -2,15 +2,15 @@
 % Please edit documentation in R/sql_lib.R
 \name{is_quoted}
 \alias{is_quoted}
-\title{is_quoted}
+\title{Determines if the string is quoted or not}
 \usage{
 is_quoted(text, quotes_symbols = c("'", "'"))
 }
 \arguments{
-\item{text}{TEST}
+\item{text}{The text to test}
 
-\item{quotes_symbols}{TEST}
+\item{quotes_symbols}{The quotation characters}
 }
 \description{
-is_quoted
+Determines if the string is quoted or not
 }

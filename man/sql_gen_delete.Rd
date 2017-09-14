@@ -2,17 +2,17 @@
 % Please edit documentation in R/sql_lib.R
 \name{sql_gen_delete}
 \alias{sql_gen_delete}
-\title{sql_gen_delete}
+\title{Generates a Delete Statement}
 \usage{
 sql_gen_delete(table, where_fields = "", where_values = NULL)
 }
 \arguments{
-\item{table}{TEST}
+\item{table}{The table from which the delete statement will be generated}
 
-\item{where_fields}{TEST}
+\item{where_fields}{The fields used in the where section}
 
-\item{where_values}{TEST}
+\item{where_values}{The values used in the where section}
 }
 \description{
-sql_gen_delete
+Generates a Delete Statement
 }

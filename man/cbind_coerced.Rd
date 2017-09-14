@@ -2,13 +2,13 @@
 % Please edit documentation in R/sql_lib.R
 \name{cbind_coerced}
 \alias{cbind_coerced}
-\title{cbind_coerced}
+\title{TODO: WHAT DOES THIS DO AGAIN?}
 \usage{
 cbind_coerced(...)
 }
 \arguments{
-\item{...}{TEST}
+\item{...}{The parameters}
 }
 \description{
-cbind_coerced
+TODO: WHAT DOES THIS DO AGAIN?
 }

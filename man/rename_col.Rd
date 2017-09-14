@@ -2,17 +2,17 @@
 % Please edit documentation in R/sql_lib.R
 \name{rename_col}
 \alias{rename_col}
-\title{rename_col}
+\title{renames a column on a data.frame}
 \usage{
 rename_col(df, name, replace_name)
 }
 \arguments{
-\item{df}{TEST}
+\item{df}{The date.frame}
 
-\item{name}{TEST}
+\item{name}{The name of the column}
 
-\item{replace_name}{TEST}
+\item{replace_name}{The new name of the column}
 }
 \description{
-rename_col
+renames a column on a data.frame
 }

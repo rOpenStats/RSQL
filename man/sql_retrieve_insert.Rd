@@ -2,24 +2,22 @@
 % Please edit documentation in R/sql_lib.R
 \name{sql_retrieve_insert}
 \alias{sql_retrieve_insert}
-\title{sql_retrieve_insert}
+\title{Retrieves an insert Statement}
 \usage{
-sql_retrieve_insert(id_procesamiento, table, fields_id, values_id,
-  fields = NULL, values = NULL, dbconn = NULL)
+sql_retrieve_insert(table, fields_id, values_id, fields = NULL,
+  values = NULL, dbconn = NULL)
 }
 \arguments{
-\item{id_procesamiento}{TEST}
+\item{table}{The table}
 
-\item{table}{TEST}
+\item{fields_id}{The fields ID}
 
-\item{fields_id}{TEST}
+\item{fields}{The fields}
 
-\item{fields}{TEST}
+\item{values}{The values}
 
-\item{values}{TEST}
-
-\item{dbconn}{TEST}
+\item{dbconn}{The database connection}
 }
 \description{
-sql_retrieve_insert
+Retrieves an insert Statement
 }

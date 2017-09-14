@@ -3,31 +3,27 @@
 \name{sql_execute_update}
 \alias{sql_execute_update}
 \alias{sql_execute_update}
-\title{sql_execute_update}
+\title{Executes an update on the database}
 \usage{
-sql_execute_update(id_procesamiento, sql_insert, dbconn = NULL,
-  export = c("db", "df"))
+sql_execute_update(sql_insert, dbconn = NULL, export = c("db", "df"))
 
-sql_execute_update(id_procesamiento, sql_insert, dbconn = NULL,
-  export = c("db", "df"))
+sql_execute_update(sql_insert, dbconn = NULL, export = c("db", "df"))
 }
 \arguments{
-\item{id_procesamiento}{TEST}
+\item{sql_insert}{The insert statement}
 
-\item{sql_insert}{TEST}
+\item{dbconn}{The Database Connection to run the query against}
 
-\item{dbconn}{TEST}
+\item{export}{The export type (either 'db' or 'df')}
 
-\item{export}{TEST}
+\item{sql_update}{The update SQL}
 
-\item{sql_update}{TEST}
+\item{dbconn}{the Database Connection}
 
-\item{id_procesamiento}{TEST}
-
-\item{export}{TEST}
+\item{export}{The export method}
 }
 \description{
-sql_execute_update
+Executes an update on the database
 
-sql_execute_update
+Executes an update
 }
