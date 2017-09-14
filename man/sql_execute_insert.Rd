@@ -15,5 +15,5 @@ sql_execute_insert(id_procesamiento, sql_insert, dbconn = NULL,
 \item{export}{TEST}
 }
 \description{
-sql_execute_insert
+Extecutes a statement on the database
 }

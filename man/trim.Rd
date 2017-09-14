@@ -2,7 +2,7 @@
 % Please edit documentation in R/sql_lib.R
 \name{trim}
 \alias{trim}
-\title{trim.leading}
+\title{trim_leading}
 \usage{
 trim(x)
 }
