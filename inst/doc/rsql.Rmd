@@ -1,0 +1,6 @@
+title: "rsql"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{rsql}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
