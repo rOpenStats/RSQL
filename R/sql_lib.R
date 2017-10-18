@@ -15,17 +15,65 @@ if (!exists("DMLcounter"))
 if (!exists("sql_inserts"))
   sql_inserts  <-  data.frame(sql = "", stringsAsFactors = FALSE)
 
-#' The class that provides the SQL functionality
+#' The class that provides the SQL functionality.
+#'
+#' This class is intended to simplify SQL commands.
 #'
 #' @importFrom R6 R6Class
 #' @export
 RSQL.class <- R6::R6Class(
   "RSQL",
   public = list(
-    dbconn = NA,
-    initialize = function() {
-    }
+    connection = NA,
+    driver = NA,
+    db.name = NA,
+    user= NA,
+    password = NA,
+    host = NA,
+    port = NA,
+    initialize = function(drv, dbname, user=NULL,
+                          password=NULL, host=NULL, port=NULL) {
+      self$db.name = dbname
+      self$driver = drv
+      self$connection = RSQLite::dbConnect(drv=self$driver,
+                                           dbname = self$db.name)
+    }, generate_select = function(select_fields, table, where_fields = NULL,
+                             where_values = NULL, group_by= c(),
+                             order_by = c(), top = 0){
+          sql_gen_select(select_fields, table, where_fields,
+                     where_values, group_by,
+                     order_by, top)
+      }, execute_update = function(sql_update,
+                        dbconn = NULL, export = c("db", "df"))
+      {
+          DMLcounter <- DMLcounter + 1
+          sql_execute_update(sql_update, self$connection, export)
+
+      }, execute_insert =  function(sql_insert, export = c("db", "df"))
+      {
+        DMLcounter <- DMLcounter + 1
+        sql_execute_insert(sql_insert, dbconn = self$connection, export = c("db", "df"))
+      }, execute_select = function(sql_select)
+      {
+        DMLcounter <- DMLcounter + 1
+        sql_execute_select(sql_select, dbconn = self$connection)
+      }, execute_delete = function(sql_delete)
+      {
+        DMLcounter <- DMLcounter + 1
+        sql_execute_delete(sql_delete, dbconn = self$connection)
+      }, disconnect = function()
+      {
+        dbDisconnect(self$connection)
+      }
   ))
+
+#' Produces a RSQL object
+#'
+#' @export
+rsql <- function(drv, dbname, user=NULL, password=NULL, host=NULL, port=NULL)
+{
+    RSQL.class$new(drv, dbname, user, password, host, port)
+}
 
 
 #' Extecutes a statement on the database.
@@ -59,7 +107,6 @@ sql_execute_insert <- function(sql_insert,
       #    }
     }
     }
-    DMLcounter <- DMLcounter + 1
     if ("df" %in% export)
       sql_inserts <- rbind(sql_inserts, sql_insert)
    ret
@@ -144,7 +191,6 @@ is_quoted <- function(text, quotes_symbols = c("'", "'")){
 #' Removes the quotes from the string
 #'
 #' @param text The string to remove the quotes from.
-#' @export
 dequote <- function(text){
   substr(text, 2, nchar(text) - 1)
 }
@@ -153,7 +199,6 @@ dequote <- function(text){
 #'
 #' @param text The string
 #' @param quotes The quotes
-#' @export
 re_quote <- function(text, quotes = "'"){
   quote <- FALSE
   if (!is_quoted(text, "'"))
@@ -170,7 +215,6 @@ re_quote <- function(text, quotes = "'"){
 #' Adds quotes to a string
 #'
 #' @param text The string to quote
-#' @export
 add_quotes <- function(text){
   ret <- sapply(text, FUN = re_quote)
   names(ret) <- NULL
@@ -181,7 +225,6 @@ add_quotes <- function(text){
 #'
 #' @param text The string to remove quotes from
 #' @param quotes Quote characters
-#' @export
 rm_quotes <- function(text, quotes = "'"){
   if (quotes == substr(text, 1, 1) &
       quotes == substr(text, nchar(text), nchar(text))) {
@@ -193,7 +236,6 @@ rm_quotes <- function(text, quotes = "'"){
 #' Removes quotes from data.frame colums
 #'
 #' @param text The text column to remove quotes from.
-#' @export
 remove_quotes <- function(text){
   ret <- sapply(text, FUN = rm_quotes)
   names(ret) <- NULL
@@ -204,7 +246,6 @@ remove_quotes <- function(text){
 #' add_grep_exact_match
 #'
 #' @param text TEST
-#' @export
 add_grep_exact_match <- function(text){
   text <- gsub("(\\^|\\%)", "\\\\\\1", text)
   paste("^", text, "$", sep = "")
@@ -215,8 +256,6 @@ add_grep_exact_match <- function(text){
 #' @param table The table from which the delete statement will be generated
 #' @param where_fields The fields used in the where section
 #' @param where_values The values used in the where section
-#'
-#' @export
 sql_gen_delete <- function(table, where_fields = "",
                              where_values = NULL){
   sql_where <- sql_gen_where(where_fields, where_values)
@@ -234,7 +273,6 @@ sql_gen_delete <- function(table, where_fields = "",
 #' @param group_by Group by fields
 #' @param order_by Order by fields
 #' @param top Retrieve top records
-#' @export
 sql_gen_select <- function(select_fields, table, where_fields = NULL,
                          where_values = NULL, group_by= c(),
                          order_by = c(), top = 0){
@@ -269,7 +307,6 @@ sql_gen_select <- function(select_fields, table, where_fields = NULL,
 #'
 #' @param where_fields The fields used in the where section
 #' @param where_values The values used in the where section
-#' @export
 sql_gen_where <- function(where_fields, where_values){
   ret <- ""
   if (!is.null(where_fields) & !is.null(where_values)){
@@ -329,7 +366,6 @@ sql_gen_where <- function(where_fields, where_values){
 #'
 #' @param where_fields The fields used in the where section
 #' @param where_values The values used in the where section
-#' @export
 sql_gen_where_list <- function(where_fields, where_values){
   sql_where <- ""
   if (length(where_fields) > 0){
@@ -373,7 +409,6 @@ sql_gen_where_list <- function(where_fields, where_values){
 #'
 #' @param where_fields The fields used in the where section
 #' @param where_values The values used in the where section
-#' @export
 sql_gen_where_or <- function(where_fields, where_values){
   sql_where <- ""
   if (length(where_fields) > 0){
