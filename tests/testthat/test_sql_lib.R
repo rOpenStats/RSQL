@@ -1,4 +1,5 @@
 # Basic functionality test
+
 test_that("sql_lib basic test", {
   db.name <- paste("mtcars.db", sep="")
   sql <- rsql(drv=RSQLite::SQLite(), dbname = db.name)

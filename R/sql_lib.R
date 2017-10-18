@@ -120,7 +120,10 @@ sql_execute_insert <- function(sql_insert,
 #' @param export The export type (either 'db' or 'df')
 sql_execute_update <- function(sql_update,
                              dbconn = NULL, export = c("db", "df")){
-  stop("Not implemented")
+  sql_select <- gsub(",NA", ",NULL", sql_update)
+  sql_select <- gsub(", NA", ",NULL", sql_update)
+  ret <- DBI::dbGetQuery(dbconn, sql_update)
+  ret
 }
 
 
