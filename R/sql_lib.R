@@ -43,12 +43,12 @@ RSQL.class <- R6::R6Class(
           sql_gen_select(select_fields, table, where_fields,
                      where_values, group_by,
                      order_by, top)
-      }, execute_update = function(sql_update,
-                        dbconn = NULL, export = c("db", "df"))
-      {
+      }, generate_insert = function(table, insert_fields, values = c()){
+        sql_gen_insert(table, insert_fields, values)
+      },  execute_update = function(sql_update,
+                        dbconn = NULL, export = c("db", "df")) {
           DMLcounter <- DMLcounter + 1
           sql_execute_update(sql_update, self$connection, export)
-
       }, execute_insert =  function(sql_insert, export = c("db", "df"))
       {
         DMLcounter <- DMLcounter + 1
@@ -57,13 +57,15 @@ RSQL.class <- R6::R6Class(
       {
         DMLcounter <- DMLcounter + 1
         sql_execute_select(sql_select, dbconn = self$connection)
-      }, execute_delete = function(sql_delete)
-      {
+      }, generate_delete = function(table, where_fields = "",
+                                    where_values = NULL){
+        sql_gen_delete(table, where_fields, where_values)
+      }, execute_delete = function(sql_delete){
         DMLcounter <- DMLcounter + 1
         sql_execute_delete(sql_delete, dbconn = self$connection)
       }, disconnect = function()
       {
-        dbDisconnect(self$connection)
+        DBI::dbDisconnect(self$connection)
       }
   ))
 
@@ -82,14 +84,13 @@ rsql <- function(drv, dbname, user=NULL, password=NULL, host=NULL, port=NULL)
 #' @param sql_insert The SQL String
 #' @param dbconn The Database Connection to run the query against
 #' @param export The export type (either 'db' or 'df')
-#' @export
 sql_execute_insert <- function(sql_insert,
                              dbconn = NULL, export = c("db", "df")){
   sql_insert <- gsub(",NA", ",NULL", sql_insert)
   sql_insert <- gsub(", NA", ",NULL", sql_insert)
   sql_insert <- paste(sql_insert, ";", sep = "")
   if ("db" %in% export){
-    ret <- dbSendQuery(dbconn, sql_insert)
+    ret <- DBI::dbSendQuery(dbconn, sql_insert)
     futile.logger::flog.info(sql_insert)
 
     #data <- fetch(rs,n=-1)
@@ -117,7 +118,6 @@ sql_execute_insert <- function(sql_insert,
 #' @param sql_update The update SQL
 #' @param dbconn The Database Connection to run the query against
 #' @param export The export type (either 'db' or 'df')
-#' @export
 sql_execute_update <- function(sql_update,
                              dbconn = NULL, export = c("db", "df")){
   stop("Not implemented")
@@ -130,11 +130,10 @@ sql_execute_update <- function(sql_update,
 #'
 #' @param sql_delete The delete SQL
 #' @param dbconn The Database Connection to run the query against
-#' @export
 sql_execute_delete <- function(sql_delete, dbconn = NULL){
   sql_delete <- gsub(",NA", ",NULL", sql_delete)
   sql_delete <- gsub(", NA", ",NULL", sql_delete)
-  ret <- dbGetQuery(dbconn, sql_delete)
+  ret <- DBI::dbGetQuery(dbconn, sql_delete)
   futile.logger::flog.info(sql_delete)
   ret
 
@@ -144,8 +143,6 @@ sql_execute_delete <- function(sql_delete, dbconn = NULL){
 #'
 #' @param sql_select The delete SQL
 #' @param dbconn The Database Connection to run the query against
-#' @param dbconn TEST
-#' @export
 sql_execute_select <- function(sql_select, dbconn = NULL){
   #debug
   #sql_select <- "select price from v_quotes_id_completed where symbol="alua"
@@ -153,7 +150,7 @@ sql_execute_select <- function(sql_select, dbconn = NULL){
   #sql_select <- "select * from v_quotes"
   sql_select <- gsub(",NA", ",NULL", sql_select)
   sql_select <- gsub(", NA", ",NULL", sql_select)
-  ret <- dbGetQuery(dbconn, sql_select)
+  ret <- DBI::dbGetQuery(dbconn, sql_select)
   ret
 }
 
@@ -161,7 +158,6 @@ sql_execute_select <- function(sql_select, dbconn = NULL){
 #'
 #' @param sql_select The SQL select query
 #' @param sql_insert The SQL insert query
-#' @export
 execute_get_insert <- function(sql_select, sql_insert, ...){
   ret <- sql_execute_select(sql_select, dbconn)
   if (nrow(ret) == 0){
@@ -449,7 +445,6 @@ sql_gen_where_or <- function(where_fields, where_values){
 #' @param table The table to be affected
 #' @param insert_fields The fields to insert
 #' @param values The values to insert
-#' @export
 sql_gen_insert <- function(table, insert_fields, values = c()){
   values <- as.data.frame(values, stringsAsFactors = FALSE)
   if (length(insert_fields) != ncol(values)){
@@ -494,7 +489,6 @@ sql_gen_insert <- function(table, insert_fields, values = c()){
 #' @param sql_insert The insert statement
 #' @param dbconn the Database Connection
 #' @param export The export method
-#' @export
 sql_execute_update <- function(sql_insert,
                              dbconn = NULL, export = c("db", "df")){
   stop("Not implemented")
@@ -507,7 +501,6 @@ sql_execute_update <- function(sql_insert,
 #' @param values The values to update
 #' @param fields_id The fields id
 #' @param values_id The values id
-#' @export
 sql_gen_update <- function(table,
                          update_fields,
                          values,
@@ -523,20 +516,17 @@ sql_gen_update <- function(table,
 #' Returns string w/o leading whitespace
 #'
 #' @param x The string
-#' @export
 trim_leading  <-  function (x)  sub("^\\s+", "", x)
 
 #' Returns string w/o trailing whitespace
 #'
 #' @param x The string
-#' @export
 trim_trailing  <-  function (x) sub("\\s+$", "", x)
 
 
 #' Returns string w/o leading or trailing whitespace
 #'
 #' @param x The string
-#' @export
 trim  <-  function (x) gsub("^\\s+|\\s+$", "", x)
 
 #' renames a column on a data.frame
@@ -553,7 +543,6 @@ rename_col <- function (df, name, replace_name){
 #' TODO: WHAT DOES THIS DO AGAIN?
 #'
 #' @param ... The parameters
-#' @export
 cbind_coerced <- function(...){
   ret <- cbind(..., stringsAsFactors = FALSE)
   if ("stringsAsFactors" %in% names(ret))
@@ -566,7 +555,6 @@ cbind_coerced <- function(...){
 #'
 #' @param dataframe The data.frame
 #' @param columns The colums to check
-#' @export
 df_verify <- function(dataframe, columns){
   ret <- NULL
   dataframe_names <- names(dataframe)
@@ -586,7 +574,6 @@ df_verify <- function(dataframe, columns){
 #' @param fields The fields
 #' @param values The values
 #' @param dbconn The database connection
-#' @export
 sql_retrieve_insert <- function(table, fields_id, values_id, fields = NULL,
                                 values = NULL, dbconn = NULL){
   ret <- NULL
@@ -633,7 +620,6 @@ sql_retrieve_insert <- function(table, fields_id, values_id, fields = NULL,
 #' @param dw_definition TEST
 #' @param recipe TEST
 #' @param indicator_fields TEST
-#' @export
 sql_gen_joined_query <- function(dw_definition, recipe, indicator_fields){
 #  sql_gen_select <- function(select_fields, table, where_fields="",
 #                           where_values=NULL,group_by=c()){
@@ -708,5 +694,4 @@ sql_gen_joined_query <- function(dw_definition, recipe, indicator_fields){
 #'
 #' @param x TEST
 #' @param y TEST
-#' @export
 "%IN%" <- function(x, y) interaction(x) %in% interaction(y)
