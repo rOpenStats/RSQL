@@ -1,0 +1,50 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: rsql 0.1.0\n"
+"POT-Creation-Date: 2017-10-19 18:51\n"
+"PO-Revision-Date: 2017-10-19 16:09-0300\n"
+"Last-Translator: Leonardo Beln <leobelen@alpha.surfertank.com>\n"
+"Language-Team: Language R-es\n"
+"Language: R-es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ASCII\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "where_fields must be a vector and was a"
+msgstr ""
+
+msgid "#where_fields!=#where_values:"
+msgstr ""
+
+msgid "!="
+msgstr ""
+
+msgid ","
+msgstr ""
+
+msgid "no where_values specified"
+msgstr ""
+
+msgid "no where_fields specified"
+msgstr ""
+
+msgid "incompatible fields and data:"
+msgstr ""
+
+msgid ";"
+msgstr ""
+
+msgid "Not implemented"
+msgstr ""
+
+msgid "missing columns in dataframe:"
+msgstr ""
+
+msgid "df"
+msgstr "DF esta aqui"
+
+msgid "error: nrow(values_id)!=nrow(values):"
+msgstr ""
+
+msgid "where_clause_list must be a vector and was a"
+msgstr ""

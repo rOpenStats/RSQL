@@ -12,6 +12,9 @@ LazyData: true
 RoxygenNote: 6.0.1
 Collate:
     'sql_lib.R'
+    'zzz.R'
+Depends: futile.logger,
+    R6
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr

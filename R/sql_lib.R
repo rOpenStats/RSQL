@@ -1,4 +1,3 @@
-# sql-lib.R
 # Library for simple sql code generation from R
 # You can learn more about package authoring with RStudio at:
 #
@@ -9,11 +8,8 @@
 #   Build and Reload Package:  'Cmd + Shift + B'
 #   Check Package:             'Cmd + Shift + E'
 #   Test Package:              'Cmd + Shift + T'
+#to internationalize gettext("no where_values specified", domain = "R-rsql") does provide a tool to do it.
 
-if (!exists("DMLcounter"))
-  DMLcounter <-  0
-if (!exists("sql_inserts"))
-  sql_inserts  <-  data.frame(sql = "", stringsAsFactors = FALSE)
 
 #' The class that provides the SQL functionality.
 #'
@@ -27,23 +23,23 @@ RSQL.class <- R6::R6Class(
     connection = NA,
     driver = NA,
     db.name = NA,
-    user= NA,
+    user = NA,
     password = NA,
     host = NA,
     port = NA,
     initialize = function(drv, dbname, user=NULL,
                           password=NULL, host=NULL, port=NULL) {
-      self$db.name = dbname
-      self$driver = drv
-      self$connection = RSQLite::dbConnect(drv=self$driver,
+      self$db.name <- dbname
+      self$driver <- drv
+      self$connection <- RSQLite::dbConnect(drv = self$driver,
                                            dbname = self$db.name)
     }, generate_select = function(select_fields, table, where_fields = NULL,
                              where_values = NULL, group_by= c(),
-                             order_by = c(), top = 0){
+                             order_by = c(), top = 0) {
           sql_gen_select(select_fields, table, where_fields,
                      where_values, group_by,
                      order_by, top)
-      }, generate_insert = function(table, insert_fields, values = c()){
+      }, generate_insert = function(table, insert_fields, values = c()) {
         sql_gen_insert(table, insert_fields, values)
       },  execute_update = function(sql_update,
                         dbconn = NULL, export = c("db", "df")) {
@@ -52,7 +48,8 @@ RSQL.class <- R6::R6Class(
       }, execute_insert =  function(sql_insert, export = c("db", "df"))
       {
         DMLcounter <- DMLcounter + 1
-        sql_execute_insert(sql_insert, dbconn = self$connection, export = c("db", "df"))
+        sql_execute_insert(sql_insert, dbconn = self$connection,
+                           export = c("db", "df"))
       }, execute_select = function(sql_select)
       {
         DMLcounter <- DMLcounter + 1
@@ -693,8 +690,128 @@ sql_gen_joined_query <- function(dw_definition, recipe, indicator_fields){
     ret
 }
 
+#' @import futile.logger
+#' @export
+parse_where_clause <- function(where_clause_list = c()){
+  where.df <- data.frame(lhs=character(),
+                         comp=character(),
+                         rhs=character(),
+                         stringsAsFactors=FALSE)
+  names(where.df) <- c("lhs", "comp", "rhs")
+  for (where_clause in where_clause_list)
+  {
+    where_struct = strsplit(where_clause, "!=")
+    if(length(where_struct[[1]])==2)
+    {
+      where = data.frame(where_struct[[1]][1], "!=", paste("'",
+                                                           sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
+                                                           "\\1", where_struct[[1]][2]),
+                                                           "'", sep = ""))
+      names(where) <- c("lhs", "comp", "rhs")
+      where.df <- rbind(where.df, where)
+      next
+    }
+    where_struct = strsplit(where_clause, "<=")
+    if(length(where_struct[[1]])==2)
+    {
+      where = data.frame(where_struct[[1]][1], "<=", paste("'",
+                                                           sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
+                                                               "\\1", where_struct[[1]][2]),
+                                                           "'", sep = ""))
+      names(where) <- c("lhs", "comp", "rhs")
+      where.df <- rbind(where.df, where)
+      next
+    }
+    where_struct = strsplit(where_clause, ">=")
+    if(length(where_struct[[1]])==2)
+    {
+      where = data.frame(where_struct[[1]][1], ">=", paste("'",
+                                                           sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
+                                                               "\\1", where_struct[[1]][2]),
+                                                           "'", sep = ""))
+      names(where) <- c("lhs", "comp", "rhs")
+      where.df <- rbind(where.df, where)
+      next
+    }
+    where_struct = strsplit(where_clause, "=")
+    if(length(where_struct[[1]])==2)
+    {
+      where = data.frame(where_struct[[1]][1], "=", paste("'",
+                                                          sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
+                                                              "\\1", where_struct[[1]][2]),
+                                                          "'", sep = ""))
+      names(where) <- c("lhs", "comp", "rhs")
+      where.df <- rbind(where.df, where)
+      next
+    }
+    where_struct = strsplit(where_clause, ">")
+    if(length(where_struct[[1]])==2)
+    {
+      where = data.frame(where_struct[[1]][1], ">", paste("'",
+                                                          sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
+                                                              "\\1", where_struct[[1]][2]),
+                                                          "'", sep = ""))
+      names(where) <- c("lhs", "comp", "rhs")
+      where.df <- rbind(where.df, where)
+      next
+    }
+    where_struct = strsplit(where_clause, "<")
+    if(length(where_struct[[1]])==2)
+    {
+      where = data.frame(where_struct[[1]][1], "<", paste("'",
+                                                          sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
+                                                              "\\1", where_struct[[1]][2]),
+                                                          "'", sep = ""))
+      names(where) <- c("lhs", "comp", "rhs")
+      where.df <- rbind(where.df, where)
+      next
+    }
+
+  }
+  where.df
+}
+
+#' Generates a where statement to be used on a SQL statement.
+#'
+#' @param where_clause_list The fields used in the where section
+sql_gen_where.new <- function(where_clause_list){
+  ret <- ""
+  if (!is.null(where_clause_list)){
+    #Asserts with values
+    if (!is.vector(where_clause_list))
+      stop(paste("where_clause_list must be a vector and was a ", str(where_clause_list)))
+    if (!is.list(where_clause_list))
+      if (is.vector(where_clause_list))
+      {
+        where_clauses <- parse_where_clause(where_clause_list)
+        ret <- sql_gen_where_list(where_fields, where_values)
+
+      }
+    }
+
+  ret
+}
+
+#' Generates a where list statement to be used on a SQL statement.
+#'
+#' @param where_clause.df The fields used in the where section
+sql_gen_where_list.new <- function(where_clause.df){
+  sql_where <- ""
+  separator <- ""
+  for (where_clause in where_clause.df)
+  {
+    sql_where <- "where ("
+    sql_where <- paste(sql_where, where_clause.lhs, where_clause.comp, where_clause.rhs, separator, sep = "")
+    separator = " and "
+    sql_where <- paste(sql_where, ") in ", sep = "")
+  }
+  sql_where
+}
+
+
 #' Operator IN for multiple columns
 #'
 #' @param x TEST
 #' @param y TEST
 "%IN%" <- function(x, y) interaction(x) %in% interaction(y)
+
