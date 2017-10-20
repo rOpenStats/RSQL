@@ -1,0 +1,50 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: rsql 0.1.0\n"
+"POT-Creation-Date: 2017-10-19 20:56\n"
+"PO-Revision-Date: 2017-10-19 16:11-0300\n"
+"Last-Translator: Leonardo Beln <leobelen@alpha.surfertank.com>\n"
+"Language-Team: Language R-en\n"
+"Language: R-en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ASCII\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "sql_lib_where_files_has_to_be_a_vector"
+msgstr "where_fields must be a vector and was a"
+
+msgid "sql_lib.where_fields_num_not_eq_where_values_num"
+msgstr "#where_fields!=#where_values:"
+
+msgid "!="
+msgstr ""
+
+msgid ","
+msgstr ""
+
+msgid "sql_lib.no_where_values_specified"
+msgstr "No where_values specified"
+
+msgid "sql_lib.incompatible_fields_and_data"
+msgstr "Incompatible fields and data:"
+
+msgid "sql_lib.not_eq"
+msgstr "!="
+
+msgid ";"
+msgstr ""
+
+msgid "sql_lib.not_implemented"
+msgstr "Not implemented"
+
+msgid "sql_lib.missing_columns_in_dataframe"
+msgstr "missing columns in dataframe:"
+
+msgid "df"
+msgstr ""
+
+msgid "sql_lib.error_nrows_values_id_neq_nrows_values"
+msgstr "error: nrow(values_id)!=nrow(values):"
+
+msgid "sql_lib.where_clause_list_must_be_a_vector_but_is"
+msgstr "where_clause_list must be a vector and was a"

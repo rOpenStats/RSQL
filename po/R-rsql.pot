@@ -1,0 +1,50 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: rsql 0.1.0\n"
+"POT-Creation-Date: 2017-10-19 20:56\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+
+msgid "sql_lib_where_files_has_to_be_a_vector"
+msgstr ""
+
+msgid "sql_lib.where_fields_num_not_eq_where_values_num"
+msgstr ""
+
+msgid "!="
+msgstr ""
+
+msgid ","
+msgstr ""
+
+msgid "sql_lib.no_where_values_specified"
+msgstr ""
+
+msgid "sql_lib.incompatible_fields_and_data"
+msgstr ""
+
+msgid "sql_lib.not_eq"
+msgstr ""
+
+msgid ";"
+msgstr ""
+
+msgid "sql_lib.not_implemented"
+msgstr ""
+
+msgid "sql_lib.missing_columns_in_dataframe"
+msgstr ""
+
+msgid "df"
+msgstr ""
+
+msgid "sql_lib.error_nrows_values_id_neq_nrows_values"
+msgstr ""
+
+msgid "sql_lib.where_clause_list_must_be_a_vector_but_is"
+msgstr ""

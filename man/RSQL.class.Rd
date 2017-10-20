@@ -3,12 +3,12 @@
 \docType{data}
 \name{RSQL.class}
 \alias{RSQL.class}
-\title{The class that provides the SQL functionality}
+\title{The class that provides the SQL functionality.}
 \format{An object of class \code{R6ClassGenerator} of length 24.}
 \usage{
 RSQL.class
 }
 \description{
-The class that provides the SQL functionality
+This class is intended to simplify SQL commands.
 }
 \keyword{datasets}

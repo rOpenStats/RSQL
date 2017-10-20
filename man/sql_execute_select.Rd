@@ -10,8 +10,6 @@ sql_execute_select(sql_select, dbconn = NULL)
 \item{sql_select}{The delete SQL}
 
 \item{dbconn}{The Database Connection to run the query against}
-
-\item{dbconn}{TEST}
 }
 \description{
 Executes a select on the database
