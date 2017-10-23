@@ -12,7 +12,7 @@
 #'
 #' @importFrom R6 R6Class
 #' @export
-RSQL.class <- R6::R6Class("RSQL", public = list(connection = NA, driver = NA, db.name = NA,
+RSQL.class <- R6Class("RSQL", public = list(connection = NA, driver = NA, db.name = NA,
     user = NA, password = NA, host = NA, port = NA, initialize = function(drv, dbname,
         user = NULL, password = NULL, host = NULL, port = NULL) {
         self$db.name <- dbname
@@ -273,15 +273,16 @@ sql_gen_where <- function(where_fields, where_values) {
     if (!is.null(where_fields) & !is.null(where_values)) {
         # Asserts with values
         if (!is.vector(where_fields))
-            stop(paste(gettext("sql_lib_where_files_has_to_be_a_vector", domain="R-rsql"), str(where_fields)))
+            stop(paste(gettext("sql_lib_where_files_has_to_be_a_vector", domain = "R-rsql"),
+                str(where_fields)))
         if (!is.list(where_values))
             if (is.vector(where_values))
                 where_values <- data.frame(matrix(where_values, byrow = TRUE, ncol = length(where_values)),
                   stringsAsFactors = FALSE)
         if (length(where_fields) != ncol(where_values))
-            stop(paste(gettext("sql_lib.where_fields_num_not_eq_where_values_num", domain="R-sql"), length(where_fields), "!=",
-                length(where_values), paste(where_fields, collapse = ","), paste(where_values,
-                  collapse = ",")))
+            stop(paste(gettext("sql_lib.where_fields_num_not_eq_where_values_num",
+                domain = "R-sql"), length(where_fields), "!=", length(where_values),
+                paste(where_fields, collapse = ","), paste(where_values, collapse = ",")))
         # if strings values, add '
         for (col in names(where_values)) {
             if (max(is.character(where_values[, col])) == 1) {
@@ -306,11 +307,11 @@ sql_gen_where <- function(where_fields, where_values) {
                 ret <- sql_gen_where_list(where_fields, where_values) else ret <- sql_gen_where_or(where_fields, where_values)
         }
     } else {
-        if (!is.null(where_fields)){
-            stop(paste(gettext("sql_lib.no_where_values_specified", domain="R-rsql")))
+        if (!is.null(where_fields)) {
+            stop(paste(gettext("sql_lib.no_where_values_specified", domain = "R-rsql")))
         }
         if (!is.null(where_values)) {
-          stop(paste(gettext("sql_lib.no_where_values_specified", domain="R-rsql")))
+            stop(paste(gettext("sql_lib.no_where_values_specified", domain = "R-rsql")))
         }
     }
     ret
@@ -400,7 +401,8 @@ sql_gen_where_or <- function(where_fields, where_values) {
 sql_gen_insert <- function(table, insert_fields, values = c()) {
     values <- as.data.frame(values, stringsAsFactors = FALSE)
     if (length(insert_fields) != ncol(values)) {
-        stop(paste(gettext("sql_lib.incompatible_fields_and_data", domain="R-rsql"), length(insert_fields), gettext("sql_lib.not_eq", domain="R-rsql"),
+        stop(paste(gettext("sql_lib.incompatible_fields_and_data", domain = "R-rsql"),
+            length(insert_fields), gettext("sql_lib.not_eq", domain = "R-rsql"),
             ncol(values), paste(insert_fields, collapse = ";"), paste(values, collapse = ";")))
     }
     separator <- ""
@@ -441,7 +443,7 @@ sql_gen_insert <- function(table, insert_fields, values = c()) {
 #' @param dbconn the Database Connection
 #' @param export The export method
 sql_execute_update <- function(sql_insert, dbconn = NULL, export = c("db", "df")) {
-    stop(gettext("sql_lib.not_implemented", domain="R-rsql"))
+    stop(gettext("sql_lib.not_implemented", domain = "R-rsql"))
 }
 
 #' Generates an update statement
@@ -452,7 +454,7 @@ sql_execute_update <- function(sql_insert, dbconn = NULL, export = c("db", "df")
 #' @param fields_id The fields id
 #' @param values_id The values id
 sql_gen_update <- function(table, update_fields, values, fields_id, values_id) {
-    stop(gettext("sql_lib.not_implemented", domain="R-rsql"))
+    stop(gettext("sql_lib.not_implemented", domain = "R-rsql"))
     ret <- paste("update ", table, " set (", sql_update_fields, ")=(", sql_values,
         ") where ", sep = "")
     ret
@@ -509,8 +511,8 @@ df_verify <- function(dataframe, columns) {
             ret <- c(ret, column)
     }
     if (length(ret) > 0)
-        stop(paste(gettext("sql_lib.missing_columns_in_dataframe", domain="R-rsql"), paste(ret, collapse = ","), "df",
-            paste(dataframe_names, collapse = ",")))
+        stop(paste(gettext("sql_lib.missing_columns_in_dataframe", domain = "R-rsql"),
+            paste(ret, collapse = ","), "df", paste(dataframe_names, collapse = ",")))
 }
 
 #' Retrieves an insert Statement
@@ -526,7 +528,8 @@ sql_retrieve_insert <- function(table, fields_id, values_id, fields = NULL, valu
     values_id <- as.data.frame(values_id, stringsAsFactors = FALSE)
     values <- as.data.frame(values, stringsAsFactors = FALSE)
     if (nrow(values) > 0 & nrow(values) < nrow(values_id)) {
-        stop(paste(gettext("sql_lib.error_nrows_values_id_neq_nrows_values", domain="R-rsql"), nrow(values_id), nrow(values)))
+        stop(paste(gettext("sql_lib.error_nrows_values_id_neq_nrows_values", domain = "R-rsql"),
+            nrow(values_id), nrow(values)))
     }
 
 
@@ -689,7 +692,8 @@ sql_gen_where.new <- function(where_clause_list) {
     if (!is.null(where_clause_list)) {
         # Asserts with values
         if (!is.vector(where_clause_list))
-            stop(paste(gettext("sql_lib.where_clause_list_must_be_a_vector_but_is", domain="R-rsql"), str(where_clause_list)))
+            stop(paste(gettext("sql_lib.where_clause_list_must_be_a_vector_but_is",
+                domain = "R-rsql"), str(where_clause_list)))
         if (!is.list(where_clause_list))
             if (is.vector(where_clause_list)) {
                 where_clauses <- parse_where_clause(where_clause_list)

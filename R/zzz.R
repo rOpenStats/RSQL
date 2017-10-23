@@ -1,4 +1,12 @@
-# execute onload
+#' rsql
+#'
+#' A package to work with SQL datasources in a simple manner
+#'
+#' @docType package
+#' @name rsql
+#' @import R6 futile.logger
+#' @author Leonardo Javier Belen <leobelen@gmail.com>, Alejandro Baranek <alejandrobaranek@gmail.com>
+
 .onLoad <- function(libname, pkgname) {
   if (!exists("DMLcounter"))
     DMLcounter <<-  0
