@@ -6,6 +6,9 @@
 \usage{
 parse_where_clause(where_clause_list = c())
 }
+\arguments{
+\item{where_clause_list}{The list of where clauses}
+}
 \description{
 Parses a where clause
 }

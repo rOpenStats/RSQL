@@ -4,9 +4,11 @@
 \alias{execute_get_insert}
 \title{Executes the insert statement}
 \usage{
-execute_get_insert(sql_select, sql_insert, ...)
+execute_get_insert(dbconn, sql_select, sql_insert, ...)
 }
 \arguments{
+\item{dbconn}{The database connection}
+
 \item{sql_select}{The SQL select query}
 
 \item{sql_insert}{The SQL insert query}

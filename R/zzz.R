@@ -8,6 +8,10 @@
 #' @importFrom utils str
 #' @author Leonardo Javier Belen <leobelen@gmail.com>, Alejandro Baranek <alejandrobaranek@gmail.com>
 
+#' Executes code while loading the package.
+#'
+#' @param libname Library name
+#' @param pkgname Package name
 .onLoad <- function(libname, pkgname) {
   if (!exists("DMLcounter"))
     DMLcounter <<-  0

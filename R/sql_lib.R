@@ -131,10 +131,11 @@ sql_execute_select <- function(sql_select, dbconn = NULL) {
 
 #' Executes the insert statement
 #'
+#' @param dbconn The database connection
 #' @param sql_select The SQL select query
 #' @param sql_insert The SQL insert query
 #' @param ... Other parameters
-execute_get_insert <- function(sql_select, sql_insert, ...) {
+execute_get_insert <- function(dbconn, sql_select, sql_insert, ...) {
     ret <- sql_execute_select(sql_select, dbconn)
     if (nrow(ret) == 0) {
         sql_execute_insert(sql_insert)
@@ -462,7 +463,7 @@ sql_execute_update <- function(sql_insert, dbconn = NULL, export = c("db", "df")
 #' @param values_id The values id
 sql_gen_update <- function(table, update_fields, values, fields_id, values_id) {
     stop(gettext("sql_lib.not_implemented", domain = "R-rsql"))
-    ret <- paste("update ", table, " set (", sql_update_fields, ")=(", sql_values,
+    ret <- paste("update ", table, " set (", update_fields, ")=(", values,
         ") where ", sep = "")
     ret
 }
@@ -634,6 +635,7 @@ sql_gen_joined_query <- function(dw_definition, recipe, indicator_fields) {
 
 #' Parses a where clause
 #'
+#' @param where_clause_list The list of where clauses
 #' @import futile.logger
 #' @export
 parse_where_clause <- function(where_clause_list = c()) {

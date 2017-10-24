@@ -25,6 +25,10 @@ rsql(drv, dbname, user = NULL, password = NULL, host = NULL,
 \item{host}{The database host}
 
 \item{port}{The database port}
+
+\item{libname}{Library name}
+
+\item{pkgname}{Package name}
 }
 \description{
 Produces a RSQL object
@@ -33,4 +37,5 @@ A package to work with SQL datasources in a simple manner
 }
 \author{
 Leonardo Javier Belen <leobelen@gmail.com>, Alejandro Baranek <alejandrobaranek@gmail.com>
+Executes code while loading the package.
 }
