@@ -10,6 +10,8 @@ execute_get_insert(sql_select, sql_insert, ...)
 \item{sql_select}{The SQL select query}
 
 \item{sql_insert}{The SQL insert query}
+
+\item{...}{Other parameters}
 }
 \description{
 Executes the insert statement

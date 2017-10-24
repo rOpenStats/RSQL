@@ -4,7 +4,8 @@
 #'
 #' @docType package
 #' @name rsql
-#' @import R6 futile.logger
+#' @import R6 futile.logger DBI testthat
+#' @importFrom utils str
 #' @author Leonardo Javier Belen <leobelen@gmail.com>, Alejandro Baranek <alejandrobaranek@gmail.com>
 
 .onLoad <- function(libname, pkgname) {

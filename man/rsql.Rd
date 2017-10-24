@@ -13,6 +13,19 @@ rsql(drv, dbname, user = NULL, password = NULL, host = NULL,
 
 .onLoad(libname, pkgname)
 }
+\arguments{
+\item{drv}{The DBI compatible driver}
+
+\item{dbname}{The database name}
+
+\item{user}{The database user}
+
+\item{password}{The database password}
+
+\item{host}{The database host}
+
+\item{port}{The database port}
+}
 \description{
 Produces a RSQL object
 

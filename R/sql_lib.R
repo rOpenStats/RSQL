@@ -45,6 +45,12 @@ RSQL.class <- R6Class("RSQL", public = list(connection = NA, driver = NA, db.nam
 
 #' Produces a RSQL object
 #'
+#' @param drv The DBI compatible driver
+#' @param dbname The database name
+#' @param user The database user
+#' @param password The database password
+#' @param host The database host
+#' @param port The database port
 #' @export
 rsql <- function(drv, dbname, user = NULL, password = NULL, host = NULL, port = NULL) {
     RSQL.class$new(drv, dbname, user, password, host, port)
@@ -127,6 +133,7 @@ sql_execute_select <- function(sql_select, dbconn = NULL) {
 #'
 #' @param sql_select The SQL select query
 #' @param sql_insert The SQL insert query
+#' @param ... Other parameters
 execute_get_insert <- function(sql_select, sql_insert, ...) {
     ret <- sql_execute_select(sql_select, dbconn)
     if (nrow(ret) == 0) {
@@ -519,6 +526,7 @@ df_verify <- function(dataframe, columns) {
 #'
 #' @param table The table
 #' @param fields_id The fields ID
+#' @param values_id The value ID
 #' @param fields The fields
 #' @param values The values
 #' @param dbconn The database connection
@@ -624,6 +632,8 @@ sql_gen_joined_query <- function(dw_definition, recipe, indicator_fields) {
     ret
 }
 
+#' Parses a where clause
+#'
 #' @import futile.logger
 #' @export
 parse_where_clause <- function(where_clause_list = c()) {
@@ -684,26 +694,7 @@ parse_where_clause <- function(where_clause_list = c()) {
     where.df
 }
 
-#' Generates a where statement to be used on a SQL statement.
-#'
-#' @param where_clause_list The fields used in the where section
-sql_gen_where.new <- function(where_clause_list) {
-    ret <- ""
-    if (!is.null(where_clause_list)) {
-        # Asserts with values
-        if (!is.vector(where_clause_list))
-            stop(paste(gettext("sql_lib.where_clause_list_must_be_a_vector_but_is",
-                domain = "R-rsql"), str(where_clause_list)))
-        if (!is.list(where_clause_list))
-            if (is.vector(where_clause_list)) {
-                where_clauses <- parse_where_clause(where_clause_list)
-                ret <- sql_gen_where_list(where_fields, where_values)
 
-            }
-    }
-
-    ret
-}
 
 #' Generates a where list statement to be used on a SQL statement.
 #'
@@ -713,7 +704,7 @@ sql_gen_where_list.new <- function(where_clause.df) {
     separator <- ""
     for (where_clause in where_clause.df) {
         sql_where <- "where ("
-        sql_where <- paste(sql_where, where_clause.lhs, where_clause.comp, where_clause.rhs,
+        sql_where <- paste(sql_where, where_clause$lhs, where_clause$comp, where_clause$rhs,
             separator, sep = "")
         separator = " and "
         sql_where <- paste(sql_where, ") in ", sep = "")

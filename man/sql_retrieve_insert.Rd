@@ -12,6 +12,8 @@ sql_retrieve_insert(table, fields_id, values_id, fields = NULL,
 
 \item{fields_id}{The fields ID}
 
+\item{values_id}{The value ID}
+
 \item{fields}{The fields}
 
 \item{values}{The values}

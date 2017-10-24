@@ -14,7 +14,10 @@ Collate:
     'sql_lib.R'
     'zzz.R'
 Depends: futile.logger,
-    R6
+    R6, 
+    DBI,
+    testthat
 Suggests: knitr,
-    rmarkdown
+    rmarkdown, 
+    RSQLite
 VignetteBuilder: knitr
