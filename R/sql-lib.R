@@ -71,7 +71,7 @@ sql_execute_insert <- function(sql_insert, dbconn = NULL, export = c("db", "df")
     sql_insert <- paste(sql_insert, ";", sep = "")
     if ("db" %in% export) {
         ret <- DBI::dbSendQuery(dbconn, sql_insert)
-        futile.logger::flog.info(sql_insert)
+        futile.logger::flog.trace(sql_insert)
 
         # data <- fetch(rs,n=-1) print(res)
         if (length(ret) > 0) {
@@ -111,7 +111,7 @@ sql_execute_delete <- function(sql_delete, dbconn = NULL) {
     sql_delete <- gsub(",NA", ",NULL", sql_delete)
     sql_delete <- gsub(", NA", ",NULL", sql_delete)
     ret <- DBI::dbGetQuery(dbconn, sql_delete)
-    futile.logger::flog.info(sql_delete)
+    futile.logger::flog.trace(sql_delete)
     ret
 
 }
@@ -294,7 +294,7 @@ sql_gen_where <- function(where_fields, where_values) {
                 # and adding after
                 new.values <- paste("'", sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
                   "\\1", where_values[, col]), "'", sep = "")
-                futile.logger::flog.info(paste("col", col, "is character. Replacing values",
+                futile.logger::flog.trace(paste("col", col, "is character. Replacing values",
                   paste(where_values[, col], collapse = ","), "with values", paste(new.values,
                     collapse = ",")))
                 where_values[, col] <- new.values
@@ -431,7 +431,7 @@ sql_gen_insert <- function(table, insert_fields, values = c()) {
             sql_values_row <- paste(sql_values_row, separator, value, sep = "")
             separator <- ", "
         }
-        futile.logger::flog.info(sql_values_row)
+        futile.logger::flog.trace(sql_values_row)
         sql_values <- paste(sql_values, separator_rows, "(", sql_values_row, ")")
         separator_rows <- ", "
     }
@@ -538,13 +538,13 @@ sql_retrieve_insert <- function(table, fields_id, values_id, fields = NULL, valu
             where_values = value_id)
 
         # debug
-        futile.logger::flog.info(paste("verifying", select_statement, ":"))
+        futile.logger::flog.trace(paste("verifying", select_statement, ":"))
         insert_statement <- sql_gen_insert(table, insert_fields = c(fields_id, fields),
             values = values_insert)
         row <- sql_execute_select(select_statement, dbconn = dbconn)
-        futile.logger::flog.info(paste(row, "rows"))
+        futile.logger::flog.trace(paste(row, "rows"))
         if (nrow(row) == 0) {
-            futile.logger::flog.info(paste("executing", insert_statement))
+            futile.logger::flog.trace(paste("executing", insert_statement))
             res <- sql_execute_insert(insert_statement, dbconn = dbconn)
             row <- sql_execute_select(select_statement, dbconn = dbconn)
         }
