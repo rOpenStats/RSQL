@@ -1,7 +1,7 @@
 # Library for simple sql code generation from R You can learn more about package
 # authoring with RStudio at: http://r-pkgs.had.co.nz/ Some useful keyboard
 # shortcuts for package authoring: Build and Reload Package: 'Cmd + Shift + B'
-# Check Package: 'Cmd + Shift + E' Test Package: 'Cmd + Shift + T' to
+# Check Package: 'Cmd + Shift + C' Test Package: 'Cmd + Shift + T' to
 # internationalize gettext('no where_values specified', domain = 'R-rsql') does
 # provide a tool to do it.
 
@@ -13,12 +13,16 @@
 #'
 #' @importFrom R6 R6Class
 #' @export
-RSQL.class <- R6::R6Class("RSQL", public = list(connection = NA, driver = NA, db.name = NA,
-    user = NA, password = NA, host = NA, port = NA, initialize = function(drv, dbname,
+RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
+    #state
+    conn = NA,
+    last.query = NA,
+
+    initialize = function(drv, dbname,
         user = NULL, password = NULL, host = NULL, port = NULL) {
         self$db.name <- dbname
         self$driver <- drv
-        self$connection <- dbConnect(drv = self$driver, dbname = self$db.name,dbname,
+        self$conn <- dbConnect(drv = self$driver, dbname = self$db.name,
                                      user = user, password = password, host = host, port = port)
     }, gen_select = function(select_fields, table, where_fields = NULL, where_values = NULL,
         group_by = c(), order_by = c(), top = 0) {
@@ -32,23 +36,30 @@ RSQL.class <- R6::R6Class("RSQL", public = list(connection = NA, driver = NA, db
         sql_gen_update(table = table,
                        update_fields = update_fields,values = values,
                        where_fields = where_fields, where_values = where_values)
-    }, execute_update = function(sql_update) {
+    }, gen_delete = function(table, where_fields = "", where_values = NULL) {
+      sql_gen_delete(table, where_fields, where_values)
+    }, execute_select = function(sql_select) {
+        self$last.query<-sql_select
+        ret <- sql_execute_select(sql_select, dbconn = self$conn)
         DMLcounter <- DMLcounter + 1
-        sql_execute_update(sql_update = sql_update, dbconn = self$connection)
+        ret
+    }, execute_update = function(sql_update) {
+        self$last.query<-sql_update
+        DMLcounter <- DMLcounter + 1
+        sql_execute_update(sql_update = sql_update, dbconn = self$conn)
     }, execute_insert = function(sql_insert, export = c("db", "df")) {
       #TODO remove export
+        self$last.query<-sql_insert
+        ret<-sql_execute_insert(sql_insert = sql_insert, dbconn = self$conn, export = export)
         DMLcounter <- DMLcounter + 1
-        sql_execute_insert(sql_insert = sql_insert, dbconn = self$connection, export = export)
-    }, execute_select = function(sql_select) {
-        DMLcounter <- DMLcounter + 1
-        sql_execute_select(sql_select, dbconn = self$connection)
-    }, gen_delete = function(table, where_fields = "", where_values = NULL) {
-        sql_gen_delete(table, where_fields, where_values)
+        ret
     }, execute_delete = function(sql_delete) {
+        self$last.query<-sql_delete
+        ret<-sql_execute_delete(sql_delete, dbconn = self$conn)
         DMLcounter <- DMLcounter + 1
-        sql_execute_delete(sql_delete, dbconn = self$connection)
+        ret
     }, disconnect = function() {
-        DBI::dbDisconnect(self$connection)
+        DBI::dbDisconnect(self$conn)
     }))
 
 #' Produces a RSQL object
