@@ -2,7 +2,9 @@
 
 export(RSQL.class)
 export(is_quoted)
+export(parse_where_clause)
 export(rsql)
 export(sql_gen_insert)
+export(sql_gen_select)
 import(futile.logger)
 importFrom(R6,R6Class)

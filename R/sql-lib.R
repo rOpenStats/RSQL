@@ -7,6 +7,7 @@
 
 
 #' The class that provides the SQL functionality.
+#' @export
 #'
 #' This class is intended to simplify SQL commands.
 #'
@@ -17,24 +18,31 @@ RSQL.class <- R6::R6Class("RSQL", public = list(connection = NA, driver = NA, db
         user = NULL, password = NULL, host = NULL, port = NULL) {
         self$db.name <- dbname
         self$driver <- drv
-        self$connection <- RSQLite::dbConnect(drv = self$driver, dbname = self$db.name)
-    }, generate_select = function(select_fields, table, where_fields = NULL, where_values = NULL,
+        self$connection <- dbConnect(drv = self$driver, dbname = self$db.name,dbname,
+                                     user = user, password = password, host = host, port = port)
+    }, gen_select = function(select_fields, table, where_fields = NULL, where_values = NULL,
         group_by = c(), order_by = c(), top = 0) {
         sql_gen_select(select_fields, table, where_fields, where_values, group_by,
             order_by, top)
-    }, generate_insert = function(table, insert_fields, values = c()) {
+    }, gen_insert = function(table, insert_fields, values = c()) {
         sql_gen_insert(table, insert_fields, values)
-    }, execute_update = function(sql_update, dbconn = NULL, export = c("db", "df")) {
+    }, gen_update = function(table,
+                             update_fields, values,
+                             where_fields, where_values) {
+        sql_gen_update(table = table,
+                       update_fields = update_fields,values = values,
+                       where_fields = where_fields, where_values = where_values)
+    }, execute_update = function(sql_update) {
         DMLcounter <- DMLcounter + 1
-        sql_execute_update(sql_update, self$connection, export)
+        sql_execute_update(sql_update = sql_update, dbconn = self$connection)
     }, execute_insert = function(sql_insert, export = c("db", "df")) {
+      #TODO remove export
         DMLcounter <- DMLcounter + 1
-        sql_execute_insert(sql_insert, dbconn = self$connection, export = c("db",
-            "df"))
+        sql_execute_insert(sql_insert = sql_insert, dbconn = self$connection, export = export)
     }, execute_select = function(sql_select) {
         DMLcounter <- DMLcounter + 1
         sql_execute_select(sql_select, dbconn = self$connection)
-    }, generate_delete = function(table, where_fields = "", where_values = NULL) {
+    }, gen_delete = function(table, where_fields = "", where_values = NULL) {
         sql_gen_delete(table, where_fields, where_values)
     }, execute_delete = function(sql_delete) {
         DMLcounter <- DMLcounter + 1
@@ -85,11 +93,10 @@ sql_execute_insert <- function(sql_insert, dbconn = NULL, export = c("db", "df")
 #'
 #' @param sql_update The update SQL
 #' @param dbconn The Database Connection to run the query against
-#' @param export The export type (either 'db' or 'df')
-sql_execute_update <- function(sql_update, dbconn = NULL, export = c("db", "df")) {
-    sql_select <- gsub(",NA", ",NULL", sql_update)
-    sql_select <- gsub(", NA", ",NULL", sql_update)
-    ret <- DBI::dbGetQuery(dbconn, sql_update)
+sql_execute_update <- function(sql_update, dbconn = NULL) {
+    sql_update <- gsub(",NA", ",NULL", sql_update)
+    sql_update <- gsub(", NA", ",NULL", sql_update)
+    ret <- DBI::dbSendQuery(dbconn, sql_update)
     ret
 }
 
@@ -140,7 +147,6 @@ execute_get_insert <- function(sql_select, sql_insert, ...) {
 #'
 #' @param text The text to test
 #' @param quotes_symbols The quotation characters
-#' @export
 is_quoted <- function(text, quotes_symbols = c("'", "'")) {
     ret <- FALSE
     i <- 1
@@ -228,7 +234,6 @@ sql_gen_delete <- function(table, where_fields = "", where_values = NULL) {
 }
 
 #' Generates a Select Statement
-#'
 #' @param select_fields The fields to be selected
 #' @param table The table to be used in the select
 #' @param where_fields The fields used in the where section
@@ -392,7 +397,6 @@ sql_gen_where_or <- function(where_fields, where_values) {
 #'
 #' @param where_fields The fields used in the where section
 #' @param where_values The values used in the where section
-#' @export
 #'
 #' @param table The table to be affected
 #' @param insert_fields The fields to insert
@@ -420,7 +424,8 @@ sql_gen_insert <- function(table, insert_fields, values = c()) {
             } else {
                 value <- values[i, j]
                 if (is.character(value)) {
-                  value <- paste("'", value, "'", sep = "")
+                  value <- add_quotes(value)
+
                 }
             }
             sql_values_row <- paste(sql_values_row, separator, value, sep = "")
@@ -435,26 +440,19 @@ sql_gen_insert <- function(table, insert_fields, values = c()) {
     ret
 }
 
-#' Executes an update
-#'
-#' @param sql_insert The insert statement
-#' @param dbconn the Database Connection
-#' @param export The export method
-sql_execute_update <- function(sql_insert, dbconn = NULL, export = c("db", "df")) {
-    stop(gettext("sql_lib.not_implemented", domain="R-rsql"))
-}
 
 #' Generates an update statement
 #'
 #' @param table The table to update
 #' @param update_fields The fields to update
 #' @param values The values to update
-#' @param fields_id The fields id
-#' @param values_id The values id
-sql_gen_update <- function(table, update_fields, values, fields_id, values_id) {
-    stop(gettext("sql_lib.not_implemented", domain="R-rsql"))
-    ret <- paste("update ", table, " set (", sql_update_fields, ")=(", sql_values,
-        ") where ", sep = "")
+#' @param where_fields The fields for where statement
+#' @param where_values The values for where statement
+sql_gen_update <- function(table, update_fields, values, where_fields, where_values) {
+    sql_where <- sql_gen_where(where_fields, where_values)
+    ret <- paste("update ", table, " set (", paste(update_fields,collapse=","),
+                                      ")=(", paste(add_quotes(values),collapse= ","),
+        ") ", sql_where,sep = "")
     ret
 }
 
