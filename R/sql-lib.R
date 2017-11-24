@@ -28,15 +28,16 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
         group_by = c(), order_by = c(), top = 0) {
         sql_gen_select(select_fields, table, where_fields, where_values, group_by,
             order_by, top)
-    }, gen_insert = function(table, insert_fields, values = c()) {
+    }, gen_insert = function(table,
+                             insert_fields, values = NULL) {
         sql_gen_insert(table, insert_fields, values)
     }, gen_update = function(table,
                              update_fields, values,
-                             where_fields, where_values) {
+                             where_fields = NULL, where_values = NULL) {
         sql_gen_update(table = table,
                        update_fields = update_fields,values = values,
                        where_fields = where_fields, where_values = where_values)
-    }, gen_delete = function(table, where_fields = "", where_values = NULL) {
+    }, gen_delete = function(table, where_fields = NULL, where_values = NULL) {
       sql_gen_delete(table, where_fields, where_values)
     }, execute_select = function(sql_select) {
         self$last.query<-sql_select
@@ -237,7 +238,7 @@ add_grep_exact_match <- function(text) {
 #' @param table The table from which the delete statement will be generated
 #' @param where_fields The fields used in the where section
 #' @param where_values The values used in the where section
-sql_gen_delete <- function(table, where_fields = "", where_values = NULL) {
+sql_gen_delete <- function(table, where_fields = NULL, where_values = NULL) {
     sql_where <- sql_gen_where(where_fields, where_values)
     ret <- paste("delete from", table, sql_where)
     ret
