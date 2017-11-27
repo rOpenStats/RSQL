@@ -1,0 +1,49 @@
+---
+title: "rsql"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{rsql}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+This package is aimed to help on SQL queries in R. Its advantages include that they isolates the programmer from the underlying backend and provides with an agnostic way to access local and remote databases, using  common R structures such as data.frames and a simple interface. 
+
+#Usage
+In order to use rsql, a RSQL object has to be initialized, indicating all information needed to access the database.
+
+```
+library(RSQLite)
+sql <- rsql(drv=RSQLite::SQLite(), dbname = "mtcars")
+```
+
+On success, it is possible to use the object to produce queries and execute them to retrieve information. Returned query sets can be in data.frame format for easy integration with R scripts. 
+
+```
+library(RSQLite)
+sql <- rsql(drv=RSQLite::SQLite(), dbname = "mtcars")
+query.sql <- sql$generate_select(c("mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb"),
+                                   "mtcars")
+mtcars.df <- sql$execute_select(query.sql)
+```
+
+Also, rsql allows to insert or delete records as easily.
+
+```
+library(RSQLite)
+sql <- rsql(drv=RSQLite::SQLite(), dbname = "mtcars")
+insert.fields <- c("mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb")
+insert.data <- data.frame(1,2,3,4,5,6,7,8,9,10,11)
+insert.sql <- sql$generate_insert("mtcars",insert.fields,
+                                    insert.data)
+sql$execute_insert(insert.sql)
+delete.sql <- sql$generate_delete("mtcars", c("mpg"), c("1"))
+sql$execute_delete(delete.sql)
+```
+
+Finally, once the connection is not longer needed, it has to be expressely disconnected. 
+
+```
+library(RSQLite)
+sql <- rsql(drv=RSQLite::SQLite(), dbname = "mtcars")
+sql$disconnect()
+```

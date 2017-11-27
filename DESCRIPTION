@@ -11,13 +11,14 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
 Collate:
-    'sql_lib.R'
+    'sql-lib.R'
     'zzz.R'
-Depends: futile.logger,
-    R6, 
-    DBI,
-    testthat
+Imports: futile.logger,
+    R6,
+    DBI, 
+    RSQLite
 Suggests: knitr,
     rmarkdown, 
-    RSQLite
+    testthat
 VignetteBuilder: knitr
+

@@ -4,7 +4,7 @@
 #'
 #' @docType package
 #' @name rsql
-#' @import R6 futile.logger DBI testthat
+#' @import R6 futile.logger DBI
 #' @importFrom utils str
 #' @author Leonardo Javier Belen <leobelen@gmail.com>, Alejandro Baranek <alejandrobaranek@gmail.com>
 
@@ -12,6 +12,7 @@
 #'
 #' @param libname Library name
 #' @param pkgname Package name
+# execute onload
 .onLoad <- function(libname, pkgname) {
   if (!exists("DMLcounter"))
     DMLcounter <<-  0
