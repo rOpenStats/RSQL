@@ -65,6 +65,12 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
 
 #' Produces a RSQL object
 #'
+#' @param drv Driver name
+#' @param dbname Database name
+#' @param user Database user name
+#' @param password Database password
+#' @param host Database host
+#' @param port Database port
 #' @export
 rsql <- function(drv, dbname, user = NULL, password = NULL, host = NULL, port = NULL) {
     RSQL.class$new(drv, dbname, user, password, host, port)
@@ -144,9 +150,11 @@ sql_execute_select <- function(sql_select, dbconn = NULL) {
 
 #' Executes the insert statement
 #'
+#' @param dbconn The db connection
 #' @param sql_select The SQL select query
 #' @param sql_insert The SQL insert query
-execute_get_insert <- function(sql_select, sql_insert, ...) {
+#' @param ... other variables to considered.
+execute_get_insert <- function(dbconn, sql_select, sql_insert, ...) {
     ret <- sql_execute_select(sql_select, dbconn)
     if (nrow(ret) == 0) {
         sql_execute_insert(sql_insert)
@@ -246,6 +254,7 @@ sql_gen_delete <- function(table, where_fields = NULL, where_values = NULL) {
 }
 
 #' Generates a Select Statement
+#'
 #' @param select_fields The fields to be selected
 #' @param table The table to be used in the select
 #' @param where_fields The fields used in the where section
@@ -631,6 +640,9 @@ sql_gen_joined_query <- function(dw_definition, recipe, indicator_fields) {
     ret
 }
 
+#' Parses a where clause.
+#'
+#' @param where_clause_list The list of params
 #' @import futile.logger
 #' @export
 parse_where_clause <- function(where_clause_list = c()) {

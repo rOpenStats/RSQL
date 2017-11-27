@@ -4,5 +4,8 @@
 .Ruserdata
 inst/doc
 
+#doc
+man/*.Rd
+
 # OSX
 .DS_Store

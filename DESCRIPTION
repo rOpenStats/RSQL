@@ -13,9 +13,12 @@ RoxygenNote: 6.0.1
 Collate:
     'sql-lib.R'
     'zzz.R'
-Depends: futile.logger,
-    R6
+Imports: futile.logger,
+    R6,
+    DBI, 
+    RSQLite
 Suggests: knitr,
-    rmarkdown
+    rmarkdown, 
+    testthat
 VignetteBuilder: knitr
 
