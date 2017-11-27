@@ -17,8 +17,14 @@ test_that("sql_lib insert and delete test", {
     insert.data <- data.frame(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
     insert.sql <- sql$gen_insert("mtcars", insert.fields, insert.data)
     sql$execute_insert(insert.sql)
-    update.sql <- sql$gen_update("mtcars", update.fields, update.values,)
-    sql$execute_insert(insert.sql)
+
+    update.fields <- c("mpg", "cyl")
+    update.values <- data.frame(1, 2)
+
+    where.fields <- "disp"
+    where.values <- 258.0
+    update.sql <- sql$gen_update("mtcars", update.fields, update.values, where_fields, where_values)
+    sql$execute_update(update.sql)
 
     delete.sql <- sql$gen_delete("mtcars", c("mpg"), c("1"))
     sql$execute_delete(delete.sql)
