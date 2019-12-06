@@ -4,9 +4,7 @@
 \alias{RSQL.class}
 \title{The class that provides the SQL functionality.}
 \description{
-The class that provides the SQL functionality.
-
-The class that provides the SQL functionality.
+This class is intended to simplify SQL commands.
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -20,6 +18,7 @@ The class that provides the SQL functionality.
 \item \href{#method-execute_update}{\code{RSQL.class$execute_update()}}
 \item \href{#method-execute_insert}{\code{RSQL.class$execute_insert()}}
 \item \href{#method-execute_delete}{\code{RSQL.class$execute_delete()}}
+\item \href{#method-retrieve_insert}{\code{RSQL.class$retrieve_insert()}}
 \item \href{#method-disconnect}{\code{RSQL.class$disconnect()}}
 \item \href{#method-clone}{\code{RSQL.class$clone()}}
 }
@@ -59,9 +58,18 @@ The class that provides the SQL functionality.
 \if{html}{\out{<a id="method-gen_insert"></a>}}
 \subsection{Method \code{gen_insert()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$gen_insert(table, insert_fields, values = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$gen_insert(table, values.df, insert_fields = names(values.df))}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{values.df}}{The values to insert. Must be defined as data.frame of values
+Composite function
+TODO review the interface for this function}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-gen_update"></a>}}
@@ -114,6 +122,14 @@ The class that provides the SQL functionality.
 \subsection{Method \code{execute_delete()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RSQL.class$execute_delete(sql_delete)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-retrieve_insert"></a>}}
+\subsection{Method \code{retrieve_insert()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$retrieve_insert(table, fields_id, values_id, fields, values)}\if{html}{\out{</div>}}
 }
 
 }

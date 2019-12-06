@@ -9,6 +9,7 @@
 #' The class that provides the SQL functionality.
 #' @export
 #'
+#' @description
 #' This class is intended to simplify SQL commands.
 #'
 #' @importFrom R6 R6Class
@@ -28,9 +29,11 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
         group_by = c(), order_by = c(), top = 0) {
         sql_gen_select(select_fields, table, where_fields, where_values, group_by,
             order_by, top)
-    }, gen_insert = function(table,
-                             insert_fields, values = NULL) {
-        sql_gen_insert(table, insert_fields, values)
+    },
+    # gen insert statement
+    #' @param values.df The values to insert. Must be defined as data.frame of values
+    gen_insert = function(table, values.df, insert_fields  = names(values.df)) {
+        sql_gen_insert(table, values.df, insert_fields)
     }, gen_update = function(table,
                              update_fields, values,
                              where_fields = NULL, where_values = NULL) {
@@ -59,7 +62,13 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
         ret<-sql_execute_delete(sql_delete, dbconn = self$conn)
         DMLcounter <- DMLcounter + 1
         ret
-    }, disconnect = function() {
+    },
+    #' Composite function
+    #' TODO review the interface for this function
+    retrieve_insert = function(table, fields_id, values_id, fields, values){
+        sql_retrieve_insert(table = table, fields_id = fields_id, values_id = values_id, fields = fields, values = values, dbconn = self$conn)
+    },
+    disconnect = function() {
         DBI::dbDisconnect(self$conn)
     }))
 
@@ -421,12 +430,15 @@ sql_gen_where_or <- function(where_fields, where_values) {
 #'
 #' @param table The table to be affected
 #' @param insert_fields The fields to insert
-#' @param values The values to insert
-sql_gen_insert <- function(table, insert_fields, values = c()) {
-    values <- as.data.frame(values, stringsAsFactors = FALSE)
-    if (length(insert_fields) != ncol(values)) {
+#' @param values.df The values to insert. Must be defined as data.frame of values
+sql_gen_insert <- function(table, values.df, insert_fields = names(values.df)) {
+    if (length(values) > 1 & class.values(values) != data.frame){
+      stop("Values must be defined as data.frames with same size of columns")
+    }
+    values.df <- as.data.frame(values, stringsAsFactors = FALSE)
+    if (length(insert_fields) != nrow(values.df)) {
         stop(paste(gettext("sql_lib.incompatible_fields_and_data", domain="R-rsql"), length(insert_fields), gettext("sql_lib.not_eq", domain="R-rsql"),
-            ncol(values), paste(insert_fields, collapse = ";"), paste(values, collapse = ";")))
+            ncol(values.df), paste(insert_fields, collapse = ";"), paste(values, collapse = ";")))
     }
     separator <- ""
     sql_insert_fields <- ""
@@ -436,14 +448,14 @@ sql_gen_insert <- function(table, insert_fields, values = c()) {
     }
     sql_values <- ""
     separator_rows <- ""
-    for (i in c(1:nrow(values))) {
+    for (i in c(1:nrow(values.df))) {
         sql_values_row <- ""
         separator <- ""
         for (j in c(1:length(insert_fields))) {
-            if (is.na(values[i, j])) {
+            if (is.na(values.df[i, j])) {
                 value <- "NA"
             } else {
-                value <- values[i, j]
+                value <- values.df[i, j]
                 if (is.character(value)) {
                   value <- add_quotes(value)
 
@@ -539,6 +551,7 @@ df_verify <- function(dataframe, columns) {
 #' @param fields The fields
 #' @param values The values
 #' @param dbconn The database connection
+#' @export
 sql_retrieve_insert <- function(table, fields_id, values_id, fields = NULL, values = NULL,
     dbconn = NULL) {
     ret <- NULL
