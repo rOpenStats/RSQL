@@ -18,7 +18,11 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
     #state
     conn = NA,
     last.query = NA,
-
+    #counters
+    select.counter = 0,
+    insert.counter = 0,
+    update.counter = 0,
+    delete.counter = 0,
     initialize = function(drv, dbname,
         user = NULL, password = NULL, host = NULL, port = NULL) {
         self$db.name <- dbname
@@ -45,22 +49,23 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
     }, execute_select = function(sql_select) {
         self$last.query<-sql_select
         ret <- sql_execute_select(sql_select, dbconn = self$conn)
-        DMLcounter <- DMLcounter + 1
+        self$select.counter <- self$select.counter + 1
         ret
     }, execute_update = function(sql_update) {
         self$last.query<-sql_update
-        DMLcounter <- DMLcounter + 1
-        sql_execute_update(sql_update = sql_update, dbconn = self$conn)
+        ret <- sql_execute_update(sql_update = sql_update, dbconn = self$conn)
+        self$update.counter <- self$update.counter + 1
+        ret
     }, execute_insert = function(sql_insert, export = c("db", "df")) {
       #TODO remove export
         self$last.query<-sql_insert
         ret<-sql_execute_insert(sql_insert = sql_insert, dbconn = self$conn, export = export)
-        DMLcounter <- DMLcounter + 1
+        self$insert.counter <- self$insert.counter + 1
         ret
     }, execute_delete = function(sql_delete) {
         self$last.query<-sql_delete
         ret<-sql_execute_delete(sql_delete, dbconn = self$conn)
-        DMLcounter <- DMLcounter + 1
+        self$delete.counter <- self$delete.counter + 1
         ret
     },
     #' Composite function
