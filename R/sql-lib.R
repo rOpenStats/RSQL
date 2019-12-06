@@ -432,11 +432,15 @@ sql_gen_where_or <- function(where_fields, where_values) {
 #' @param insert_fields The fields to insert
 #' @param values.df The values to insert. Must be defined as data.frame of values
 sql_gen_insert <- function(table, values.df, insert_fields = names(values.df)) {
-    if (length(values) > 1 & class.values(values) != data.frame){
+    if (length(values.df) > 1 & class(values.df) != "data.frame"){
       stop("Values must be defined as data.frames with same size of columns")
     }
-    values.df <- as.data.frame(values, stringsAsFactors = FALSE)
-    if (length(insert_fields) != nrow(values.df)) {
+    # Converts all factors to strings
+    values.df <- as.data.frame(lapply(values.df, as.character), stringsAsFactors = FALSE)
+
+    #debug
+    values.df <<- 2
+    if (length(insert_fields) != ncol(values.df)) {
         stop(paste(gettext("sql_lib.incompatible_fields_and_data", domain="R-rsql"), length(insert_fields), gettext("sql_lib.not_eq", domain="R-rsql"),
             ncol(values.df), paste(insert_fields, collapse = ";"), paste(values, collapse = ";")))
     }
@@ -458,9 +462,12 @@ sql_gen_insert <- function(table, values.df, insert_fields = names(values.df)) {
                 value <- values.df[i, j]
                 if (is.character(value)) {
                   value <- add_quotes(value)
-
                 }
             }
+            #debug
+            value.debug <<- value
+            print(paste( insert_fields[j],"value:", value))
+
             sql_values_row <- paste(sql_values_row, separator, value, sep = "")
             separator <- ", "
         }
