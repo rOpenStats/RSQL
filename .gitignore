@@ -4,11 +4,12 @@
 .Ruserdata
 inst/doc
 
-#doc
-man/*.Rd
 
 #test db
 **/mtcars.db
 
 # OSX
 .DS_Store
+
+#
+R/dev/
