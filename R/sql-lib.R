@@ -56,8 +56,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
         ret <- sql_execute_update(sql_update = sql_update, dbconn = self$conn)
         self$update.counter <- self$update.counter + 1
         ret
-    }, execute_insert = function(sql_insert, export = c("db", "df")) {
-      #TODO remove export
+    }, execute_insert = function(sql_insert, export = "db") {
         self$last.query<-sql_insert
         ret<-sql_execute_insert(sql_insert = sql_insert, dbconn = self$conn, export = export)
         self$insert.counter <- self$insert.counter + 1
