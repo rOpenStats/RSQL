@@ -113,7 +113,7 @@ TODO review the interface for this function}
 \if{html}{\out{<a id="method-execute_insert"></a>}}
 \subsection{Method \code{execute_insert()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$execute_insert(sql_insert, export = c("db", "df"))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$execute_insert(sql_insert, export = "db")}\if{html}{\out{</div>}}
 }
 
 }

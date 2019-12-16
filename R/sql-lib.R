@@ -85,7 +85,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
 #' @param host Database host
 #' @param port Database port
 #' @export
-rsql <- function(drv, dbname, user = NULL, password = NULL, host = NULL, port = NULL) {
+createRSQL <- function(drv, dbname, user = NULL, password = NULL, host = NULL, port = NULL) {
     RSQL.class$new(drv, dbname, user, password, host, port)
 }
 
@@ -323,7 +323,12 @@ sql_gen_where <- function(where_fields, where_values) {
                   collapse = ",")))
         # if strings values, add '
         for (col in names(where_values)) {
-            if (max(is.character(where_values[, col])) == 1) {
+            where_values_col <- where_values[, col]
+            if (class(where_values_col) == "factor"){
+              where_values_col <- as.character(where_values_col)
+            }
+            if (max(is.character(where_values_col)) == 1) {
+                # TODO extend to multiple columns
                 # if there is at least one value character in column remove ' for normalization
                 # and adding after
                 new.values <- paste("'", sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
