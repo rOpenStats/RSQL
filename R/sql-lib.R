@@ -340,14 +340,17 @@ sql_gen_where <- function(where_fields, where_values) {
             }
         }
 
-
         ret <- ""
         if (length(where_fields) > 0 & !(length(where_fields) == 1 & nchar(where_fields[1]) ==
             0)) {
             where_values <- as.data.frame(where_values, nrow = nrow(where_values)/length(where_fields),
                 stringsAsFactors = FALSE)
-            if (nrow(where_values) > 2)
-                ret <- sql_gen_where_list(where_fields, where_values) else ret <- sql_gen_where_or(where_fields, where_values)
+            if (nrow(where_values) > 2){
+              ret <- sql_gen_where_list(where_fields, where_values)
+            }
+            else{
+              ret <- sql_gen_where_or(where_fields, where_values)
+            }
         }
     } else {
         if (!is.null(where_fields)){
@@ -366,12 +369,13 @@ sql_gen_where <- function(where_fields, where_values) {
 #' @param where_values The values used in the where section
 sql_gen_where_list <- function(where_fields, where_values) {
     sql_where <- ""
+    comma.sep <- ", "
     if (length(where_fields) > 0) {
         separator <- ""
         sql_where <- "where ("
         for (f in where_fields) {
             sql_where <- paste(sql_where, separator, f, sep = "")
-            separator <- ","
+            separator <- comma.sep
         }
         sql_where <- paste(sql_where, ") in ", sep = "")
         list_where <- ""
@@ -388,13 +392,13 @@ sql_gen_where_list <- function(where_fields, where_values) {
                   value <- add_quotes(value)
                 }
                 sql_row_where <- paste(sql_row_where, separator, value, sep = "")
-                separator <- ","
+                separator <- comma.sep
                 i <- i + 1
             }
             if (i > 2)
                 sql_row_where <- paste("(", sql_row_where, ")", sep = "")
             list_where <- paste(list_where, separator_list, sql_row_where, sep = "")
-            separator_list <- ","
+            separator_list <- comma.sep
         }
         sql_where <- paste(sql_where, "(", list_where, ")")
     }
