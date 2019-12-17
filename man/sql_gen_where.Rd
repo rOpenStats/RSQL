@@ -4,7 +4,7 @@
 \alias{sql_gen_where}
 \title{Generates a where statement to be used on a SQL statement.}
 \usage{
-sql_gen_where(where_fields, where_values)
+sql_gen_where(where_fields = names(where_values), where_values)
 }
 \arguments{
 \item{where_fields}{The fields used in the where section}

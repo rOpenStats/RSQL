@@ -29,7 +29,8 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
         self$driver <- drv
         self$conn <- dbConnect(drv = self$driver, dbname = self$db.name,
                                      user = user, password = password, host = host, port = port)
-    }, gen_select = function(select_fields, table, where_fields = NULL, where_values = NULL,
+    },
+    gen_select = function(select_fields, table, where_fields = names(where_values), where_values = NULL,
         group_by = c(), order_by = c(), top = 0) {
         sql_gen_select(select_fields, table, where_fields, where_values, group_by,
             order_by, top)
@@ -38,30 +39,36 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
     #' @param values.df The values to insert. Must be defined as data.frame of values
     gen_insert = function(table, values.df, insert_fields  = names(values.df)) {
         sql_gen_insert(table, values.df, insert_fields)
-    }, gen_update = function(table,
+    },
+    gen_update = function(table,
                              update_fields, values,
-                             where_fields = NULL, where_values = NULL) {
+                             where_fields = names(where_values), where_values = NULL) {
         sql_gen_update(table = table,
                        update_fields = update_fields,values = values,
                        where_fields = where_fields, where_values = where_values)
-    }, gen_delete = function(table, where_fields = NULL, where_values = NULL) {
+    },
+    gen_delete = function(table, where_fields = names(where_values), where_values = NULL) {
       sql_gen_delete(table, where_fields, where_values)
-    }, execute_select = function(sql_select) {
+    },
+    execute_select = function(sql_select) {
         self$last.query<-sql_select
         ret <- sql_execute_select(sql_select, dbconn = self$conn)
         self$select.counter <- self$select.counter + 1
         ret
-    }, execute_update = function(sql_update) {
+    },
+    execute_update = function(sql_update) {
         self$last.query<-sql_update
         ret <- sql_execute_update(sql_update = sql_update, dbconn = self$conn)
         self$update.counter <- self$update.counter + 1
         ret
-    }, execute_insert = function(sql_insert, export = "db") {
+    },
+    execute_insert = function(sql_insert, export = "db") {
         self$last.query<-sql_insert
         ret<-sql_execute_insert(sql_insert = sql_insert, dbconn = self$conn, export = export)
         self$insert.counter <- self$insert.counter + 1
         ret
-    }, execute_delete = function(sql_delete) {
+    },
+    execute_delete = function(sql_delete) {
         self$last.query<-sql_delete
         ret<-sql_execute_delete(sql_delete, dbconn = self$conn)
         self$delete.counter <- self$delete.counter + 1
@@ -69,7 +76,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
     },
     #' Composite function
     #' TODO review the interface for this function
-    retrieve_insert = function(table, fields_id, values_id, fields, values){
+    retrieve_insert = function(table, fields_id, values_id, fields = names(values), values){
         sql_retrieve_insert(table = table, fields_id = fields_id, values_id = values_id, fields = fields, values = values, dbconn = self$conn)
     },
     disconnect = function() {
@@ -259,7 +266,7 @@ add_grep_exact_match <- function(text) {
 #' @param table The table from which the delete statement will be generated
 #' @param where_fields The fields used in the where section
 #' @param where_values The values used in the where section
-sql_gen_delete <- function(table, where_fields = NULL, where_values = NULL) {
+sql_gen_delete <- function(table, where_fields = names(where_values), where_values = NULL) {
     sql_where <- sql_gen_where(where_fields, where_values)
     ret <- paste("delete from", table, sql_where)
     ret
@@ -275,7 +282,7 @@ sql_gen_delete <- function(table, where_fields = NULL, where_values = NULL) {
 #' @param group_by Group by fields
 #' @param order_by Order by fields
 #' @param top Retrieve top records
-sql_gen_select <- function(select_fields, table, where_fields = NULL, where_values = NULL,
+sql_gen_select <- function(select_fields, table, where_fields = names(where_values), where_values = NULL,
     group_by = c(), order_by = c(), top = 0) {
     separator <- ""
     sql_select_fields <- ""
@@ -307,7 +314,7 @@ sql_gen_select <- function(select_fields, table, where_fields = NULL, where_valu
 #'
 #' @param where_fields The fields used in the where section
 #' @param where_values The values used in the where section
-sql_gen_where <- function(where_fields, where_values) {
+sql_gen_where <- function(where_fields = names(where_values), where_values) {
     ret <- ""
     if (!is.null(where_fields) & !is.null(where_values)) {
         # Asserts with values
@@ -345,12 +352,12 @@ sql_gen_where <- function(where_fields, where_values) {
             0)) {
             where_values <- as.data.frame(where_values, nrow = nrow(where_values)/length(where_fields),
                 stringsAsFactors = FALSE)
-            if (nrow(where_values) > 2){
-              ret <- sql_gen_where_list(where_fields, where_values)
-            }
-            else{
-              ret <- sql_gen_where_or(where_fields, where_values)
-            }
+            #if (nrow(where_values) > 2){
+            ret <- sql_gen_where_list(where_fields = where_fields, where_values = where_values)
+            #}
+            #else{
+            #  ret <- sql_gen_where_or(where_fields, where_values)
+            #}
         }
     } else {
         if (!is.null(where_fields)){
@@ -409,7 +416,7 @@ sql_gen_where_list <- function(where_fields, where_values) {
 #'
 #' @param where_fields The fields used in the where section
 #' @param where_values The values used in the where section
-sql_gen_where_or <- function(where_fields, where_values) {
+sql_gen_where_or <- function(where_fields = names(where_values), where_values) {
     sql_where <- ""
     if (length(where_fields) > 0) {
         sql_where <- "where"
@@ -496,7 +503,7 @@ sql_gen_insert <- function(table, values.df, insert_fields = names(values.df)) {
 #' @param values The values to update
 #' @param where_fields The fields for where statement
 #' @param where_values The values for where statement
-sql_gen_update <- function(table, update_fields, values, where_fields, where_values) {
+sql_gen_update <- function(table, update_fields, values, where_fields = names(where_values), where_values) {
     sql_where <- sql_gen_where(where_fields, where_values)
     ret <- paste("update ", table, " set (", paste(update_fields,collapse=","),
                                       ")=(", paste(add_quotes(values),collapse= ","),
@@ -567,7 +574,7 @@ df_verify <- function(dataframe, columns) {
 #' @param values The values
 #' @param dbconn The database connection
 #' @export
-sql_retrieve_insert <- function(table, fields_id, values_id, fields = NULL, values = NULL,
+sql_retrieve_insert <- function(table, fields_id = names(values_id), values_id, fields = NULL, values = NULL,
     dbconn = NULL) {
     ret <- NULL
     values_id <- as.data.frame(values_id, stringsAsFactors = FALSE)

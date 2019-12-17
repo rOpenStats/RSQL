@@ -7,7 +7,7 @@
 sql_gen_select(
   select_fields,
   table,
-  where_fields = NULL,
+  where_fields = names(where_values),
   where_values = NULL,
   group_by = c(),
   order_by = c(),

@@ -4,7 +4,13 @@
 \alias{sql_gen_update}
 \title{Generates an update statement}
 \usage{
-sql_gen_update(table, update_fields, values, where_fields, where_values)
+sql_gen_update(
+  table,
+  update_fields,
+  values,
+  where_fields = names(where_values),
+  where_values
+)
 }
 \arguments{
 \item{table}{The table to update}

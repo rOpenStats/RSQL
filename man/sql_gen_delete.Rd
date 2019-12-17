@@ -4,7 +4,7 @@
 \alias{sql_gen_delete}
 \title{Generates a Delete Statement}
 \usage{
-sql_gen_delete(table, where_fields = NULL, where_values = NULL)
+sql_gen_delete(table, where_fields = names(where_values), where_values = NULL)
 }
 \arguments{
 \item{table}{The table from which the delete statement will be generated}

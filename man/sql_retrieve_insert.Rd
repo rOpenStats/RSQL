@@ -6,7 +6,7 @@
 \usage{
 sql_retrieve_insert(
   table,
-  fields_id,
+  fields_id = names(values_id),
   values_id,
   fields = NULL,
   values = NULL,

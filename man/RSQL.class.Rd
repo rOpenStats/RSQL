@@ -45,7 +45,7 @@ This class is intended to simplify SQL commands.
 \if{html}{\out{<div class="r">}}\preformatted{RSQL.class$gen_select(
   select_fields,
   table,
-  where_fields = NULL,
+  where_fields = names(where_values),
   where_values = NULL,
   group_by = c(),
   order_by = c(),
@@ -79,7 +79,7 @@ TODO review the interface for this function}
   table,
   update_fields,
   values,
-  where_fields = NULL,
+  where_fields = names(where_values),
   where_values = NULL
 )}\if{html}{\out{</div>}}
 }
@@ -89,7 +89,11 @@ TODO review the interface for this function}
 \if{html}{\out{<a id="method-gen_delete"></a>}}
 \subsection{Method \code{gen_delete()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$gen_delete(table, where_fields = NULL, where_values = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$gen_delete(
+  table,
+  where_fields = names(where_values),
+  where_values = NULL
+)}\if{html}{\out{</div>}}
 }
 
 }
@@ -129,7 +133,13 @@ TODO review the interface for this function}
 \if{html}{\out{<a id="method-retrieve_insert"></a>}}
 \subsection{Method \code{retrieve_insert()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$retrieve_insert(table, fields_id, values_id, fields, values)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$retrieve_insert(
+  table,
+  fields_id,
+  values_id,
+  fields = names(values),
+  values
+)}\if{html}{\out{</div>}}
 }
 
 }
