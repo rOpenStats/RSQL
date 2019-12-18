@@ -6,6 +6,8 @@
 # provide a tool to do it.
 
 
+# TODO where clause  with range as mpg > 1
+
 #' The class that provides the SQL functionality.
 #' @export
 #'
@@ -30,10 +32,20 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
         self$conn <- dbConnect(drv = self$driver, dbname = self$db.name,
                                      user = user, password = password, host = host, port = port)
     },
-    gen_select = function(select_fields, table, where_fields = names(where_values), where_values = NULL,
-        group_by = c(), order_by = c(), top = 0) {
-        sql_gen_select(select_fields, table, where_fields, where_values, group_by,
-            order_by, top)
+    gen_select = function(select_fields, table,
+                          where_fields = names(where_values),
+                          where_values = NULL,
+                          group_by = c(),
+                          order_by = c(),
+                          top = 0,
+                          distinct = FALSE) {
+        sql_gen_select(select_fields = select_fields, table = table,
+                       where_fields = where_fields,
+                       where_values = where_values,
+                       group_by = group_by,
+                       order_by = order_by,
+                       top = top,
+                       distinct = distinct)
     },
     # gen insert statement
     #' @param values_df The values to insert. Must be defined as data.frame of values
@@ -41,7 +53,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
         sql_gen_insert(table = table, values_df = values_df, insert_fields = insert_fields)
     },
     gen_update = function(table,
-                             update_fields, values,
+                             update_fields = names(values), values,
                              where_fields = names(where_values), where_values = NULL) {
         sql_gen_update(table = table,
                        update_fields = update_fields,values = values,
@@ -282,13 +294,21 @@ sql_gen_delete <- function(table, where_fields = names(where_values), where_valu
 #' @param group_by Group by fields
 #' @param order_by Order by fields
 #' @param top Retrieve top records
-sql_gen_select <- function(select_fields, table, where_fields = names(where_values), where_values = NULL,
-    group_by = c(), order_by = c(), top = 0) {
+sql_gen_select <- function(select_fields, table,
+                           where_fields = names(where_values),
+                           where_values = NULL,
+                           group_by = c(),
+                           order_by = c(),
+                           top = 0,
+                           distinct = FALSE) {
     separator <- ""
     sql_select_fields <- ""
     for (f in select_fields) {
         sql_select_fields <- paste(sql_select_fields, separator, f, sep = "")
         separator <- ", "
+    }
+    if (distinct){
+      sql_select_fields <- paste("distinct", sql_select_fields)
     }
     sql_where <- sql_gen_where(where_fields, where_values)
     sql_order_by <- paste(order_by, collapse = ",")
@@ -505,7 +525,7 @@ sql_gen_insert <- function(table, values_df, insert_fields = names(values_df)) {
 #' @param values The values to update
 #' @param where_fields The fields for where statement
 #' @param where_values The values for where statement
-sql_gen_update <- function(table, update_fields, values, where_fields = names(where_values), where_values) {
+sql_gen_update <- function(table, update_fields = names(values), values, where_fields = names(where_values), where_values) {
     sql_where <- sql_gen_where(where_fields, where_values)
     ret <- paste("update ", table, " set (", paste(update_fields,collapse=","),
                                       ")=(", paste(add_quotes(values),collapse= ","),
@@ -805,7 +825,7 @@ getMtcarsdbPath <- function(copy = TRUE){
   source.path <- file.path(getPackageDir(), db.filename)
   if (copy){
     tmp.dir <- tempdir()
-    file.copy(source.path, tmp.dir)
+    file.copy(source.path, tmp.dir, overwrite = TRUE)
     ret <- file.path(tmp.dir, db.filename)
   }
   else{
