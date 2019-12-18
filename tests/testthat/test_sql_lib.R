@@ -1,7 +1,7 @@
 
 test_that("sql_lib basic test", {
 
-    db.name <- getCarsdbPath()
+    db.name <- getMtcarsdbPath()
     rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
     #dbWriteTable(rsql$conn, name = "mtcars", mtcars, overwrite = TRUE)
     expect_equal(dbListTables(rsql$conn), "mtcars")
@@ -9,12 +9,12 @@ test_that("sql_lib basic test", {
     query_sql <- rsql$gen_select(select_fields = c("mpg", "cyl", "disp", "hp", "drat", "wt",
         table = "qsec", "vs", "am", where_fields="gear", where_values="carb"), "mtcars")
     mtcars.observed <- rsql$execute_select(query_sql)
-    rsql$disconnect()
     expect_equal(nrow(mtcars.observed), 31)
+    rsql$disconnect()
 })
 
 test_that("sql_lib insert and delete test", {
-    db.name <- getCarsdbPath()
+    db.name <- getMtcarsdbPath()
     rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
     insert.fields <- c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am",
         "gear", "carb")
@@ -39,10 +39,11 @@ test_that("sql_lib insert and delete test", {
 })
 
 test_that("sql_lib select with where clause", {
-    db.name <- getCarsdbPath()
+    db.name <- getMtcarsdbPath()
     sql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
     query_sql <- sql$gen_select(table = "mtcars", select_fields = "*", where_fields = c("mpg"),
-        where_values = c("1"))
+        where_values = 21)
     selected.mtcars = sql$execute_select(query_sql)
+    expect_equal(selected.mtcars$drat, c(3.9, 3.9))
     sql$disconnect()
 })

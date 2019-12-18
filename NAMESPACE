@@ -2,7 +2,7 @@
 
 export(RSQL.class)
 export(createRSQL)
-export(getCarsdbPath)
+export(getMtcarsdbPath)
 export(getPackageDir)
 export(parse_where_clause)
 export(sql_retrieve_insert)

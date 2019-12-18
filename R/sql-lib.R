@@ -148,7 +148,7 @@ sql_execute_update <- function(sql_update, dbconn = NULL) {
 sql_execute_delete <- function(sql_delete, dbconn = NULL) {
     sql_delete <- gsub(",NA", ",NULL", sql_delete)
     sql_delete <- gsub(", NA", ",NULL", sql_delete)
-    ret <- DBI::dbGetQuery(dbconn, sql_delete)
+    ret <- DBI::dbExecute(dbconn, sql_delete)
     lgr$trace(sql_delete)
     ret
 
@@ -800,6 +800,16 @@ getPackageDir <- function(){
 
 #' getCarsdbPath
 #' @export
-getCarsdbPath <- function(){
-  file.path(getPackageDir(), "mtcars.db")
+getMtcarsdbPath <- function(copy = TRUE){
+  db.filename <- "mtcars.db"
+  source.path <- file.path(getPackageDir(), db.filename)
+  if (copy){
+    tmp.dir <- tempdir()
+    file.copy(source.path, tmp.dir)
+    ret <- file.path(tmp.dir, db.filename)
+  }
+  else{
+    ret <- source.path
+  }
+  ret
 }
