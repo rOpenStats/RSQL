@@ -4,12 +4,12 @@
 \alias{sql_gen_insert}
 \title{Generates an insert statement.}
 \usage{
-sql_gen_insert(table, values.df, insert_fields = names(values.df))
+sql_gen_insert(table, values_df, insert_fields = names(values_df))
 }
 \arguments{
 \item{table}{The table to be affected}
 
-\item{values.df}{The values to insert. Must be defined as data.frame of values}
+\item{values_df}{The values to insert. Must be defined as data.frame of values}
 
 \item{insert_fields}{The fields to insert}
 

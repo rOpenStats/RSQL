@@ -36,9 +36,9 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
             order_by, top)
     },
     # gen insert statement
-    #' @param values.df The values to insert. Must be defined as data.frame of values
-    gen_insert = function(table, values.df, insert_fields  = names(values.df)) {
-        sql_gen_insert(table, values.df, insert_fields)
+    #' @param values_df The values to insert. Must be defined as data.frame of values
+    gen_insert = function(table, values_df, insert_fields  = names(values_df)) {
+        sql_gen_insert(table = table, values_df = values_df, insert_fields = insert_fields)
     },
     gen_update = function(table,
                              update_fields, values,
@@ -450,17 +450,19 @@ sql_gen_where_or <- function(where_fields = names(where_values), where_values) {
 #'
 #' @param table The table to be affected
 #' @param insert_fields The fields to insert
-#' @param values.df The values to insert. Must be defined as data.frame of values
-sql_gen_insert <- function(table, values.df, insert_fields = names(values.df)) {
-    if (length(values.df) > 1 & class(values.df) != "data.frame"){
+#' @param values_df The values to insert. Must be defined as data.frame of values
+sql_gen_insert <- function(table, values_df, insert_fields = names(values_df)) {
+    if (length(values_df) > 1 & class(values_df) != "data.frame"){
+      #debug
+      print(values_df)
       stop("Values must be defined as data.frames with same size of columns")
     }
     # Converts all factors to strings
-    values.df <- as.data.frame(lapply(values.df, as.character), stringsAsFactors = FALSE)
+    values_df <- as.data.frame(lapply(values_df, as.character), stringsAsFactors = FALSE)
 
-    if (length(insert_fields) != ncol(values.df)) {
+    if (length(insert_fields) != ncol(values_df)) {
         stop(paste(gettext("sql_lib.incompatible_fields_and_data", domain="R-rsql"), length(insert_fields), gettext("sql_lib.not_eq", domain="R-rsql"),
-            ncol(values.df), paste(insert_fields, collapse = ";"), paste(values, collapse = ";")))
+            ncol(values_df), paste(insert_fields, collapse = ";"), paste(values, collapse = ";")))
     }
     separator <- ""
     sql_insert_fields <- ""
@@ -470,14 +472,14 @@ sql_gen_insert <- function(table, values.df, insert_fields = names(values.df)) {
     }
     sql_values <- ""
     separator_rows <- ""
-    for (i in c(1:nrow(values.df))) {
+    for (i in c(1:nrow(values_df))) {
         sql_values_row <- ""
         separator <- ""
         for (j in c(1:length(insert_fields))) {
-            if (is.na(values.df[i, j])) {
+            if (is.na(values_df[i, j])) {
                 value <- "NA"
             } else {
-                value <- values.df[i, j]
+                value <- values_df[i, j]
                 if (is.character(value)) {
                   value <- add_quotes(value)
                 }
@@ -683,16 +685,16 @@ sql_gen_joined_query <- function(dw_definition, recipe, indicator_fields) {
 #' @import lgr
 #' @export
 parse_where_clause <- function(where_clause_list = c()) {
-    where.df <- data.frame(lhs = character(), comp = character(), rhs = character(),
+    where_df <- data.frame(lhs = character(), comp = character(), rhs = character(),
         stringsAsFactors = FALSE)
-    names(where.df) <- c("lhs", "comp", "rhs")
+    names(where_df) <- c("lhs", "comp", "rhs")
     for (where_clause in where_clause_list) {
         where_struct = strsplit(where_clause, "!=")
         if (length(where_struct[[1]]) == 2) {
             where = data.frame(where_struct[[1]][1], "!=", paste("'", sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
                 "\\1", where_struct[[1]][2]), "'", sep = ""))
             names(where) <- c("lhs", "comp", "rhs")
-            where.df <- rbind(where.df, where)
+            where_df <- rbind(where_df, where)
             next
         }
         where_struct = strsplit(where_clause, "<=")
@@ -700,7 +702,7 @@ parse_where_clause <- function(where_clause_list = c()) {
             where = data.frame(where_struct[[1]][1], "<=", paste("'", sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
                 "\\1", where_struct[[1]][2]), "'", sep = ""))
             names(where) <- c("lhs", "comp", "rhs")
-            where.df <- rbind(where.df, where)
+            where_df <- rbind(where_df, where)
             next
         }
         where_struct = strsplit(where_clause, ">=")
@@ -708,7 +710,7 @@ parse_where_clause <- function(where_clause_list = c()) {
             where = data.frame(where_struct[[1]][1], ">=", paste("'", sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
                 "\\1", where_struct[[1]][2]), "'", sep = ""))
             names(where) <- c("lhs", "comp", "rhs")
-            where.df <- rbind(where.df, where)
+            where_df <- rbind(where_df, where)
             next
         }
         where_struct = strsplit(where_clause, "=")
@@ -716,7 +718,7 @@ parse_where_clause <- function(where_clause_list = c()) {
             where = data.frame(where_struct[[1]][1], "=", paste("'", sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
                 "\\1", where_struct[[1]][2]), "'", sep = ""))
             names(where) <- c("lhs", "comp", "rhs")
-            where.df <- rbind(where.df, where)
+            where_df <- rbind(where_df, where)
             next
         }
         where_struct = strsplit(where_clause, ">")
@@ -724,7 +726,7 @@ parse_where_clause <- function(where_clause_list = c()) {
             where = data.frame(where_struct[[1]][1], ">", paste("'", sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
                 "\\1", where_struct[[1]][2]), "'", sep = ""))
             names(where) <- c("lhs", "comp", "rhs")
-            where.df <- rbind(where.df, where)
+            where_df <- rbind(where_df, where)
             next
         }
         where_struct = strsplit(where_clause, "<")
@@ -732,12 +734,12 @@ parse_where_clause <- function(where_clause_list = c()) {
             where = data.frame(where_struct[[1]][1], "<", paste("'", sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
                 "\\1", where_struct[[1]][2]), "'", sep = ""))
             names(where) <- c("lhs", "comp", "rhs")
-            where.df <- rbind(where.df, where)
+            where_df <- rbind(where_df, where)
             next
         }
 
     }
-    where.df
+    where_df
 }
 
 #' Generates a where statement to be used on a SQL statement.
@@ -762,11 +764,11 @@ sql_gen_where.new <- function(where_clause_list) {
 
 #' Generates a where list statement to be used on a SQL statement.
 #'
-#' @param where_clause.df The fields used in the where section
-sql_gen_where_list.new <- function(where_clause.df) {
+#' @param where_clause_df The fields used in the where section
+sql_gen_where_list.new <- function(where_clause_df) {
     sql_where <- ""
     separator <- ""
-    for (where_clause in where_clause.df) {
+    for (where_clause in where_clause_df) {
         sql_where <- "where ("
         sql_where <- paste(sql_where, where_clause.lhs, where_clause.comp, where_clause.rhs,
             separator, sep = "")
@@ -783,3 +785,21 @@ sql_gen_where_list.new <- function(where_clause.df) {
 #' @param y TEST
 "%IN%" <- function(x, y) interaction(x) %in% interaction(y)
 
+
+#' Get package directory
+#'
+#' Gets the path of package data.
+#' @export
+getPackageDir <- function(){
+  home.dir <- find.package("rsql", lib.loc = NULL, quiet = TRUE)
+  data.subdir <- file.path("inst", "extdata")
+  if (!dir.exists(file.path(home.dir, data.subdir)))
+    data.subdir <- "extdata"
+  file.path(home.dir, data.subdir)
+}
+
+#' getCarsdbPath
+#' @export
+getCarsdbPath <- function(){
+  file.path(getPackageDir(), "mtcars.db")
+}
