@@ -1,12 +1,9 @@
+# R
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
-inst/doc
 
-
-#test db
-**/mtcars.db
 
 # OSX
 .DS_Store

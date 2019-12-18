@@ -2,10 +2,12 @@
 
 export(RSQL.class)
 export(createRSQL)
+export(getCarsdbPath)
+export(getPackageDir)
 export(parse_where_clause)
 export(sql_retrieve_insert)
 import(DBI)
 import(R6)
-import(futile.logger)
+import(lgr)
 importFrom(R6,R6Class)
 importFrom(utils,str)

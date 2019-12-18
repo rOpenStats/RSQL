@@ -4,9 +4,9 @@
 #'
 #' @docType package
 #' @name rsql
-#' @import R6 futile.logger DBI
+#' @import R6 lgr DBI
 #' @importFrom utils str
-#' @author Leonardo Javier Belen <leobelen@gmail.com>, Alejandro Baranek <alejandrobaranek@gmail.com>
+#' @author Alejandro Baranek <abaranek@dc.uba.ar>, Leonardo Javier Belen <leobelen@gmail.com>
 
 #' Executes code while loading the package.
 #'

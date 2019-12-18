@@ -6,21 +6,26 @@
 \usage{
 sql_retrieve_insert(
   table,
-  fields_id = names(values_id),
-  values_id,
-  fields = NULL,
+  fields_uk = names(values_uk),
+  values_uk,
+  fields = names(values),
   values = NULL,
+  field_id = "id",
   dbconn = NULL
 )
 }
 \arguments{
 \item{table}{The table}
 
-\item{fields_id}{The fields ID}
+\item{fields_uk}{The fields unique key}
+
+\item{values_uk}{The values unique key}
 
 \item{fields}{The fields}
 
 \item{values}{The values}
+
+\item{field_id}{The field of the serial id}
 
 \item{dbconn}{The database connection}
 }

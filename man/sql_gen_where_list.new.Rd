@@ -4,10 +4,10 @@
 \alias{sql_gen_where_list.new}
 \title{Generates a where list statement to be used on a SQL statement.}
 \usage{
-sql_gen_where_list.new(where_clause.df)
+sql_gen_where_list.new(where_clause_df)
 }
 \arguments{
-\item{where_clause.df}{The fields used in the where section}
+\item{where_clause_df}{The fields used in the where section}
 }
 \description{
 Generates a where list statement to be used on a SQL statement.
