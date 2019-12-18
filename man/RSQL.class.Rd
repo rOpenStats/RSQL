@@ -65,8 +65,7 @@ This class is intended to simplify SQL commands.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{values.df}}{The values to insert. Must be defined as data.frame of values
-Composite function
-TODO review the interface for this function}
+Composite function}
 }
 \if{html}{\out{</div>}}
 }
@@ -135,10 +134,11 @@ TODO review the interface for this function}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RSQL.class$retrieve_insert(
   table,
-  fields_id,
-  values_id,
+  fields_uk = names(values_uk),
+  values_uk,
   fields = names(values),
-  values
+  values,
+  field_id = "id"
 )}\if{html}{\out{</div>}}
 }
 

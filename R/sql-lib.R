@@ -99,7 +99,7 @@ createRSQL <- function(drv, dbname, user = NULL, password = NULL, host = NULL, p
 
 #' Extecutes a statement on the database.
 #'
-#' @import futile.logger
+#' @import lgr
 #' @param sql_insert The SQL String
 #' @param dbconn The Database Connection to run the query against
 #' @param export The export type (either 'db' or 'df')
@@ -109,7 +109,7 @@ sql_execute_insert <- function(sql_insert, dbconn = NULL, export = c("db", "df")
     sql_insert <- paste(sql_insert, ";", sep = "")
     if ("db" %in% export) {
         ret <- DBI::dbSendQuery(dbconn, sql_insert)
-        futile.logger::flog.trace(sql_insert)
+        lgr$trace(sql_insert)
 
         # data <- fetch(rs,n=-1) print(res)
         if (length(ret) > 0) {
@@ -149,7 +149,7 @@ sql_execute_delete <- function(sql_delete, dbconn = NULL) {
     sql_delete <- gsub(",NA", ",NULL", sql_delete)
     sql_delete <- gsub(", NA", ",NULL", sql_delete)
     ret <- DBI::dbGetQuery(dbconn, sql_delete)
-    futile.logger::flog.trace(sql_delete)
+    lgr$trace(sql_delete)
     ret
 
 }
@@ -340,7 +340,7 @@ sql_gen_where <- function(where_fields = names(where_values), where_values) {
                 # and adding after
                 new.values <- paste("'", sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
                   "\\1", where_values[, col]), "'", sep = "")
-                futile.logger::flog.trace(paste("col", col, "is character. Replacing values",
+                lgr$trace(paste("col", col, "is character. Replacing values",
                   paste(where_values[, col], collapse = ","), "with values", paste(new.values,
                     collapse = ",")))
                 where_values[, col] <- new.values
@@ -486,7 +486,7 @@ sql_gen_insert <- function(table, values.df, insert_fields = names(values.df)) {
             sql_values_row <- paste(sql_values_row, separator, value, sep = "")
             separator <- ", "
         }
-        futile.logger::flog.trace(sql_values_row)
+        lgr$trace(sql_values_row)
         sql_values <- paste(sql_values, separator_rows, "(", sql_values_row, ")")
         separator_rows <- ", "
     }
@@ -596,14 +596,13 @@ sql_retrieve_insert <- function(table, fields_uk = names(values_uk), values_uk,
         select_statement <- sql_gen_select(field_id, table, where_fields = fields_uk,
             where_values = value_uk)
 
-        # debug
-        futile.logger::flog.trace(paste("verifying", select_statement, ":"))
+        lgr$trace(paste("verifying", select_statement, ":"))
         insert_statement <- sql_gen_insert(table, insert_fields = c(fields_uk, fields),
             values = values_insert)
         row <- sql_execute_select(select_statement, dbconn = dbconn)
-        futile.logger::flog.trace(paste(row, "rows"))
+        lgr$trace("Retrieved", rows = nrow(row))
         if (nrow(row) == 0) {
-            futile.logger::flog.trace(paste("executing", insert_statement))
+            lgr$trace(paste("executing", insert_statement))
             res <- sql_execute_insert(insert_statement, dbconn = dbconn)
             row <- sql_execute_select(select_statement, dbconn = dbconn)
         }
@@ -681,7 +680,7 @@ sql_gen_joined_query <- function(dw_definition, recipe, indicator_fields) {
 #' Parses a where clause.
 #'
 #' @param where_clause_list The list of params
-#' @import futile.logger
+#' @import lgr
 #' @export
 parse_where_clause <- function(where_clause_list = c()) {
     where.df <- data.frame(lhs = character(), comp = character(), rhs = character(),
