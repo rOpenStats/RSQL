@@ -32,6 +32,22 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
         self$conn <- dbConnect(drv = self$driver, dbname = self$db.name,
                                      user = user, password = password, host = host, port = port)
     },
+    checkFieldsNames = function(fields){
+      errors <- NULL
+      for (field in fields){
+        if (grepl(" ",field)){
+          error <- TRUE
+        }
+        if (error){
+          errors <- rbind(errors, field)
+        }
+      }
+      if (!is.null(errors)){
+        stop(paste("Field names are not legal:",
+                   paste(errors, collapse = ",")
+                   ))
+      }
+    },
     gen_select = function(select_fields, table,
                           where_fields = names(where_values),
                           where_values = NULL,
@@ -90,7 +106,8 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
     retrieve_insert = function(table, fields_uk = names(values_uk), values_uk,
                                fields = names(values), values,
                                field_id = "id"){
-        sql_retrieve_insert(table = table, fields_uk = fields_uk, values_uk = values_uk,
+      self$checkFieldsNames(c(fields_uk, fields, field_id))
+      sql_retrieve_insert(table = table, fields_uk = fields_uk, values_uk = values_uk,
                             fields = fields, values = values, field_id = field_id,
                             dbconn = self$conn)
     },
@@ -631,6 +648,7 @@ sql_retrieve_insert <- function(table, fields_uk = names(values_uk), values_uk,
             res <- sql_execute_insert(insert_statement, dbconn = dbconn)
             row <- sql_execute_select(select_statement, dbconn = dbconn)
         }
+
         ret <- c(ret, as.numeric(row[, field_id]))
         i <- i + 1
     }

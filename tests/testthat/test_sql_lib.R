@@ -118,4 +118,5 @@ test_that("retrieveInsert", {
     rsql$disconnect()
 })
 
+# TODO fieldnames not legal
 # TODO group by
