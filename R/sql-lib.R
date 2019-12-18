@@ -87,9 +87,12 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
         ret
     },
     #' Composite function
-    retrieve_insert = function(table, fields_uk = names(values_uk), values_uk, fields = names(values), values, field_id = "id"){
+    retrieve_insert = function(table, fields_uk = names(values_uk), values_uk,
+                               fields = names(values), values,
+                               field_id = "id"){
         sql_retrieve_insert(table = table, fields_uk = fields_uk, values_uk = values_uk,
-                            fields = fields, values = values, dbconn = self$conn)
+                            fields = fields, values = values, field_id = field_id,
+                            dbconn = self$conn)
     },
     disconnect = function() {
         DBI::dbDisconnect(self$conn)
@@ -599,8 +602,8 @@ df_verify <- function(dataframe, columns) {
 #' @param dbconn The database connection
 #' @export
 sql_retrieve_insert <- function(table, fields_uk = names(values_uk), values_uk,
-                                fields = names(values), values = NULL, field_id = "id",
-    dbconn = NULL) {
+                                fields = names(values), values = NULL,
+                                field_id = "id", dbconn = NULL) {
     ret <- NULL
     values_uk <- as.data.frame(values_uk, stringsAsFactors = FALSE)
     values <- as.data.frame(values, stringsAsFactors = FALSE)
@@ -628,7 +631,7 @@ sql_retrieve_insert <- function(table, fields_uk = names(values_uk), values_uk,
             res <- sql_execute_insert(insert_statement, dbconn = dbconn)
             row <- sql_execute_select(select_statement, dbconn = dbconn)
         }
-        ret <- c(ret, as.numeric(row$id))
+        ret <- c(ret, as.numeric(row[, field_id]))
         i <- i + 1
     }
     ret

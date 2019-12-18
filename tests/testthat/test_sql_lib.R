@@ -83,4 +83,39 @@ test_that("sql_lib select with where clause", {
     sql$disconnect()
 })
 
+
+test_that("retrieveInsert", {
+    db.name <- getMtcarsdbPath()
+    rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
+    retrieve.insert.df <- data.frame(vehicle_id = 0, uk = "car",
+                                     color = "red", stringsAsFactors = FALSE)
+    dbWriteTable(rsql$conn, name = "retrieveInsert", retrieve.insert.df, overwrite = TRUE)
+
+    values.uk <- data.frame(uk = retrieve.insert.df[, "uk"], stringsAsFactors = FALSE)
+    values.color <- data.frame(color = retrieve.insert.df[, "color"], stringsAsFactors = FALSE)
+
+    vehicle.id.observed <-
+        rsql$retrieve_insert(table = "retrieveInsert", values_uk = values.uk,
+                         values = values.color, field_id = "vehicle_id")
+    expect_equal(vehicle.id.observed, 0)
+
+    values.uk <- data.frame(uk = "truck", stringsAsFactors = FALSE)
+
+    vehicle.id.observed <-
+        rsql$retrieve_insert(table = "retrieveInsert", values_uk = values.uk,
+                             values = values.color, field_id = "vehicle_id")
+
+    expect_true(is.na(vehicle.id.observed))#
+    expect_equal(2, nrow(rsql$execute_select(rsql$gen_select("*", "retrieveInsert"))))
+    vehicle_id <- data.frame(vehicle_id = 1)
+    #Update vehicle_id to 1
+    rsql$execute_update(rsql$gen_update("retrieveInsert", values = vehicle_id, where_values = values.uk))
+    vehicle.id.observed <-
+        rsql$retrieve_insert(table = "retrieveInsert", values_uk = values.uk,
+                             values = values.color, field_id = "vehicle_id")
+    expect_equal(1, vehicle.id.observed)
+
+    rsql$disconnect()
+})
+
 # TODO group by

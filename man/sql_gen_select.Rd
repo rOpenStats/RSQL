@@ -11,7 +11,8 @@ sql_gen_select(
   where_values = NULL,
   group_by = c(),
   order_by = c(),
-  top = 0
+  top = 0,
+  distinct = FALSE
 )
 }
 \arguments{

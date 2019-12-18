@@ -6,7 +6,7 @@
 \usage{
 sql_gen_update(
   table,
-  update_fields,
+  update_fields = names(values),
   values,
   where_fields = names(where_values),
   where_values

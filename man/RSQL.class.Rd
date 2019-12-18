@@ -49,7 +49,8 @@ This class is intended to simplify SQL commands.
   where_values = NULL,
   group_by = c(),
   order_by = c(),
-  top = 0
+  top = 0,
+  distinct = FALSE
 )}\if{html}{\out{</div>}}
 }
 
@@ -76,7 +77,7 @@ Composite function}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RSQL.class$gen_update(
   table,
-  update_fields,
+  update_fields = names(values),
   values,
   where_fields = names(where_values),
   where_values = NULL
