@@ -75,9 +75,9 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
         ret
     },
     #' Composite function
-    #' TODO review the interface for this function
-    retrieve_insert = function(table, fields_id, values_id, fields = names(values), values){
-        sql_retrieve_insert(table = table, fields_id = fields_id, values_id = values_id, fields = fields, values = values, dbconn = self$conn)
+    retrieve_insert = function(table, fields_uk = names(values_uk), values_uk, fields = names(values), values, field_id = "id"){
+        sql_retrieve_insert(table = table, fields_uk = fields_uk, values_uk = values_uk,
+                            fields = fields, values = values, dbconn = self$conn)
     },
     disconnect = function() {
         DBI::dbDisconnect(self$conn)
@@ -569,33 +569,36 @@ df_verify <- function(dataframe, columns) {
 #' Retrieves an insert Statement
 #'
 #' @param table The table
-#' @param fields_id The fields ID
+#' @param fields_uk The fields unique key
+#' @param values_uk The values unique key
 #' @param fields The fields
 #' @param values The values
+#' @param field_id The field of the serial id
 #' @param dbconn The database connection
 #' @export
-sql_retrieve_insert <- function(table, fields_id = names(values_id), values_id, fields = NULL, values = NULL,
+sql_retrieve_insert <- function(table, fields_uk = names(values_uk), values_uk,
+                                fields = names(values), values = NULL, field_id = "id",
     dbconn = NULL) {
     ret <- NULL
-    values_id <- as.data.frame(values_id, stringsAsFactors = FALSE)
+    values_uk <- as.data.frame(values_uk, stringsAsFactors = FALSE)
     values <- as.data.frame(values, stringsAsFactors = FALSE)
-    if (nrow(values) > 0 & nrow(values) < nrow(values_id)) {
-        stop(paste(gettext("sql_lib.error_nrows_values_id_neq_nrows_values", domain="R-rsql"), nrow(values_id), nrow(values)))
+    if (nrow(values) > 0 & nrow(values) < nrow(values_uk)) {
+        stop(paste(gettext("sql_lib.error_nrows_values_uk_neq_nrows_values", domain="R-rsql"), nrow(values_uk), nrow(values)))
     }
 
 
-    for (i in c(1:nrow(values_id))) {
-        # value_id <- as.character(values_id[i,]) value <- as.character(values[i,])
-        value_id <- as.data.frame(values_id[i, ], stringsAsFactors = FALSE)
+    for (i in c(1:nrow(values_uk))) {
+        # value_uk <- as.character(values_uk[i,]) value <- as.character(values[i,])
+        value_uk <- as.data.frame(values_uk[i, ], stringsAsFactors = FALSE)
         value <- values[i, ]
-        values_insert <- cbind_coerced(value_id, value)
+        values_insert <- cbind_coerced(value_uk, value)
 
-        select_statement <- sql_gen_select("id", table, where_fields = fields_id,
-            where_values = value_id)
+        select_statement <- sql_gen_select(field_id, table, where_fields = fields_uk,
+            where_values = value_uk)
 
         # debug
         futile.logger::flog.trace(paste("verifying", select_statement, ":"))
-        insert_statement <- sql_gen_insert(table, insert_fields = c(fields_id, fields),
+        insert_statement <- sql_gen_insert(table, insert_fields = c(fields_uk, fields),
             values = values_insert)
         row <- sql_execute_select(select_statement, dbconn = dbconn)
         futile.logger::flog.trace(paste(row, "rows"))
