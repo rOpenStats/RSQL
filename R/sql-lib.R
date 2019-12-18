@@ -36,9 +36,9 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
             order_by, top)
     },
     # gen insert statement
-    #' @param values.df The values to insert. Must be defined as data.frame of values
-    gen_insert = function(table, values.df, insert_fields  = names(values.df)) {
-        sql_gen_insert(table, values.df, insert_fields)
+    #' @param values_df The values to insert. Must be defined as data.frame of values
+    gen_insert = function(table, values_df, insert_fields  = names(values_df)) {
+        sql_gen_insert(table = table, values_df = values_df, insert_fields = insert_fields)
     },
     gen_update = function(table,
                              update_fields, values,
@@ -75,9 +75,9 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
         ret
     },
     #' Composite function
-    #' TODO review the interface for this function
-    retrieve_insert = function(table, fields_id, values_id, fields = names(values), values){
-        sql_retrieve_insert(table = table, fields_id = fields_id, values_id = values_id, fields = fields, values = values, dbconn = self$conn)
+    retrieve_insert = function(table, fields_uk = names(values_uk), values_uk, fields = names(values), values, field_id = "id"){
+        sql_retrieve_insert(table = table, fields_uk = fields_uk, values_uk = values_uk,
+                            fields = fields, values = values, dbconn = self$conn)
     },
     disconnect = function() {
         DBI::dbDisconnect(self$conn)
@@ -99,7 +99,7 @@ createRSQL <- function(drv, dbname, user = NULL, password = NULL, host = NULL, p
 
 #' Extecutes a statement on the database.
 #'
-#' @import futile.logger
+#' @import lgr
 #' @param sql_insert The SQL String
 #' @param dbconn The Database Connection to run the query against
 #' @param export The export type (either 'db' or 'df')
@@ -109,7 +109,7 @@ sql_execute_insert <- function(sql_insert, dbconn = NULL, export = c("db", "df")
     sql_insert <- paste(sql_insert, ";", sep = "")
     if ("db" %in% export) {
         ret <- DBI::dbSendQuery(dbconn, sql_insert)
-        futile.logger::flog.trace(sql_insert)
+        lgr$trace(sql_insert)
 
         # data <- fetch(rs,n=-1) print(res)
         if (length(ret) > 0) {
@@ -149,7 +149,7 @@ sql_execute_delete <- function(sql_delete, dbconn = NULL) {
     sql_delete <- gsub(",NA", ",NULL", sql_delete)
     sql_delete <- gsub(", NA", ",NULL", sql_delete)
     ret <- DBI::dbGetQuery(dbconn, sql_delete)
-    futile.logger::flog.trace(sql_delete)
+    lgr$trace(sql_delete)
     ret
 
 }
@@ -340,7 +340,7 @@ sql_gen_where <- function(where_fields = names(where_values), where_values) {
                 # and adding after
                 new.values <- paste("'", sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
                   "\\1", where_values[, col]), "'", sep = "")
-                futile.logger::flog.trace(paste("col", col, "is character. Replacing values",
+                lgr$trace(paste("col", col, "is character. Replacing values",
                   paste(where_values[, col], collapse = ","), "with values", paste(new.values,
                     collapse = ",")))
                 where_values[, col] <- new.values
@@ -450,17 +450,19 @@ sql_gen_where_or <- function(where_fields = names(where_values), where_values) {
 #'
 #' @param table The table to be affected
 #' @param insert_fields The fields to insert
-#' @param values.df The values to insert. Must be defined as data.frame of values
-sql_gen_insert <- function(table, values.df, insert_fields = names(values.df)) {
-    if (length(values.df) > 1 & class(values.df) != "data.frame"){
+#' @param values_df The values to insert. Must be defined as data.frame of values
+sql_gen_insert <- function(table, values_df, insert_fields = names(values_df)) {
+    if (length(values_df) > 1 & class(values_df) != "data.frame"){
+      #debug
+      print(values_df)
       stop("Values must be defined as data.frames with same size of columns")
     }
     # Converts all factors to strings
-    values.df <- as.data.frame(lapply(values.df, as.character), stringsAsFactors = FALSE)
+    values_df <- as.data.frame(lapply(values_df, as.character), stringsAsFactors = FALSE)
 
-    if (length(insert_fields) != ncol(values.df)) {
+    if (length(insert_fields) != ncol(values_df)) {
         stop(paste(gettext("sql_lib.incompatible_fields_and_data", domain="R-rsql"), length(insert_fields), gettext("sql_lib.not_eq", domain="R-rsql"),
-            ncol(values.df), paste(insert_fields, collapse = ";"), paste(values, collapse = ";")))
+            ncol(values_df), paste(insert_fields, collapse = ";"), paste(values, collapse = ";")))
     }
     separator <- ""
     sql_insert_fields <- ""
@@ -470,14 +472,14 @@ sql_gen_insert <- function(table, values.df, insert_fields = names(values.df)) {
     }
     sql_values <- ""
     separator_rows <- ""
-    for (i in c(1:nrow(values.df))) {
+    for (i in c(1:nrow(values_df))) {
         sql_values_row <- ""
         separator <- ""
         for (j in c(1:length(insert_fields))) {
-            if (is.na(values.df[i, j])) {
+            if (is.na(values_df[i, j])) {
                 value <- "NA"
             } else {
-                value <- values.df[i, j]
+                value <- values_df[i, j]
                 if (is.character(value)) {
                   value <- add_quotes(value)
                 }
@@ -486,7 +488,7 @@ sql_gen_insert <- function(table, values.df, insert_fields = names(values.df)) {
             sql_values_row <- paste(sql_values_row, separator, value, sep = "")
             separator <- ", "
         }
-        futile.logger::flog.trace(sql_values_row)
+        lgr$trace(sql_values_row)
         sql_values <- paste(sql_values, separator_rows, "(", sql_values_row, ")")
         separator_rows <- ", "
     }
@@ -569,38 +571,40 @@ df_verify <- function(dataframe, columns) {
 #' Retrieves an insert Statement
 #'
 #' @param table The table
-#' @param fields_id The fields ID
+#' @param fields_uk The fields unique key
+#' @param values_uk The values unique key
 #' @param fields The fields
 #' @param values The values
+#' @param field_id The field of the serial id
 #' @param dbconn The database connection
 #' @export
-sql_retrieve_insert <- function(table, fields_id = names(values_id), values_id, fields = NULL, values = NULL,
+sql_retrieve_insert <- function(table, fields_uk = names(values_uk), values_uk,
+                                fields = names(values), values = NULL, field_id = "id",
     dbconn = NULL) {
     ret <- NULL
-    values_id <- as.data.frame(values_id, stringsAsFactors = FALSE)
+    values_uk <- as.data.frame(values_uk, stringsAsFactors = FALSE)
     values <- as.data.frame(values, stringsAsFactors = FALSE)
-    if (nrow(values) > 0 & nrow(values) < nrow(values_id)) {
-        stop(paste(gettext("sql_lib.error_nrows_values_id_neq_nrows_values", domain="R-rsql"), nrow(values_id), nrow(values)))
+    if (nrow(values) > 0 & nrow(values) < nrow(values_uk)) {
+        stop(paste(gettext("sql_lib.error_nrows_values_uk_neq_nrows_values", domain="R-rsql"), nrow(values_uk), nrow(values)))
     }
 
 
-    for (i in c(1:nrow(values_id))) {
-        # value_id <- as.character(values_id[i,]) value <- as.character(values[i,])
-        value_id <- as.data.frame(values_id[i, ], stringsAsFactors = FALSE)
+    for (i in c(1:nrow(values_uk))) {
+        # value_uk <- as.character(values_uk[i,]) value <- as.character(values[i,])
+        value_uk <- as.data.frame(values_uk[i, ], stringsAsFactors = FALSE)
         value <- values[i, ]
-        values_insert <- cbind_coerced(value_id, value)
+        values_insert <- cbind_coerced(value_uk, value)
 
-        select_statement <- sql_gen_select("id", table, where_fields = fields_id,
-            where_values = value_id)
+        select_statement <- sql_gen_select(field_id, table, where_fields = fields_uk,
+            where_values = value_uk)
 
-        # debug
-        futile.logger::flog.trace(paste("verifying", select_statement, ":"))
-        insert_statement <- sql_gen_insert(table, insert_fields = c(fields_id, fields),
+        lgr$trace(paste("verifying", select_statement, ":"))
+        insert_statement <- sql_gen_insert(table, insert_fields = c(fields_uk, fields),
             values = values_insert)
         row <- sql_execute_select(select_statement, dbconn = dbconn)
-        futile.logger::flog.trace(paste(row, "rows"))
+        lgr$trace("Retrieved", rows = nrow(row))
         if (nrow(row) == 0) {
-            futile.logger::flog.trace(paste("executing", insert_statement))
+            lgr$trace(paste("executing", insert_statement))
             res <- sql_execute_insert(insert_statement, dbconn = dbconn)
             row <- sql_execute_select(select_statement, dbconn = dbconn)
         }
@@ -678,19 +682,19 @@ sql_gen_joined_query <- function(dw_definition, recipe, indicator_fields) {
 #' Parses a where clause.
 #'
 #' @param where_clause_list The list of params
-#' @import futile.logger
+#' @import lgr
 #' @export
 parse_where_clause <- function(where_clause_list = c()) {
-    where.df <- data.frame(lhs = character(), comp = character(), rhs = character(),
+    where_df <- data.frame(lhs = character(), comp = character(), rhs = character(),
         stringsAsFactors = FALSE)
-    names(where.df) <- c("lhs", "comp", "rhs")
+    names(where_df) <- c("lhs", "comp", "rhs")
     for (where_clause in where_clause_list) {
         where_struct = strsplit(where_clause, "!=")
         if (length(where_struct[[1]]) == 2) {
             where = data.frame(where_struct[[1]][1], "!=", paste("'", sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
                 "\\1", where_struct[[1]][2]), "'", sep = ""))
             names(where) <- c("lhs", "comp", "rhs")
-            where.df <- rbind(where.df, where)
+            where_df <- rbind(where_df, where)
             next
         }
         where_struct = strsplit(where_clause, "<=")
@@ -698,7 +702,7 @@ parse_where_clause <- function(where_clause_list = c()) {
             where = data.frame(where_struct[[1]][1], "<=", paste("'", sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
                 "\\1", where_struct[[1]][2]), "'", sep = ""))
             names(where) <- c("lhs", "comp", "rhs")
-            where.df <- rbind(where.df, where)
+            where_df <- rbind(where_df, where)
             next
         }
         where_struct = strsplit(where_clause, ">=")
@@ -706,7 +710,7 @@ parse_where_clause <- function(where_clause_list = c()) {
             where = data.frame(where_struct[[1]][1], ">=", paste("'", sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
                 "\\1", where_struct[[1]][2]), "'", sep = ""))
             names(where) <- c("lhs", "comp", "rhs")
-            where.df <- rbind(where.df, where)
+            where_df <- rbind(where_df, where)
             next
         }
         where_struct = strsplit(where_clause, "=")
@@ -714,7 +718,7 @@ parse_where_clause <- function(where_clause_list = c()) {
             where = data.frame(where_struct[[1]][1], "=", paste("'", sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
                 "\\1", where_struct[[1]][2]), "'", sep = ""))
             names(where) <- c("lhs", "comp", "rhs")
-            where.df <- rbind(where.df, where)
+            where_df <- rbind(where_df, where)
             next
         }
         where_struct = strsplit(where_clause, ">")
@@ -722,7 +726,7 @@ parse_where_clause <- function(where_clause_list = c()) {
             where = data.frame(where_struct[[1]][1], ">", paste("'", sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
                 "\\1", where_struct[[1]][2]), "'", sep = ""))
             names(where) <- c("lhs", "comp", "rhs")
-            where.df <- rbind(where.df, where)
+            where_df <- rbind(where_df, where)
             next
         }
         where_struct = strsplit(where_clause, "<")
@@ -730,12 +734,12 @@ parse_where_clause <- function(where_clause_list = c()) {
             where = data.frame(where_struct[[1]][1], "<", paste("'", sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
                 "\\1", where_struct[[1]][2]), "'", sep = ""))
             names(where) <- c("lhs", "comp", "rhs")
-            where.df <- rbind(where.df, where)
+            where_df <- rbind(where_df, where)
             next
         }
 
     }
-    where.df
+    where_df
 }
 
 #' Generates a where statement to be used on a SQL statement.
@@ -760,11 +764,11 @@ sql_gen_where.new <- function(where_clause_list) {
 
 #' Generates a where list statement to be used on a SQL statement.
 #'
-#' @param where_clause.df The fields used in the where section
-sql_gen_where_list.new <- function(where_clause.df) {
+#' @param where_clause_df The fields used in the where section
+sql_gen_where_list.new <- function(where_clause_df) {
     sql_where <- ""
     separator <- ""
-    for (where_clause in where_clause.df) {
+    for (where_clause in where_clause_df) {
         sql_where <- "where ("
         sql_where <- paste(sql_where, where_clause.lhs, where_clause.comp, where_clause.rhs,
             separator, sep = "")
@@ -781,3 +785,21 @@ sql_gen_where_list.new <- function(where_clause.df) {
 #' @param y TEST
 "%IN%" <- function(x, y) interaction(x) %in% interaction(y)
 
+
+#' Get package directory
+#'
+#' Gets the path of package data.
+#' @export
+getPackageDir <- function(){
+  home.dir <- find.package("rsql", lib.loc = NULL, quiet = TRUE)
+  data.subdir <- file.path("inst", "extdata")
+  if (!dir.exists(file.path(home.dir, data.subdir)))
+    data.subdir <- "extdata"
+  file.path(home.dir, data.subdir)
+}
+
+#' getCarsdbPath
+#' @export
+getCarsdbPath <- function(){
+  file.path(getPackageDir(), "mtcars.db")
+}
