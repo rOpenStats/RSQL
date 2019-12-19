@@ -503,7 +503,7 @@ sql_gen_insert <- function(table, values_df, insert_fields = names(values_df)) {
 
     if (length(insert_fields) != ncol(values_df)) {
         stop(paste(gettext("sql_lib.incompatible_fields_and_data", domain="R-rsql"), length(insert_fields), gettext("sql_lib.not_eq", domain="R-rsql"),
-            ncol(values_df), paste(insert_fields, collapse = ";"), paste(values, collapse = ";")))
+            ncol(values_df), paste(insert_fields, collapse = ";"), paste(values_df, collapse = ";")))
     }
     separator <- ""
     sql_insert_fields <- ""
