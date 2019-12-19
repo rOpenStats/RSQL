@@ -32,9 +32,10 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
         self$conn <- dbConnect(drv = self$driver, dbname = self$db.name,
                                      user = user, password = password, host = host, port = port)
     },
-    checkFieldsNames = function(fields){
+    checkEntityName = function(fields){
       errors <- NULL
       for (field in fields){
+        error <- FALSE
         if (grepl(" ",field)){
           error <- TRUE
         }
@@ -106,7 +107,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
     retrieve_insert = function(table, fields_uk = names(values_uk), values_uk,
                                fields = names(values), values,
                                field_id = "id"){
-      self$checkFieldsNames(c(fields_uk, fields, field_id))
+      self$checkEntityName(c(fields_uk, fields, field_id))
       sql_retrieve_insert(table = table, fields_uk = fields_uk, values_uk = values_uk,
                             fields = fields, values = values, field_id = field_id,
                             dbconn = self$conn)
