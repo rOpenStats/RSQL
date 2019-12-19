@@ -1,3 +1,5 @@
+# TODO remove from here
+library(dplyr)
 
 test_that("sql_lib basic test", {
 
@@ -13,13 +15,33 @@ test_that("sql_lib basic test", {
     rsql$disconnect()
 })
 
+test_that("legal entities", {
+
+    db.name <- getMtcarsdbPath()
+    rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
+    #dbWriteTable(rsql$conn, name = "mtcars", mtcars, overwrite = TRUE)
+    query_sql <- rsql$gen_select(select_fields = c("mpg", "cyl", "disp", "hp", "drat", "wt"),
+                                                   table = "qsec")
+    expect_equal(query_sql, "select mpg, cyl, disp, hp, drat, wt from qsec")
+
+    expect_error(query_sql <- rsql$gen_select(select_fields = c("ill.egal1"),
+                                 table = "legal"))
+
+    expect_error(query_sql <- rsql$gen_select(select_fields = c("ill egal2"),
+                                              table = "legal"))
+
+    expect_error(query_sql <- rsql$gen_select(select_fields = c("legal"),
+                                              table = "illegal 3"))
+    rsql$disconnect()
+})
+
 test_that("sql_lib insert and delete test", {
     db.name <- getMtcarsdbPath()
     rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
     insert_fields <- c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am",
         "gear", "carb")
     insert_data <- data.frame(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
-    insert.sql <- rsql$gen_insert("mtcars", values_df = insert_data, insert_fields = insert_fields)
+    insert.sql <- rsql$gen_insert(table = "mtcars", values_df = insert_data, insert_fields = insert_fields)
     rsql$execute_insert(insert.sql)
 
     update_fields <- c("mpg", "cyl")

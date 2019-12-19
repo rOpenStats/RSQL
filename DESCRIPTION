@@ -18,6 +18,7 @@ Collate:
 Imports: lgr,
     R6,
     DBI, 
+    dplyr,
     RSQLite
 Suggests: knitr,
     rmarkdown, 

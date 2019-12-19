@@ -17,6 +17,8 @@
 #' @importFrom R6 R6Class
 #' @export
 RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
+    # regexp
+    entity.regexp = "(^(?:[[:alnum:]\\_]+|\\*)$)",
     #state
     conn = NA,
     last.query = NA,
@@ -32,31 +34,40 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
         self$conn <- dbConnect(drv = self$driver, dbname = self$db.name,
                                      user = user, password = password, host = host, port = port)
     },
-    checkEntityName = function(fields){
+    finalize = function(){
+      message("Finalizing object and disconnecting")
+      self$disconnect()
+    },
+    checkEntityName = function(entities, entity.type){
       errors <- NULL
-      for (field in fields){
+      for (entity in entities){
         error <- FALSE
-        if (grepl(" ",field)){
+        if (!grepl(self$entity.regexp, entity, perl = TRUE)){
           error <- TRUE
         }
         if (error){
-          errors <- rbind(errors, field)
+          errors <- c(errors, entity)
         }
       }
+      errors
       if (!is.null(errors)){
-        stop(paste("Field names are not legal:",
+        stop(paste(entity.type," names are not legal:",
                    paste(errors, collapse = ",")
                    ))
       }
     },
-    gen_select = function(select_fields, table,
+    gen_select = function(select_fields,
+                          table,
                           where_fields = names(where_values),
                           where_values = NULL,
                           group_by = c(),
                           order_by = c(),
                           top = 0,
                           distinct = FALSE) {
-        sql_gen_select(select_fields = select_fields, table = table,
+      self$checkEntityName(table, entity.type = "table")
+      self$checkEntityName(c(select_fields, where_fields, group_by, order_by), entity.type = "field")
+
+      sql_gen_select(select_fields = select_fields, table = table,
                        where_fields = where_fields,
                        where_values = where_values,
                        group_by = group_by,
@@ -67,16 +78,23 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
     # gen insert statement
     #' @param values_df The values to insert. Must be defined as data.frame of values
     gen_insert = function(table, values_df, insert_fields  = names(values_df)) {
-        sql_gen_insert(table = table, values_df = values_df, insert_fields = insert_fields)
+      self$checkEntityName(table, entity.type = "table")
+      self$checkEntityName(insert_fields, entity.type = "field")
+       sql_gen_insert(table = table, values_df = values_df, insert_fields = insert_fields)
     },
     gen_update = function(table,
                              update_fields = names(values), values,
                              where_fields = names(where_values), where_values = NULL) {
-        sql_gen_update(table = table,
-                       update_fields = update_fields,values = values,
-                       where_fields = where_fields, where_values = where_values)
+      self$checkEntityName(table, entity.type = "table")
+      self$checkEntityName(c(update_fields, where_fields), entity.type = "field")
+      sql_gen_update(table = table,
+                     update_fields = update_fields,values = values,
+                     where_fields = where_fields, where_values = where_values)
     },
     gen_delete = function(table, where_fields = names(where_values), where_values = NULL) {
+      self$checkEntityName(table, entity.type = "table")
+      self$checkEntityName(c(where_fields), entity.type = "field")
+
       sql_gen_delete(table, where_fields, where_values)
     },
     execute_select = function(sql_select) {
@@ -107,7 +125,8 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
     retrieve_insert = function(table, fields_uk = names(values_uk), values_uk,
                                fields = names(values), values,
                                field_id = "id"){
-      self$checkEntityName(c(fields_uk, fields, field_id))
+      self$checkEntityName(table, entity.type = "table")
+      self$checkEntityName(c(fields_uk, fields, field_id), entity.type = "field")
       sql_retrieve_insert(table = table, fields_uk = fields_uk, values_uk = values_uk,
                             fields = fields, values = values, field_id = field_id,
                             dbconn = self$conn)
