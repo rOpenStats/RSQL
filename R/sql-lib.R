@@ -38,7 +38,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
       message("Finalizing object and disconnecting")
       self$disconnect()
     },
-    checkEntityName = function(entities, entity.type){
+    checkEntitiesNames = function(entities, entity.type){
       errors <- NULL
       for (entity in entities){
         error <- FALSE
@@ -64,8 +64,8 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
                           order_by = c(),
                           top = 0,
                           distinct = FALSE) {
-      self$checkEntityName(table, entity.type = "table")
-      self$checkEntityName(c(select_fields, where_fields, group_by, order_by), entity.type = "field")
+      self$checkEntitiesNames(table, entity.type = "table")
+      self$checkEntitiesNames(c(select_fields, where_fields, group_by, order_by), entity.type = "field")
 
       sql_gen_select(select_fields = select_fields, table = table,
                        where_fields = where_fields,
@@ -78,22 +78,22 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
     # gen insert statement
     #' @param values_df The values to insert. Must be defined as data.frame of values
     gen_insert = function(table, values_df, insert_fields  = names(values_df)) {
-      self$checkEntityName(table, entity.type = "table")
-      self$checkEntityName(insert_fields, entity.type = "field")
+      self$checkEntitiesNames(table, entity.type = "table")
+      self$checkEntitiesNames(insert_fields, entity.type = "field")
        sql_gen_insert(table = table, values_df = values_df, insert_fields = insert_fields)
     },
     gen_update = function(table,
                              update_fields = names(values), values,
                              where_fields = names(where_values), where_values = NULL) {
-      self$checkEntityName(table, entity.type = "table")
-      self$checkEntityName(c(update_fields, where_fields), entity.type = "field")
+      self$checkEntitiesNames(table, entity.type = "table")
+      self$checkEntitiesNames(c(update_fields, where_fields), entity.type = "field")
       sql_gen_update(table = table,
                      update_fields = update_fields,values = values,
                      where_fields = where_fields, where_values = where_values)
     },
     gen_delete = function(table, where_fields = names(where_values), where_values = NULL) {
-      self$checkEntityName(table, entity.type = "table")
-      self$checkEntityName(c(where_fields), entity.type = "field")
+      self$checkEntitiesNames(table, entity.type = "table")
+      self$checkEntitiesNames(c(where_fields), entity.type = "field")
 
       sql_gen_delete(table, where_fields, where_values)
     },
@@ -125,8 +125,8 @@ RSQL.class <- R6::R6Class("RSQL", public = list(driver = NA, db.name = NA,
     retrieve_insert = function(table, fields_uk = names(values_uk), values_uk,
                                fields = names(values), values,
                                field_id = "id"){
-      self$checkEntityName(table, entity.type = "table")
-      self$checkEntityName(c(fields_uk, fields, field_id), entity.type = "field")
+      self$checkEntitiesNames(table, entity.type = "table")
+      self$checkEntitiesNames(c(fields_uk, fields, field_id), entity.type = "field")
       sql_retrieve_insert(table = table, fields_uk = fields_uk, values_uk = values_uk,
                             fields = fields, values = values, field_id = field_id,
                             dbconn = self$conn)

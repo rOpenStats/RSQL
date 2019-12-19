@@ -10,7 +10,8 @@ This class is intended to simplify SQL commands.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{RSQL.class$new()}}
-\item \href{#method-checkEntityName}{\code{RSQL.class$checkEntityName()}}
+\item \href{#method-finalize}{\code{RSQL.class$finalize()}}
+\item \href{#method-checkEntitiesNames}{\code{RSQL.class$checkEntitiesNames()}}
 \item \href{#method-gen_select}{\code{RSQL.class$gen_select()}}
 \item \href{#method-gen_insert}{\code{RSQL.class$gen_insert()}}
 \item \href{#method-gen_update}{\code{RSQL.class$gen_update()}}
@@ -40,10 +41,18 @@ This class is intended to simplify SQL commands.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-checkEntityName"></a>}}
-\subsection{Method \code{checkEntityName()}}{
+\if{html}{\out{<a id="method-finalize"></a>}}
+\subsection{Method \code{finalize()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$checkEntityName(fields)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$finalize()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-checkEntitiesNames"></a>}}
+\subsection{Method \code{checkEntitiesNames()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$checkEntitiesNames(entities, entity.type)}\if{html}{\out{</div>}}
 }
 
 }
