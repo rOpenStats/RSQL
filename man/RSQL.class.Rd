@@ -10,6 +10,7 @@ This class is intended to simplify SQL commands.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{RSQL.class$new()}}
+\item \href{#method-checkEntityName}{\code{RSQL.class$checkEntityName()}}
 \item \href{#method-gen_select}{\code{RSQL.class$gen_select()}}
 \item \href{#method-gen_insert}{\code{RSQL.class$gen_insert()}}
 \item \href{#method-gen_update}{\code{RSQL.class$gen_update()}}
@@ -35,6 +36,14 @@ This class is intended to simplify SQL commands.
   host = NULL,
   port = NULL
 )}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-checkEntityName"></a>}}
+\subsection{Method \code{checkEntityName()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$checkEntityName(fields)}\if{html}{\out{</div>}}
 }
 
 }
