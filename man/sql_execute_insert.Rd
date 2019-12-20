@@ -2,7 +2,7 @@
 % Please edit documentation in R/sql-lib.R
 \name{sql_execute_insert}
 \alias{sql_execute_insert}
-\title{Extecutes a statement on the database.}
+\title{Executes a statement on the database.}
 \usage{
 sql_execute_insert(sql_insert, dbconn = NULL, export = c("db", "df"))
 }
@@ -14,5 +14,5 @@ sql_execute_insert(sql_insert, dbconn = NULL, export = c("db", "df"))
 \item{export}{The export type (either 'db' or 'df')}
 }
 \description{
-Extecutes a statement on the database.
+Executes a statement on the database.
 }

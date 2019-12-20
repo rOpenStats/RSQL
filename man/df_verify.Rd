@@ -9,7 +9,7 @@ df_verify(dataframe, columns)
 \arguments{
 \item{dataframe}{The data.frame}
 
-\item{columns}{The colums to check}
+\item{columns}{The columns to check}
 }
 \description{
 Checks that the columns are in the data.frame

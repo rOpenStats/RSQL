@@ -149,7 +149,7 @@ createRSQL <- function(drv, dbname, user = NULL, password = NULL, host = NULL, p
 }
 
 
-#' Extecutes a statement on the database.
+#' Executes a statement on the database.
 #'
 #' @import lgr
 #' @param sql_insert The SQL String
@@ -295,7 +295,7 @@ rm_quotes <- function(text, quotes = "'") {
     text
 }
 
-#' Removes quotes from data.frame colums
+#' Removes quotes from data.frame columns
 #'
 #' @param text The text column to remove quotes from.
 remove_quotes <- function(text) {
@@ -615,7 +615,7 @@ cbind_coerced <- function(...) {
 #' Checks that the columns are in the data.frame
 #'
 #' @param dataframe The data.frame
-#' @param columns The colums to check
+#' @param columns The columns to check
 df_verify <- function(dataframe, columns) {
     ret <- NULL
     dataframe_names <- names(dataframe)

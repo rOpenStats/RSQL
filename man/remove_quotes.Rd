@@ -2,7 +2,7 @@
 % Please edit documentation in R/sql-lib.R
 \name{remove_quotes}
 \alias{remove_quotes}
-\title{Removes quotes from data.frame colums}
+\title{Removes quotes from data.frame columns}
 \usage{
 remove_quotes(text)
 }
@@ -10,5 +10,5 @@ remove_quotes(text)
 \item{text}{The text column to remove quotes from.}
 }
 \description{
-Removes quotes from data.frame colums
+Removes quotes from data.frame columns
 }
