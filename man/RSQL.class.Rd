@@ -6,6 +6,31 @@
 \description{
 This class is intended to simplify SQL commands.
 }
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{driver}}{driver  name}
+
+\item{\code{db.name}}{database name}
+
+\item{\code{entity.regexp}}{A regexp to detect the entity}
+
+\item{\code{conn}}{The connection handler}
+
+\item{\code{last.query}}{The last query}
+
+\item{\code{last.rs}}{The last resultset}
+
+\item{\code{select.counter}}{An instance select counter}
+
+\item{\code{insert.counter}}{An instance insert counter}
+
+\item{\code{update.counter}}{An instance update counter}
+
+\item{\code{delete.counter}}{An instance delete counter}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -28,6 +53,7 @@ This class is intended to simplify SQL commands.
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
 \subsection{Method \code{new()}}{
+Initializes a connection
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RSQL.class$new(
   drv,
@@ -39,10 +65,28 @@ This class is intended to simplify SQL commands.
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{drv}}{driver name}
+
+\item{\code{dbname}}{database name}
+
+\item{\code{user}}{user name}
+
+\item{\code{password}}{password}
+
+\item{\code{host}}{host name}
+
+\item{\code{port}}{port number}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-finalize"></a>}}
 \subsection{Method \code{finalize()}}{
+Class destructor
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RSQL.class$finalize()}\if{html}{\out{</div>}}
 }
@@ -51,14 +95,25 @@ This class is intended to simplify SQL commands.
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-checkEntitiesNames"></a>}}
 \subsection{Method \code{checkEntitiesNames()}}{
+Checks if an entity exists
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RSQL.class$checkEntitiesNames(entities, entity.type)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{entities}}{entitities to check}
+
+\item{\code{entity.type}}{entity type to check against}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-gen_select"></a>}}
 \subsection{Method \code{gen_select()}}{
+Generates a select
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RSQL.class$gen_select(
   select_fields,
@@ -72,10 +127,32 @@ This class is intended to simplify SQL commands.
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{select_fields}}{fields to be selected}
+
+\item{\code{table}}{table to select from}
+
+\item{\code{where_fields}}{fields in the where clause}
+
+\item{\code{where_values}}{values to the fields on the where clause}
+
+\item{\code{group_by}}{fields to group by}
+
+\item{\code{order_by}}{fields to order by}
+
+\item{\code{top}}{where does the resultset starts?}
+
+\item{\code{distinct}}{provides a way to select distinct rows}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-gen_insert"></a>}}
 \subsection{Method \code{gen_insert()}}{
+Generate  insert statement
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RSQL.class$gen_insert(table, values_df, insert_fields = names(values_df))}\if{html}{\out{</div>}}
 }
@@ -83,8 +160,11 @@ This class is intended to simplify SQL commands.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{values_df}}{The values to insert. Must be defined as data.frame of values
-Composite function}
+\item{\code{table}}{The table to insert into}
+
+\item{\code{values_df}}{The values to insert. Must be defined as data.frame of values}
+
+\item{\code{insert_fields}}{the fields to insert into}
 }
 \if{html}{\out{</div>}}
 }
@@ -92,6 +172,7 @@ Composite function}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-gen_update"></a>}}
 \subsection{Method \code{gen_update()}}{
+Generate  insert statement
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RSQL.class$gen_update(
   table,
@@ -102,10 +183,26 @@ Composite function}
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{table}}{the table to insert into}
+
+\item{\code{update_fields}}{the fields to update}
+
+\item{\code{values}}{the values to update}
+
+\item{\code{where_fields}}{a where clause to the insert}
+
+\item{\code{where_values}}{the values to add to the where clause}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-gen_delete"></a>}}
 \subsection{Method \code{gen_delete()}}{
+Generate a delete statement
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RSQL.class$gen_delete(
   table,
@@ -114,42 +211,86 @@ Composite function}
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{table}}{the table to insert into}
+
+\item{\code{where_fields}}{a where clause to the insert}
+
+\item{\code{where_values}}{the fields to add to the where clause}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-execute_select"></a>}}
 \subsection{Method \code{execute_select()}}{
+Performs an execution on the database
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RSQL.class$execute_select(sql_select)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{sql_select}}{the select to perform}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-execute_update"></a>}}
 \subsection{Method \code{execute_update()}}{
+Performs an update on the database
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RSQL.class$execute_update(sql_update)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{sql_update}}{the select to perform}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-execute_insert"></a>}}
 \subsection{Method \code{execute_insert()}}{
+Performs an insert on the database
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$execute_insert(sql_insert, export = "db")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$execute_insert(sql_insert)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{sql_insert}}{the select to perform}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-execute_delete"></a>}}
 \subsection{Method \code{execute_delete()}}{
+Performs an deletion on the database
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RSQL.class$execute_delete(sql_delete)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{sql_delete}}{the select to perform}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-retrieve_insert"></a>}}
 \subsection{Method \code{retrieve_insert()}}{
+Performs an insert on the database. This is a composite function
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RSQL.class$retrieve_insert(
   table,
@@ -161,10 +302,28 @@ Composite function}
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{table}}{The table}
+
+\item{\code{fields_uk}}{The fields unique key}
+
+\item{\code{values_uk}}{The values unique key}
+
+\item{\code{fields}}{The fields}
+
+\item{\code{values}}{The values}
+
+\item{\code{field_id}}{The field of the serial id}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-disconnect"></a>}}
 \subsection{Method \code{disconnect()}}{
+Disconnects the instance from the database
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RSQL.class$disconnect()}\if{html}{\out{</div>}}
 }

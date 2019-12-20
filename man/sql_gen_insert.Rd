@@ -12,10 +12,6 @@ sql_gen_insert(table, values_df, insert_fields = names(values_df))
 \item{values_df}{The values to insert. Must be defined as data.frame of values}
 
 \item{insert_fields}{The fields to insert}
-
-\item{where_fields}{The fields used in the where section}
-
-\item{where_values}{The values used in the where section}
 }
 \description{
 Generates an insert statement.

@@ -29,6 +29,8 @@ sql_gen_select(
 \item{order_by}{Order by fields}
 
 \item{top}{Retrieve top records}
+
+\item{distinct}{it adds a distinct clause to the query.}
 }
 \description{
 Generates a Select Statement

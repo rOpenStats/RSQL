@@ -6,6 +6,9 @@
 \usage{
 getMtcarsdbPath(copy = TRUE)
 }
+\arguments{
+\item{copy}{a boolean that states whether it should be copied to the home directory or not.}
+}
 \description{
 getCarsdbPath
 }

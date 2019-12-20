@@ -4,14 +4,12 @@
 \alias{sql_execute_insert}
 \title{Executes a statement on the database.}
 \usage{
-sql_execute_insert(sql_insert, dbconn = NULL, export = c("db", "df"))
+sql_execute_insert(sql_insert, dbconn = NULL)
 }
 \arguments{
 \item{sql_insert}{The SQL String}
 
 \item{dbconn}{The Database Connection to run the query against}
-
-\item{export}{The export type (either 'db' or 'df')}
 }
 \description{
 Executes a statement on the database.

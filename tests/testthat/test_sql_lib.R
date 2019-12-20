@@ -1,24 +1,22 @@
 # TODO remove from here
 library(dplyr)
 
+db.name <- getMtcarsdbPath()
+rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
+
 test_that("sql_lib basic test", {
 
-    db.name <- getMtcarsdbPath()
-    rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
     #dbWriteTable(rsql$conn, name = "mtcars", mtcars, overwrite = TRUE)
     expect_equal(dbListTables(rsql$conn), "mtcars")
 
     query_sql <- rsql$gen_select(select_fields = c("mpg", "cyl", "disp", "hp", "drat", "wt",
-        table = "qsec", "vs", "am", where_fields="gear", where_values ="carb"), "mtcars")
+        table = "qsec", "vs", "am", where_fields = "gear", where_values = "carb"), "mtcars")
     mtcars.observed <- rsql$execute_select(query_sql)
     expect_equal(nrow(mtcars.observed), 31)
-    rsql$disconnect()
 })
 
 test_that("legal entities", {
 
-    db.name <- getMtcarsdbPath()
-    rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
     #dbWriteTable(rsql$conn, name = "mtcars", mtcars, overwrite = TRUE)
     query_sql <- rsql$gen_select(select_fields = c("mpg", "cyl", "disp", "hp", "drat", "wt"),
                                                    table = "qsec")
@@ -32,12 +30,9 @@ test_that("legal entities", {
 
     expect_error(query_sql <- rsql$gen_select(select_fields = c("legal"),
                                               table = "illegal 3"))
-    rsql$disconnect()
 })
 
 test_that("sql_lib insert and delete test", {
-    db.name <- getMtcarsdbPath()
-    rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
     insert_fields <- c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am",
         "gear", "carb")
     insert_data <- data.frame(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
@@ -56,17 +51,13 @@ test_that("sql_lib insert and delete test", {
 
     delete.sql <- rsql$gen_delete("mtcars", c("mpg"), c("1"))
     rsql$execute_delete(delete.sql)
-
-    rsql$disconnect()
 })
 
 
 test_that("sql_lib select, insert and delete with dataframe", {
-    db.name <- getMtcarsdbPath()
-    rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
     insert_fields <- c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am",
                        "gear", "carb")
-    insert_data <- data.frame(matrix(1:(11*7), ncol = 11, byrow = TRUE))
+    insert_data <- data.frame(matrix(1: ( 11 * 7 ), ncol = 11, byrow = TRUE))
     names(insert_data) <- insert_fields
     insert.sql <- rsql$gen_insert("mtcars", values_df = insert_data)
     rsql$execute_insert(insert.sql)
@@ -91,24 +82,18 @@ test_that("sql_lib select, insert and delete with dataframe", {
     delete.sql <- rsql$gen_delete("mtcars", c("mpg"), c("1"))
     rsql$execute_delete(delete.sql)
 
-    rsql$disconnect()
 })
 
 test_that("sql_lib select with where clause", {
-    db.name <- getMtcarsdbPath()
-    sql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
-    query_sql <- sql$gen_select(table = "mtcars", select_fields = "*",
+    query_sql <- rsql$gen_select(table = "mtcars", select_fields = "*",
                                 where_fields = c("mpg"),
                                 where_values = 21)
-    selected.mtcars = sql$execute_select(query_sql)
+    selected.mtcars <- rsql$execute_select(query_sql)
     expect_equal(selected.mtcars$drat, c(3.9, 3.9))
-    sql$disconnect()
 })
 
 
 test_that("retrieveInsert", {
-    db.name <- getMtcarsdbPath()
-    rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
     retrieve.insert.df <- data.frame(vehicle_id = 0, uk = "car",
                                      color = "red", stringsAsFactors = FALSE)
     dbWriteTable(rsql$conn, name = "retrieveInsert", retrieve.insert.df, overwrite = TRUE)
@@ -136,9 +121,8 @@ test_that("retrieveInsert", {
         rsql$retrieve_insert(table = "retrieveInsert", values_uk = values.uk,
                              values = values.color, field_id = "vehicle_id")
     expect_equal(1, vehicle.id.observed)
-
-    rsql$disconnect()
 })
 
-# TODO fieldnames not legal
+rsql$disconnect()
+
 # TODO group by
