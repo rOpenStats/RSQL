@@ -1,13 +1,12 @@
 Package: rsql
 Type: Package
-Title: Database Agnostic package for R
+Title: Database Agnostic Package To Generate And Process SQL Queries In R
 Version: 0.1.0
 Authors@R: c(
     person("Alejandro", "Baranek",,"abaranek@dc.uba.ar", c("aut","com","cre", "cph")),
     person("Leonardo","Belen",,"leobelen@gmail.com", c("aut","com","cph")))
 Maintainer: Alejandro Baranek <abaranek@dc.uba.ar>
-Description: A Database Agnostic package for R
-    This package allows the user to generate select, insert, update and delete sql queries the underlying database without having to write SQL code. 
+Description: A Database Agnostic package for R. This package allows the user to generate and execute select, insert, update and delete sql queries the underlying database without having to write SQL code. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
