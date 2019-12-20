@@ -542,7 +542,7 @@ sql_gen_where_list <- function(where_fields, where_values) {
         sql_where <- paste(sql_where, ") in ", sep = "")
         list_where <- ""
         separator_list <- ""
-        for (v in c( 1 : nrow(where_values))) {
+        for (v in seq_len(nrow(where_values))) {
             i <- 1
             separator <- ""
             sql_row_where <- ""
@@ -576,7 +576,7 @@ sql_gen_where_or <- function(where_fields = names(where_values), where_values) {
     if (length(where_fields) > 0) {
         sql_where <- "where"
         separator_where <- ""
-        for (v in c(1:nrow(where_values))) {
+        for (v in seq_len(nrow(where_values))) {
             i <- 1
             separator <- ""
             sql_row_where <- ""
@@ -624,10 +624,10 @@ sql_gen_insert <- function(table, values_df, insert_fields = names(values_df)) {
     }
     sql_values <- ""
     separator_rows <- ""
-    for (i in c(1:nrow(values_df))) {
+    for (i in seq_len(nrow(values_df))) {
         sql_values_row <- ""
         separator <- ""
-        for (j in c(1:length(insert_fields))) {
+        for (j in seq_len(length(insert_fields))) {
             if (is.na(values_df[i, j])) {
                 value <- "NA"
             } else {
@@ -741,7 +741,7 @@ sql_retrieve_insert <- function(table, fields_uk = names(values_uk), values_uk,
     }
 
 
-    for (i in c(1:nrow(values_uk))) {
+    for (i in seq_len(nrow(values_uk))) {
         # value_uk <- as.character(values_uk[i,]) value <- as.character(values[i,])
         value_uk <- as.data.frame(values_uk[i, ], stringsAsFactors = FALSE)
         value <- values[i, ]
@@ -757,7 +757,7 @@ sql_retrieve_insert <- function(table, fields_uk = names(values_uk), values_uk,
         lgr$trace("Retrieved", rows = nrow(row))
         if (nrow(row) == 0) {
             lgr$trace(paste("executing", insert_statement))
-            res <- sql_execute_insert(insert_statement, dbconn = dbconn)
+            sql_execute_insert(insert_statement, dbconn = dbconn)
             row <- sql_execute_select(select_statement, dbconn = dbconn)
         }
 
@@ -769,10 +769,11 @@ sql_retrieve_insert <- function(table, fields_uk = names(values_uk), values_uk,
 
 
 #' Generates a Joined Query
-#'
+#' TODO integrate with external functionality
 #' @param dw_definition TEST
 #' @param recipe TEST
 #' @param indicator_fields TEST
+#' @noRd
 sql_gen_joined_query <- function(dw_definition, recipe, indicator_fields) {
     # sql_gen_select <- function(select_fields, table, where_fields='',
     # where_values=NULL,group_by=c()){
@@ -782,11 +783,11 @@ sql_gen_joined_query <- function(dw_definition, recipe, indicator_fields) {
     ind_i <- 0
     where_sep <- ""
     from_sep <- ""
-    for (i in c(1:nrow(recipe$m_recipe))) {
+    for (i in seq_len(nrow(recipe$m_recipe))) {
         current_expression <- recipe$m_recipe[i, ]
         # TODO correct in a dictionary
         alias <- gsub("\\.", "_", current_expression$value)
-        for (j in c( 1 : length(indicator_fields) ) ) {
+        for (j in seq_len(length(indicator_fields) ) ) {
             if (current_expression$op == "=")
                 sql_select_fields[j] <- current_expression$value else {
                 sql_select_fields[j] <- paste("(", sql_select_fields[j], current_expression$op,
@@ -801,7 +802,7 @@ sql_gen_joined_query <- function(dw_definition, recipe, indicator_fields) {
                 alias, sep = "")
             from_sep <- ","
             first_field_def <- dw_definition$m_dimensions[1, ]
-            for (k in c(1:nrow(dw_definition$m_dimensions))) {
+            for (k in seq_len(nrow(dw_definition$m_dimensions))) {
                 current_field_def <- dw_definition$m_dimensions[k, ]
                 explicit_value <- ind_i == 1 & nchar(current_field_def$default) ==
                   0
@@ -824,6 +825,7 @@ sql_gen_joined_query <- function(dw_definition, recipe, indicator_fields) {
                     "=", right_value, sep = "")
                   where_sep <- " and "
                 }
+                current_field_def
             }
         }
         ret <- paste("select", paste(sql_select_fields, "as", indicator_fields, collapse = ","),
