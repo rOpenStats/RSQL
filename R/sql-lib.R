@@ -660,7 +660,7 @@ sql_retrieve_insert <- function(table, fields_uk = names(values_uk), values_uk,
 
         lgr$trace(paste("verifying", select_statement, ":"))
         insert_statement <- sql_gen_insert(table, insert_fields = c(fields_uk, fields),
-            values = values_insert)
+            values_df = values_insert)
         row <- sql_execute_select(select_statement, dbconn = dbconn)
         lgr$trace("Retrieved", rows = nrow(row))
         if (nrow(row) == 0) {
