@@ -1,6 +1,6 @@
 Package: rsql
 Type: Package
-Title: Database Agnostic Package To Generate And Process SQL Queries In R
+Title: Database Agnostic Package to Generate and Process SQL Queries in R
 Version: 0.1.0
 Authors@R: c(
     person("Alejandro", "Baranek",,"abaranek@dc.uba.ar", c("aut","com","cre", "cph")),
