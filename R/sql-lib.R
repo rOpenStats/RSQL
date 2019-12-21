@@ -103,9 +103,6 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
           entity.regexp <- self$entity.select.regexp
         }
 
-        print(entity.type)
-        print(entity.regexp)
-
         grepl(entity.regexp, entity, perl = TRUE)
         gsub(entity.regexp, "====", entity, perl = TRUE)
 

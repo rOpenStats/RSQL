@@ -41,9 +41,10 @@ test_that("legal entities", {
     expect_error(query_sql <- rsql$gen_select(select_fields = c("legal"),
                                               table = "illegal 3"))
     #aggregation functions
-    rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
     query_sql <- rsql$gen_select(select_fields = c("min(legal)"),
                                               table = "legal")
+    expect_error(query_sql <- rsql$gen_select(select_fields = c("illegal(legal)"),
+                                 table = "legal"))
 })
 
 test_that("sql_lib insert and delete test", {
