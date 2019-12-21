@@ -9,10 +9,20 @@ test_that("sql_lib basic test", {
     #dbWriteTable(rsql$conn, name = "mtcars", mtcars, overwrite = TRUE)
     expect_equal(dbListTables(rsql$conn), "mtcars")
 
-    query_sql <- rsql$gen_select(select_fields = c("mpg", "cyl", "disp", "hp", "drat", "wt",
-        table = "qsec", "vs", "am", where_fields = "gear", where_values = "carb"), "mtcars")
+    query_sql <- rsql$gen_select(
+        select_fields = c("*"),
+        table = "mtcars")
+
+#    query_sql <- rsql$gen_select(select_fields = c("mpg", "cyl", "disp", "hp", "drat", "wt",
+#                                                   -        table = "qsec", "vs", "am", where_fields = "gear", where_values = "carb"), "mtcars")
+
+    query_sql <- rsql$gen_select(
+        select_fields = c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am"),
+        table = "mtcars",
+        where_fields = "gear",
+        where_values = 4)
     mtcars.observed <- rsql$execute_select(query_sql)
-    expect_equal(nrow(mtcars.observed), 31)
+    expect_equal(nrow(mtcars.observed), 12)
 })
 
 test_that("legal entities", {
@@ -30,6 +40,10 @@ test_that("legal entities", {
 
     expect_error(query_sql <- rsql$gen_select(select_fields = c("legal"),
                                               table = "illegal 3"))
+    #aggregation functions
+    rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
+    query_sql <- rsql$gen_select(select_fields = c("min(legal)"),
+                                              table = "legal")
 })
 
 test_that("sql_lib insert and delete test", {

@@ -21,8 +21,13 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     #' @field db.name database name
     db.name = NA,
     # regexp
-    #' @field entity.regexp A regexp to detect the entity
-    entity.regexp = "(^(?:[[:alnum:]\\_]+|\\*)$)",
+    #'
+    #' @field available.functions for generating select expressions
+    available.functions  = NA,
+    #' @field entity.field.regexp for scrape a field or table expression
+    entity.field.regexp  = NA,
+    #' @field entity.select.regexp for scrape a select expressions expression
+    entity.select.regexp = NA,
     #state
     #' @field conn  The connection handler
     conn = NULL,
@@ -55,21 +60,56 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
                                      user = user, password = password, host = host, port = port)
     },
     #' @description
+    #' initialize regexp for scraping entities
+    #' @param force force setup?
+    #' @return regexp for scraping select expressionss
+    setupRegexp = function(force = FALSE){
+      if (is.na(self$entity.field.regexp) | force){
+        self$available.functions   <- c("max", "min", "mean", "tmean", "count")
+        self$entity.field.regexp   <- "([[:alnum:]\\_]+)"
+        available.functions.regexp <- paste(self$available.functions, collapse = "|")
+        field.wildcard <- paste("(?:",self$entity.field.regexp, "|\\*)", sep = "")
+        self$entity.select.regexp  <- paste("^(?:", self$entity.field.regexp, "|(",
+                                              available.functions.regexp,")\\(",
+                                                self$entity.field.regexp,
+                                           "\\)", "|", "\\*)$", sep = "")
+        entity.regexp <- "^(?:[[:alnum:]]\\_|(?:max|min|mean|tmean|count)\\([[:alnum:]\\_]+\\)|\\*)$"
+
+        self$entity.field.regexp   <- paste("^", self$entity.field.regexp, "$", sep ="")
+      }
+      self$entity.select.regexp
+    },
+    #' @description
     #' Class destructor
     finalize = function(){
       message("Finalizing object and disconnecting")
       self$disconnect()
     },
-
     #'@description
     #' Checks if an entity exists
     #' @param entities entitities to check
     #' @param entity.type entity type to check against
     checkEntitiesNames = function(entities, entity.type){
+      self$setupRegexp()
       errors <- NULL
       for (entity in entities){
         error <- FALSE
-        if (!grepl(self$entity.regexp, entity, perl = TRUE)){
+
+        entity.regexp <- NULL
+        if (entity.type %in% c("table", "field")){
+          entity.regexp <- self$entity.field.regexp
+        }
+        if (entity.type == "select"){
+          entity.regexp <- self$entity.select.regexp
+        }
+
+        print(entity.type)
+        print(entity.regexp)
+
+        grepl(entity.regexp, entity, perl = TRUE)
+        gsub(entity.regexp, "====", entity, perl = TRUE)
+
+        if (!grepl(entity.regexp, entity, perl = TRUE)){
           error <- TRUE
         }
         if (error){
@@ -101,8 +141,9 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
                           order_by = c(),
                           top = 0,
                           distinct = FALSE) {
+      self$checkEntitiesNames(select_fields, entity.type = "select")
       self$checkEntitiesNames(table, entity.type = "table")
-      self$checkEntitiesNames(c(select_fields, where_fields, group_by, order_by), entity.type = "field")
+      self$checkEntitiesNames(c(where_fields, group_by, order_by), entity.type = "field")
 
       sql_gen_select(select_fields = select_fields, table = table,
                        where_fields = where_fields,
@@ -218,7 +259,8 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     disconnect = function() {
       if (!is.null(self$conn)){
         if (!is.null(self$last.rs)) {
-          DBI::dbClearResult(self$last.rs)
+          # TODO Fix this call
+          #DBI::dbClearResult(self$last.rs)
           self$last.rs <- NULL
         }
         DBI::dbDisconnect(self$conn)

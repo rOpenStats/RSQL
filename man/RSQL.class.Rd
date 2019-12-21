@@ -13,7 +13,11 @@ This class is intended to simplify SQL commands.
 
 \item{\code{db.name}}{database name}
 
-\item{\code{entity.regexp}}{A regexp to detect the entity}
+\item{\code{available.functions}}{for generating select expressions}
+
+\item{\code{entity.field.regexp}}{for scrape a field or table expression}
+
+\item{\code{entity.select.regexp}}{for scrape a select expressions expression}
 
 \item{\code{conn}}{The connection handler}
 
@@ -35,6 +39,7 @@ This class is intended to simplify SQL commands.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{RSQL.class$new()}}
+\item \href{#method-setupRegexp}{\code{RSQL.class$setupRegexp()}}
 \item \href{#method-finalize}{\code{RSQL.class$finalize()}}
 \item \href{#method-checkEntitiesNames}{\code{RSQL.class$checkEntitiesNames()}}
 \item \href{#method-gen_select}{\code{RSQL.class$gen_select()}}
@@ -81,6 +86,25 @@ Initializes a connection
 \item{\code{port}}{port number}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setupRegexp"></a>}}
+\subsection{Method \code{setupRegexp()}}{
+initialize regexp for scraping entities
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$setupRegexp(force = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{force}}{force setup?}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+regexp for scraping select expressionss
 }
 }
 \if{html}{\out{<hr>}}
