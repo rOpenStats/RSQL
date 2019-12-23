@@ -237,13 +237,17 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     #' @param table The table
     #' @param fields_uk The fields unique key
     #' @param values_uk The values unique key
+    #' @param fields The fields (Not used. Included for compatibility)
+    #' @param values The values (Not used. Included for compatibility)
     #' @param field_id The field of the serial id
     retrieve = function(table, fields_uk = names(values_uk), values_uk,
+                        fields = names(values), values,
                                field_id = "id"){
       self$checkEntitiesNames(table, entity.type = "table")
       self$checkEntitiesNames(c(fields_uk, field_id), entity.type = "field")
       sql_retrieve(table = table, fields_uk = fields_uk, values_uk = values_uk,
-                            field_id = field_id, dbconn = self$conn)
+                   fields = fields, values = values, field_id = field_id,
+                   dbconn = self$conn)
     },
     #'@description
     #'
@@ -779,9 +783,12 @@ df_verify <- function(dataframe, columns) {
 #' @param fields_uk The fields unique key
 #' @param values_uk The values unique key
 #' @param field_id The field of the serial id
+#' @param fields The fields (Not used. Included for compatibility)
+#' @param values The values (Not used. Included for compatibility)
 #' @param dbconn The database connection
 #' @export
 sql_retrieve <- function(table, fields_uk = names(values_uk), values_uk,
+                         fields = names(values), values = NULL,
                          field_id = "id", dbconn = NULL) {
   ret <- NULL
   values_uk <- as.data.frame(values_uk, stringsAsFactors = FALSE)

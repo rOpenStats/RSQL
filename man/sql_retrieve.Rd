@@ -8,6 +8,8 @@ sql_retrieve(
   table,
   fields_uk = names(values_uk),
   values_uk,
+  fields = names(values),
+  values = NULL,
   field_id = "id",
   dbconn = NULL
 )
@@ -18,6 +20,10 @@ sql_retrieve(
 \item{fields_uk}{The fields unique key}
 
 \item{values_uk}{The values unique key}
+
+\item{fields}{The fields (Not used. Included for compatibility)}
+
+\item{values}{The values (Not used. Included for compatibility)}
 
 \item{field_id}{The field of the serial id}
 

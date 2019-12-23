@@ -321,6 +321,8 @@ Performs an insert on the database. This is a composite function
   table,
   fields_uk = names(values_uk),
   values_uk,
+  fields = names(values),
+  values,
   field_id = "id"
 )}\if{html}{\out{</div>}}
 }
@@ -333,6 +335,10 @@ Performs an insert on the database. This is a composite function
 \item{\code{fields_uk}}{The fields unique key}
 
 \item{\code{values_uk}}{The values unique key}
+
+\item{\code{fields}}{The fields (Not used. Included for compatibility)}
+
+\item{\code{values}}{The values (Not used. Included for compatibility)}
 
 \item{\code{field_id}}{The field of the serial id}
 }
