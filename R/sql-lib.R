@@ -785,20 +785,13 @@ sql_retrieve <- function(table, fields_uk = names(values_uk), values_uk,
                          field_id = "id", dbconn = NULL) {
   ret <- NULL
   values_uk <- as.data.frame(values_uk, stringsAsFactors = FALSE)
-  values <- as.data.frame(values, stringsAsFactors = FALSE)
-  if (nrow(values) > 0 & nrow(values) < nrow(values_uk)) {
-    stop(paste(gettext("sql_lib.error_nrows_values_uk_neq_nrows_values", domain = "R-rsql"), nrow(values_uk), nrow(values)))
-  }
-
 
   for (i in seq_len(nrow(values_uk))) {
     # value_uk <- as.character(values_uk[i,]) value <- as.character(values[i,])
     value_uk <- as.data.frame(values_uk[i, ], stringsAsFactors = FALSE)
-    value <- values[i, ]
 
     select_statement <- sql_gen_select(field_id, table, where_fields = fields_uk,
                                        where_values = value_uk)
-
     lgr$trace(paste("verifying", select_statement, ":"))
     row <- sql_execute_select(select_statement, dbconn = dbconn)
     lgr$trace("Retrieved", rows = nrow(row))
@@ -825,7 +818,7 @@ sql_retrieve_insert <- function(table, fields_uk = names(values_uk), values_uk,
     ret <- NULL
     values_uk <- as.data.frame(values_uk, stringsAsFactors = FALSE)
     values <- as.data.frame(values, stringsAsFactors = FALSE)
-    if (nrow(values) > 0 & nrow(values) < nrow(values_uk)) {
+    if (nrow(values) > 0 & nrow(values) != nrow(values_uk)) {
         stop(paste(gettext("sql_lib.error_nrows_values_uk_neq_nrows_values", domain = "R-rsql"), nrow(values_uk), nrow(values)))
     }
 
