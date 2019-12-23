@@ -50,6 +50,7 @@ This class is intended to simplify SQL commands.
 \item \href{#method-execute_update}{\code{RSQL.class$execute_update()}}
 \item \href{#method-execute_insert}{\code{RSQL.class$execute_insert()}}
 \item \href{#method-execute_delete}{\code{RSQL.class$execute_delete()}}
+\item \href{#method-retrieve}{\code{RSQL.class$retrieve()}}
 \item \href{#method-retrieve_insert}{\code{RSQL.class$retrieve_insert()}}
 \item \href{#method-disconnect}{\code{RSQL.class$disconnect()}}
 \item \href{#method-clone}{\code{RSQL.class$clone()}}
@@ -312,9 +313,36 @@ Performs an deletion on the database
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-retrieve"></a>}}
+\subsection{Method \code{retrieve()}}{
+Performs an insert on the database. This is a composite function
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$retrieve(
+  table,
+  fields_uk = names(values_uk),
+  values_uk,
+  field_id = "id"
+)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{table}}{The table}
+
+\item{\code{fields_uk}}{The fields unique key}
+
+\item{\code{values_uk}}{The values unique key}
+
+\item{\code{field_id}}{The field of the serial id}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-retrieve_insert"></a>}}
 \subsection{Method \code{retrieve_insert()}}{
-Performs an insert on the database. This is a composite function
+Obtain id if object exists on the database. Insert object if not.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RSQL.class$retrieve_insert(
   table,

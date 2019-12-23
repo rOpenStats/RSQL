@@ -231,10 +231,23 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
         self$delete.counter <- self$delete.counter + 1
         self$last.rs
     },
-
     #'@description
     #'
     #' Performs an insert on the database. This is a composite function
+    #' @param table The table
+    #' @param fields_uk The fields unique key
+    #' @param values_uk The values unique key
+    #' @param field_id The field of the serial id
+    retrieve = function(table, fields_uk = names(values_uk), values_uk,
+                               field_id = "id"){
+      self$checkEntitiesNames(table, entity.type = "table")
+      self$checkEntitiesNames(c(fields_uk, field_id), entity.type = "field")
+      sql_retrieve(table = table, fields_uk = fields_uk, values_uk = values_uk,
+                            field_id = field_id, dbconn = self$conn)
+    },
+    #'@description
+    #'
+    #' Obtain id if object exists on the database. Insert object if not.
     #' @param table The table
     #' @param fields_uk The fields unique key
     #' @param values_uk The values unique key
@@ -247,8 +260,8 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
       self$checkEntitiesNames(table, entity.type = "table")
       self$checkEntitiesNames(c(fields_uk, fields, field_id), entity.type = "field")
       sql_retrieve_insert(table = table, fields_uk = fields_uk, values_uk = values_uk,
-                            fields = fields, values = values, field_id = field_id,
-                            dbconn = self$conn)
+                          fields = fields, values = values, field_id = field_id,
+                          dbconn = self$conn)
     },
     #' @description
     #'
@@ -759,7 +772,44 @@ df_verify <- function(dataframe, columns) {
             paste(dataframe_names, collapse = ",")))
 }
 
-#' Retrieves an insert Statement
+
+#' Retrieves Statement
+#'
+#' @param table The table
+#' @param fields_uk The fields unique key
+#' @param values_uk The values unique key
+#' @param field_id The field of the serial id
+#' @param dbconn The database connection
+#' @export
+sql_retrieve <- function(table, fields_uk = names(values_uk), values_uk,
+                         field_id = "id", dbconn = NULL) {
+  ret <- NULL
+  values_uk <- as.data.frame(values_uk, stringsAsFactors = FALSE)
+  values <- as.data.frame(values, stringsAsFactors = FALSE)
+  if (nrow(values) > 0 & nrow(values) < nrow(values_uk)) {
+    stop(paste(gettext("sql_lib.error_nrows_values_uk_neq_nrows_values", domain = "R-rsql"), nrow(values_uk), nrow(values)))
+  }
+
+
+  for (i in seq_len(nrow(values_uk))) {
+    # value_uk <- as.character(values_uk[i,]) value <- as.character(values[i,])
+    value_uk <- as.data.frame(values_uk[i, ], stringsAsFactors = FALSE)
+    value <- values[i, ]
+
+    select_statement <- sql_gen_select(field_id, table, where_fields = fields_uk,
+                                       where_values = value_uk)
+
+    lgr$trace(paste("verifying", select_statement, ":"))
+    row <- sql_execute_select(select_statement, dbconn = dbconn)
+    lgr$trace("Retrieved", rows = nrow(row))
+    ret <- c(ret, as.numeric(row[, field_id]))
+    i <- i + 1
+  }
+  ret
+}
+
+
+#' Retrieves or insert Statement
 #'
 #' @param table The table
 #' @param fields_uk The fields unique key
