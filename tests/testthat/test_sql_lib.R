@@ -133,6 +133,14 @@ test_that("retrieveInsert", {
 
     expect_true(is.na(vehicle.id.observed))#
     expect_equal(2, nrow(rsql$execute_select(rsql$gen_select("*", "retrieveInsert"))))
+
+    # After insert, only execute retrieve
+    vehicle.id.observed <-
+        rsql$retrieve(table = "retrieveInsert", values_uk = values.uk,
+                      field_id = "vehicle_id")
+    expect_true(is.na(vehicle.id.observed))#
+
+
     vehicle_id <- data.frame(vehicle_id = 1)
     #Update vehicle_id to 1
     rsql$execute_update(rsql$gen_update("retrieveInsert", values = vehicle_id, where_values = values.uk))
