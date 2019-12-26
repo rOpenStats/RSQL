@@ -194,7 +194,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     #'@description
     #'
     #' Performs an execution on the database
-    #' @param sql_select the select to perform
+    #' @param sql_select the sql select statement to perform
     execute_select = function(sql_select) {
         self$last.query <- sql_select
         self$last.rs <- sql_execute_select(sql_select, dbconn = self$conn)
@@ -204,7 +204,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     #'@description
     #'
     #' Performs an update on the database
-    #' @param sql_update the select to perform
+    #' @param sql_update the sql update statement to perform
     execute_update = function(sql_update) {
         self$last.query <- sql_update
         self$last.rs <- sql_execute_update(sql_update = sql_update, dbconn = self$conn)
@@ -214,7 +214,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     #'@description
     #'
     #' Performs an insert on the database
-    #' @param sql_insert the select to perform
+    #' @param sql_insert the sql insert statement to perform
     execute_insert = function(sql_insert) {
         self$last.query <- sql_insert
         self$last.rs <- sql_execute_insert(sql_insert = sql_insert, dbconn = self$conn)
@@ -223,8 +223,18 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     },
     #'@description
     #'
+    #' Performs a comman on the database
+    #' @param sql_command the sql statement to perform
+    execute_command = function(sql_command){
+      self$last.query <- sql_command
+      self$last.rs <- sql_execute_insert(sql_command, dbconn = self$conn)
+      self$command.counter <- self$command.counter + 1
+      self$last.rs
+    },
+    #'@description
+    #'
     #' Performs an deletion on the database
-    #' @param sql_delete the select to perform
+    #' @param sql_delete the sql delete statement to perform
     execute_delete = function(sql_delete) {
         self$last.query <- sql_delete
         self$last.rs <- sql_execute_delete(sql_delete, dbconn = self$conn)

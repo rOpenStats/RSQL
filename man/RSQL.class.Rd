@@ -49,6 +49,7 @@ This class is intended to simplify SQL commands.
 \item \href{#method-execute_select}{\code{RSQL.class$execute_select()}}
 \item \href{#method-execute_update}{\code{RSQL.class$execute_update()}}
 \item \href{#method-execute_insert}{\code{RSQL.class$execute_insert()}}
+\item \href{#method-execute_command}{\code{RSQL.class$execute_command()}}
 \item \href{#method-execute_delete}{\code{RSQL.class$execute_delete()}}
 \item \href{#method-retrieve}{\code{RSQL.class$retrieve()}}
 \item \href{#method-retrieve_insert}{\code{RSQL.class$retrieve_insert()}}
@@ -259,7 +260,7 @@ Performs an execution on the database
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{sql_select}}{the select to perform}
+\item{\code{sql_select}}{the sql select statement to perform}
 }
 \if{html}{\out{</div>}}
 }
@@ -275,7 +276,7 @@ Performs an update on the database
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{sql_update}}{the select to perform}
+\item{\code{sql_update}}{the sql update statement to perform}
 }
 \if{html}{\out{</div>}}
 }
@@ -291,7 +292,23 @@ Performs an insert on the database
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{sql_insert}}{the select to perform}
+\item{\code{sql_insert}}{the sql insert statement to perform}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-execute_command"></a>}}
+\subsection{Method \code{execute_command()}}{
+Performs a comman on the database
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$execute_command(sql_command)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{sql_command}}{the sql statement to perform}
 }
 \if{html}{\out{</div>}}
 }
@@ -307,7 +324,7 @@ Performs an deletion on the database
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{sql_delete}}{the select to perform}
+\item{\code{sql_delete}}{the sql delete statement to perform}
 }
 \if{html}{\out{</div>}}
 }
