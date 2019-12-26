@@ -32,6 +32,8 @@ This class is intended to simplify SQL commands.
 \item{\code{update.counter}}{An instance update counter}
 
 \item{\code{delete.counter}}{An instance delete counter}
+
+\item{\code{command.counter}}{An instance command counter}
 }
 \if{html}{\out{</div>}}
 }

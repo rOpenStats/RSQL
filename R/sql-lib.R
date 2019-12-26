@@ -44,6 +44,8 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     update.counter = 0,
     #' @field delete.counter   An instance delete counter
     delete.counter = 0,
+    #' @field command.counter   An instance command counter
+    command.counter = 0,
     #' @description
     #' Initializes a connection
     #' @param drv driver name
