@@ -64,7 +64,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     #' @description
     #' initialize regexp for scraping entities
     #' @param force force setup?
-    #' @return regexp for scraping select expressionss
+    #' @return regexp for scraping select expressions
     setupRegexp = function(force = FALSE){
       if (is.na(self$entity.field.regexp) | force){
         self$available.functions   <- c("max", "min", "mean", "tmean", "count")
@@ -89,7 +89,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     },
     #'@description
     #' Checks if an entity exists
-    #' @param entities entitities to check
+    #' @param entities entities to check
     #' @param entity.type entity type to check against
     checkEntitiesNames = function(entities, entity.type){
       self$setupRegexp()
@@ -225,7 +225,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     },
     #'@description
     #'
-    #' Performs a comman on the database
+    #' Performs a command on the database
     #' @param sql_command the sql statement to perform
     execute_command = function(sql_command){
       self$last.query <- sql_command

@@ -108,7 +108,7 @@ initialize regexp for scraping entities
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-regexp for scraping select expressionss
+regexp for scraping select expressions
 }
 }
 \if{html}{\out{<hr>}}
@@ -131,7 +131,7 @@ Checks if an entity exists
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{entities}}{entitities to check}
+\item{\code{entities}}{entities to check}
 
 \item{\code{entity.type}}{entity type to check against}
 }
@@ -302,7 +302,7 @@ Performs an insert on the database
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-execute_command"></a>}}
 \subsection{Method \code{execute_command()}}{
-Performs a comman on the database
+Performs a command on the database
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RSQL.class$execute_command(sql_command)}\if{html}{\out{</div>}}
 }

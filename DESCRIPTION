@@ -6,7 +6,7 @@ Authors@R: c(
     person("Alejandro", "Baranek",,"abaranek@dc.uba.ar", c("aut","com","cre", "cph")),
     person("Leonardo","Belen",,"leobelen@gmail.com", c("aut","com","cph")))
 Maintainer: Alejandro Baranek <abaranek@dc.uba.ar>
-Description: A Database Agnostic package for R. This package allows the user to generate and execute select, insert, update and delete sql queries the underlying database without having to write SQL code. 
+Description: A Database Agnostic package for R. This package allows the user to generate and execute select, insert, update and delete SQL queries the underlying database without having to explicitly write SQL code. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -23,3 +23,5 @@ Suggests: knitr,
     rmarkdown, 
     testthat
 VignetteBuilder: knitr
+BugReports: https://github.com/rOpenStats/rsql/issues
+URL: https://github.com/rOpenStats/rsql

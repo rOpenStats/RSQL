@@ -4,20 +4,20 @@
     "http://schema.org"
   ],
   "@type": "SoftwareSourceCode",
-  "identifier": "Rpolyhedra",
-  "description": "A polyhedra database scraped from various sources as R6 objects and 'rgl' visualizing capabilities.",
-  "name": "Rpolyhedra: Polyhedra Database",
-  "codeRepository": "https://github.com/ropensci/Rpolyhedra",
-  "issueTracker": "https://github.com/ropensci/Rpolyhedra/issues",
+  "identifier": "rsql",
+  "description": "A Database Agnostic package for R. This package allows the user to generate and execute select, insert, update and delete SQL queries the underlying database without having to explicitly write SQL code. ",
+  "name": "rsql: Database Agnostic Package to Generate and Process SQL Queries in R",
+  "codeRepository": "https://github.com/rOpenStats/rsql",
+  "issueTracker": "https://github.com/rOpenStats/rsql/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.4.3",
+  "version": "0.1.0",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
-    "version": "3.6.1",
+    "version": "3.6.2",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 3.6.1 (2019-07-05)",
+  "runtimePlatform": "R version 3.6.2 (2019-12-12)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -101,23 +101,29 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "covr",
-      "name": "covr",
+      "identifier": "testthat",
+      "name": "testthat",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://CRAN.R-project.org/package=covr"
+      "sameAs": "https://CRAN.R-project.org/package=testthat"
     }
   ],
   "softwareRequirements": [
     {
       "@type": "SoftwareApplication",
-      "identifier": "R",
-      "name": "R",
-      "version": ">= 3.4"
+      "identifier": "lgr",
+      "name": "lgr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=lgr"
     },
     {
       "@type": "SoftwareApplication",
@@ -133,39 +139,15 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "geometry",
-      "name": "geometry",
+      "identifier": "DBI",
+      "name": "DBI",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://CRAN.R-project.org/package=geometry"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "rgl",
-      "name": "rgl",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=rgl"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "stringr",
-      "name": "stringr",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=stringr"
+      "sameAs": "https://CRAN.R-project.org/package=DBI"
     },
     {
       "@type": "SoftwareApplication",
@@ -181,66 +163,17 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "XML",
-      "name": "XML",
+      "identifier": "RSQLite",
+      "name": "RSQLite",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://CRAN.R-project.org/package=XML"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "digest",
-      "name": "digest",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=digest"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "testthat",
-      "name": "testthat",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=testthat"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "futile.logger",
-      "name": "futile.logger",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=futile.logger"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "git2r",
-      "name": "git2r",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=git2r"
+      "sameAs": "https://CRAN.R-project.org/package=RSQLite"
     }
   ],
-  "readme": "https://github.com/ropensci/Rpolyhedra/blob/master/README.md",
   "contIntegration": [
     "https://travis-ci.org/ropensci/Rpolyhedra",
     "https://codecov.io/gh/ropensci/Rpolyhedra"
@@ -252,11 +185,11 @@
   ],
   "relatedLink": "https://CRAN.R-project.org/package=Rpolyhedra",
   "funder": {},
-  "releaseNotes": "https://github.com/ropensci/Rpolyhedra/blob/master/NEWS.md",
   "review": {
     "@type": "Review",
     "url": "https://github.com/ropensci/onboarding/issues/157",
     "provider": "http://ropensci.org"
   },
-  "developmentStatus": "https://www.repostatus.org/#active"
+  "developmentStatus": "https://www.repostatus.org/#active",
+  "fileSize": "54.696KB"
 }
