@@ -40,7 +40,7 @@ delete.sql <- sql$generate_delete("mtcars", c("mpg"), c("1"))
 sql$execute_delete(delete.sql)
 ```
 
-Finally, once the connection is not longer needed, it has to be expressely disconnected. 
+Finally, once the connection is not longer needed, it has to be expressly disconnected. 
 
 ```
 library(RSQLite)

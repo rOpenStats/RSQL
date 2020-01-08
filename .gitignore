@@ -10,3 +10,8 @@
 
 #
 R/dev/
+
+# Rcheck output
+..Rcheck
+doc
+Meta
