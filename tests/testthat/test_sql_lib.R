@@ -1,5 +1,3 @@
-# TODO remove from here
-library(dplyr)
 
 db.name <- getMtcarsdbPath()
 rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)

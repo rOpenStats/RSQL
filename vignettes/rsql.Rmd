@@ -13,14 +13,14 @@ In order to use rsql, a RSQL object has to be initialized, indicating all inform
 
 ```
 library(RSQLite)
-sql <- rsql(drv=RSQLite::SQLite(), dbname = "mtcars")
+sql <- createRSQL(drv=RSQLite::SQLite(), dbname = "mtcars")
 ```
 
 On success, it is possible to use the object to produce queries and execute them to retrieve information. Returned query sets can be in data.frame format for easy integration with R scripts. 
 
 ```
 library(RSQLite)
-sql <- rsql(drv=RSQLite::SQLite(), dbname = "mtcars")
+sql <- createRSQL(drv=RSQLite::SQLite(), dbname = "mtcars")
 query.sql <- sql$generate_select(c("mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb"),
                                    "mtcars")
 mtcars.df <- sql$execute_select(query.sql)
@@ -30,7 +30,7 @@ Also, rsql allows to insert or delete records as easily.
 
 ```
 library(RSQLite)
-sql <- rsql(drv=RSQLite::SQLite(), dbname = "mtcars")
+sql <- createRSQL(drv=RSQLite::SQLite(), dbname = "mtcars")
 insert.fields <- c("mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb")
 insert.data <- data.frame(1,2,3,4,5,6,7,8,9,10,11)
 insert.sql <- sql$generate_insert("mtcars",insert.fields,
@@ -44,6 +44,6 @@ Finally, once the connection is not longer needed, it has to be expressly discon
 
 ```
 library(RSQLite)
-sql <- rsql(drv=RSQLite::SQLite(), dbname = "mtcars")
+sql <- createRSQL(drv=RSQLite::SQLite(), dbname = "mtcars")
 sql$disconnect()
 ```

@@ -13,6 +13,7 @@
 #' @description
 #' This class is intended to simplify SQL commands.
 #' @examples
+#' library(RSQL)
 #' db.name <- getMtcarsdbPath(copy = TRUE)
 #' rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
 #' where_values_df <- data.frame(carb = 8, stringsAsFactors = FALSE)
@@ -35,7 +36,7 @@
 #'  where_values = where_values_df)
 #' mtcars.observed <- rsql$execute_select(select_sql)
 #' mtcars.observed
-#' å
+#'
 #' @export
 #' @importFrom R6 R6Class
 RSQL.class <- R6::R6Class("RSQL", public = list(
@@ -821,7 +822,6 @@ df_verify <- function(dataframe, columns) {
 #' @param fields The fields (Not used. Included for compatibility)
 #' @param values The values (Not used. Included for compatibility)
 #' @param dbconn The database connection
-#' @export
 sql_retrieve <- function(table, fields_uk = names(values_uk), values_uk,
                          fields = names(values), values = NULL,
                          field_id = "id", dbconn = NULL) {
@@ -853,7 +853,6 @@ sql_retrieve <- function(table, fields_uk = names(values_uk), values_uk,
 #' @param values The values
 #' @param field_id The field of the serial id
 #' @param dbconn The database connection
-#' @export
 sql_retrieve_insert <- function(table, fields_uk = names(values_uk), values_uk,
                                 fields = names(values), values = NULL,
                                 field_id = "id", dbconn = NULL) {
@@ -1033,7 +1032,7 @@ parse_where_clause <- function(where_clause_list = c()) {
 #' Gets the path of package data.
 #' @export
 getPackageDir <- function(){
-  home.dir <- find.package("rsql", lib.loc = NULL, quiet = TRUE)
+  home.dir <- find.package("RSQL", lib.loc = NULL, quiet = TRUE)
   data.subdir <- file.path("inst", "extdata")
   if (!dir.exists(file.path(home.dir, data.subdir)))
     data.subdir <- "extdata"

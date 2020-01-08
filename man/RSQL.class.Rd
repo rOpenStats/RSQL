@@ -7,6 +7,7 @@
 This class is intended to simplify SQL commands.
 }
 \examples{
+library(RSQL)
 db.name <- getMtcarsdbPath(copy = TRUE)
 rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
 where_values_df <- data.frame(carb = 8, stringsAsFactors = FALSE)
@@ -29,7 +30,7 @@ select_sql <- rsql$gen_select(
  where_values = where_values_df)
 mtcars.observed <- rsql$execute_select(select_sql)
 mtcars.observed
-å
+
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
