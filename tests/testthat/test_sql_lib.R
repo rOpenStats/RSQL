@@ -41,6 +41,10 @@ test_that("legal entities", {
     #aggregation functions
     query_sql <- rsql$gen_select(select_fields = c("min(legal)"),
                                               table = "legal")
+    expect_equal(query_sql,  "select min(legal) from legal")
+    query_sql <- rsql$gen_select(select_fields = c("min(d_date)"),
+                                 table = "legal")
+    expect_equal(query_sql,  "select min(d_date) from legal")
     expect_error(query_sql <- rsql$gen_select(select_fields = c("illegal(legal)"),
                                  table = "legal"))
 })
