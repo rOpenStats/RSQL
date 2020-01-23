@@ -18,11 +18,12 @@ Collate:
 Imports: lgr,
     R6,
     DBI, 
-    dplyr,
     RSQLite
 Suggests: knitr,
+    testthat,
     rmarkdown, 
-    testthat
+    dplyr,
+    covr
 VignetteBuilder: knitr
 BugReports: https://github.com/rOpenStats/rsql/issues
 URL: https://github.com/rOpenStats/rsql
