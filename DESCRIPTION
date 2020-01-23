@@ -4,8 +4,8 @@ Title: Database Agnostic Package to Generate and Process 'SQL' Queries in R
 Version: 0.1.1
 Language: en-US
 Authors@R: c(
-    person("Alejandro", "Baranek",,"abaranek@dc.uba.ar", c("aut","com","cre", "cph")),
-    person("Leonardo","Belen",,"leobelen@gmail.com", c("aut","com","cph")))
+    person("Alejandro", "Baranek",,"abaranek@dc.uba.ar", c("cre", "aut")),
+    person("Leonardo","Belen",,"leobelen@gmail.com", c("cre", "aut")))
 Maintainer: Alejandro Baranek <abaranek@dc.uba.ar>
 Description: Allows the user to generate and execute select, insert, update and delete 'SQL' queries the underlying database without having to explicitly write 'SQL' code. 
 License: MIT + file LICENSE
