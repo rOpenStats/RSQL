@@ -4,13 +4,13 @@
     "http://schema.org"
   ],
   "@type": "SoftwareSourceCode",
-  "identifier": "rsql",
-  "description": "A Database Agnostic package for R. This package allows the user to generate and execute select, insert, update and delete SQL queries the underlying database without having to explicitly write SQL code. ",
-  "name": "rsql: Database Agnostic Package to Generate and Process SQL Queries in R",
-  "codeRepository": "https://github.com/rOpenStats/rsql",
-  "issueTracker": "https://github.com/rOpenStats/rsql/issues",
+  "identifier": "RSQL",
+  "description": "Allows the user to generate and execute select, insert, update and delete 'SQL' queries the underlying database without having to explicitly write 'SQL' code. ",
+  "name": "RSQL: Database Agnostic Package to Generate and Process 'SQL' Queries in R",
+  "codeRepository": "https://github.com/rOpenStats/RSQL",
+  "issueTracker": "https://github.com/rOpenStats/RSQL/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -38,34 +38,8 @@
       "email": "leobelen@gmail.com"
     }
   ],
-  "contributor": [
-    {
-      "@type": "Person",
-      "givenName": "Alejandro",
-      "familyName": "Baranek",
-      "email": "abaranek@dc.uba.ar"
-    },
-    {
-      "@type": "Person",
-      "givenName": "Leonardo",
-      "familyName": "Belen",
-      "email": "leobelen@gmail.com"
-    }
-  ],
-  "copyrightHolder": [
-    {
-      "@type": "Person",
-      "givenName": "Alejandro",
-      "familyName": "Baranek",
-      "email": "abaranek@dc.uba.ar"
-    },
-    {
-      "@type": "Person",
-      "givenName": "Leonardo",
-      "familyName": "Belen",
-      "email": "leobelen@gmail.com"
-    }
-  ],
+  "contributor": {},
+  "copyrightHolder": {},
   "maintainer": [
     {
       "@type": "Person",
@@ -89,6 +63,18 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "testthat",
+      "name": "testthat",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=testthat"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "rmarkdown",
       "name": "rmarkdown",
       "provider": {
@@ -101,15 +87,27 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "testthat",
-      "name": "testthat",
+      "identifier": "dplyr",
+      "name": "dplyr",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://CRAN.R-project.org/package=testthat"
+      "sameAs": "https://CRAN.R-project.org/package=dplyr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "covr",
+      "name": "covr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=covr"
     }
   ],
   "softwareRequirements": [
@@ -151,18 +149,6 @@
     },
     {
       "@type": "SoftwareApplication",
-      "identifier": "dplyr",
-      "name": "dplyr",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=dplyr"
-    },
-    {
-      "@type": "SoftwareApplication",
       "identifier": "RSQLite",
       "name": "RSQLite",
       "provider": {
@@ -190,6 +176,5 @@
     "url": "https://github.com/ropensci/onboarding/issues/157",
     "provider": "http://ropensci.org"
   },
-  "developmentStatus": "https://www.repostatus.org/#active",
-  "fileSize": "54.696KB"
+  "developmentStatus": "https://www.repostatus.org/#active"
 }
