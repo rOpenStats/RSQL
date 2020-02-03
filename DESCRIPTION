@@ -25,5 +25,5 @@ Suggests: knitr,
     dplyr,
     covr
 VignetteBuilder: knitr
-BugReports: https://github.com/rOpenStats/rsql/issues
-URL: https://github.com/rOpenStats/rsql
+BugReports: https://github.com/rOpenStats/RSQL/issues
+URL: https://github.com/rOpenStats/RSQL
