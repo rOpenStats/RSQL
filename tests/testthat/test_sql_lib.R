@@ -7,6 +7,8 @@ test_that("sql_lib basic test", {
     #dbWriteTable(rsql$conn, name = "mtcars", mtcars, overwrite = TRUE)
     expect_equal(dbListTables(rsql$conn), "mtcars")
 
+    db.name <- getMtcarsdbPath()
+    rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
     query_sql <- rsql$gen_select(
         select_fields = c("*"),
         table = "mtcars")
