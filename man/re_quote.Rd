@@ -2,7 +2,8 @@
 % Please edit documentation in R/sql-lib.R
 \name{re_quote}
 \alias{re_quote}
-\title{TODO: WHAT IS THIS FUNCTION DOING AGAIN?}
+\title{This functions remove original quotes and sets validated quotes for corresponding db.
+If it had no quotes, will only put corresponding quotes symbols}
 \usage{
 re_quote(text, quotes = "'")
 }
@@ -12,5 +13,6 @@ re_quote(text, quotes = "'")
 \item{quotes}{The quotes}
 }
 \description{
-TODO: WHAT IS THIS FUNCTION DOING AGAIN?
+This functions remove original quotes and sets validated quotes for corresponding db.
+If it had no quotes, will only put corresponding quotes symbols
 }

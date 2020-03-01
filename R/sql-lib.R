@@ -365,8 +365,6 @@ sql_execute_insert <- function(sql_insert, dbconn = NULL) {
 #' @param sql_update The update SQL
 #' @param dbconn The Database Connection to run the query against
 sql_execute_update <- function(sql_update, dbconn = NULL) {
-    sql_update <- gsub(",NA", ",NULL", sql_update)
-    sql_update <- gsub(", NA", ",NULL", sql_update)
     ret <- DBI::dbSendQuery(dbconn, sql_update)
     ret
 }
@@ -422,14 +420,19 @@ execute_get_insert <- function(dbconn, sql_select, sql_insert, ...) {
 #'
 #' @param text The text to test
 #' @param quotes_symbols The quotation characters
-is_quoted <- function(text, quotes_symbols = c("'", "'")) {
-    ret <- FALSE
+is_quoted <- function(text, quotes_symbols = "'") {
+    ret <- TRUE
     i <- 1
-    while (!ret & i <= length(quotes_symbols)) {
-        quotes <- quotes_symbols[i]
-        ret <- substr(text, 1, 1) == quotes & substr(text, nchar(text), nchar(text)) ==
+    if (!is.na(text)){
+      if (!is.null(text)){
+        ret <- FALSE
+        while (!ret & i <= length(quotes_symbols)) {
+          quotes <- quotes_symbols[i]
+          ret <- substr(text, 1, 1) == quotes & substr(text, nchar(text), nchar(text)) ==
             quotes
-        i <- i + 1
+          i <- i + 1
+        }
+      }
     }
     ret
 }
@@ -441,15 +444,16 @@ dequote <- function(text) {
     substr(text, 2, nchar(text) - 1)
 }
 
-#' TODO: WHAT IS THIS FUNCTION DOING AGAIN?
+#' This functions remove original quotes and sets validated quotes for corresponding db.
+#' If it had no quotes, will only put corresponding quotes symbols
 #'
 #' @param text The string
 #' @param quotes The quotes
 re_quote <- function(text, quotes = "'") {
     quote <- FALSE
-    if (!is_quoted(text, "'"))
+    if (!is_quoted(text, quotes_symbols = "\""))
         quote <- TRUE
-    if (is_quoted(text, "'")) {
+    if (is_quoted(text, quotes_symbols = "'")) {
         text <- dequote(text)
         quote <- TRUE
     }
@@ -461,6 +465,7 @@ re_quote <- function(text, quotes = "'") {
 #' Adds quotes to a string
 #'
 #' @param text The string to quote
+#' @export
 add_quotes <- function(text) {
     ret <- sapply(text, FUN = re_quote)
     names(ret) <- NULL
@@ -754,6 +759,7 @@ sql_gen_update <- function(table, update_fields = names(values), values, where_f
     ret <- paste("update ", table, " set (", paste(update_fields, collapse = ","),
                                       ")=(", paste(add_quotes(values), collapse =  ","),
         ") ", sql_where, sep = "")
+    ret <- gsub(",\'{,1}NA\'{,1}", ",NULL", ret)
     ret
 }
 

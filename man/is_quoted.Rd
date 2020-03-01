@@ -4,7 +4,7 @@
 \alias{is_quoted}
 \title{Determines if the string is quoted or not}
 \usage{
-is_quoted(text, quotes_symbols = c("'", "'"))
+is_quoted(text, quotes_symbols = "'")
 }
 \arguments{
 \item{text}{The text to test}

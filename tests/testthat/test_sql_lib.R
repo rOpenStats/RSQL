@@ -148,6 +148,13 @@ test_that("retrieveInsert", {
     expect_equal(1, vehicle.id.observed)
 })
 
+test_that("update symbols", {
+    update.pk <- data.frame(pk = 1, stringsAsFactors = FALSE)
+    update.values <- data.frame(field.1 = "a", field.2 = "b", field.3 = NA, stringsAsFactors = FALSE)
+    observed.update <- sql_gen_update("foo", values = update.values, where_values = update.pk)
+    expect_equal(observed.update, "update foo set (field.1,field.2,field.3)=('a','b',NULL) where (pk) in  ( 1 )")
+})
+
 rsql$disconnect()
 
 # TODO group by
