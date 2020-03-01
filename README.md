@@ -7,7 +7,7 @@
 
 | Release | Usage | Development |
 |:--------|:------|:------------|
-| [![](https://badges.ropensci.org/999_status.svg)](https://github.com/ropensci/onboarding/issues/999)-->| [![minimal R version](https://img.shields.io/badge/R%3E%3D-3.4.0-blue.svg)](https://cran.r-project.org/) | [![Travis](https://travis-ci.org/rOpenStats/RSQL.svg?branch=master)](https://travis-ci.org/rOpenStats/RSQL) |
+| [![](https://badges.ropensci.org/371_status.svg)](https://github.com/ropensci/onboarding/issues/371)-->| [![minimal R version](https://img.shields.io/badge/R%3E%3D-3.4.0-blue.svg)](https://cran.r-project.org/) | [![Travis](https://travis-ci.org/rOpenStats/RSQL.svg?branch=master)](https://travis-ci.org/rOpenStats/RSQL) |
 | [![CRAN](http://www.r-pkg.org/badges/version/RSQL)](https://cran.r-project.org/package=RSQL) | | [![codecov](https://codecov.io/gh/rOpenStats/RSQL/branch/master/graph/badge.svg)](https://codecov.io/gh/rOpenStats/RSQL) |
 |||[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)|
 
