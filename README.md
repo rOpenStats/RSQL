@@ -40,8 +40,6 @@ query_sql <- rsql$gen_select(
     select_fields = c("*"),
     table = "mtcars")
 
-where_values = "carb"), "mtcars")
-
 query_sql <- rsql$gen_select(
     select_fields = c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am"),
     table = "mtcars",
