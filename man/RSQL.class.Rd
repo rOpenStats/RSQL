@@ -87,6 +87,7 @@ mtcars.observed
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 Initializes a connection
 \subsection{Usage}{
@@ -120,6 +121,7 @@ Initializes a connection
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-setupRegexp"></a>}}
+\if{latex}{\out{\hypertarget{method-setupRegexp}{}}}
 \subsection{Method \code{setupRegexp()}}{
 initialize regexp for scraping entities
 \subsection{Usage}{
@@ -139,6 +141,7 @@ regexp for scraping select expressions
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-finalize"></a>}}
+\if{latex}{\out{\hypertarget{method-finalize}{}}}
 \subsection{Method \code{finalize()}}{
 Class destructor
 \subsection{Usage}{
@@ -148,6 +151,7 @@ Class destructor
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-checkEntitiesNames"></a>}}
+\if{latex}{\out{\hypertarget{method-checkEntitiesNames}{}}}
 \subsection{Method \code{checkEntitiesNames()}}{
 Checks if an entity exists
 \subsection{Usage}{
@@ -166,6 +170,7 @@ Checks if an entity exists
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-gen_select"></a>}}
+\if{latex}{\out{\hypertarget{method-gen_select}{}}}
 \subsection{Method \code{gen_select()}}{
 Generates a select
 \subsection{Usage}{
@@ -205,6 +210,7 @@ Generates a select
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-gen_insert"></a>}}
+\if{latex}{\out{\hypertarget{method-gen_insert}{}}}
 \subsection{Method \code{gen_insert()}}{
 Generate  insert statement
 \subsection{Usage}{
@@ -225,6 +231,7 @@ Generate  insert statement
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-gen_update"></a>}}
+\if{latex}{\out{\hypertarget{method-gen_update}{}}}
 \subsection{Method \code{gen_update()}}{
 Generate  insert statement
 \subsection{Usage}{
@@ -255,6 +262,7 @@ Generate  insert statement
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-gen_delete"></a>}}
+\if{latex}{\out{\hypertarget{method-gen_delete}{}}}
 \subsection{Method \code{gen_delete()}}{
 Generate a delete statement
 \subsection{Usage}{
@@ -279,6 +287,7 @@ Generate a delete statement
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-execute_select"></a>}}
+\if{latex}{\out{\hypertarget{method-execute_select}{}}}
 \subsection{Method \code{execute_select()}}{
 Performs an execution on the database
 \subsection{Usage}{
@@ -295,6 +304,7 @@ Performs an execution on the database
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-execute_update"></a>}}
+\if{latex}{\out{\hypertarget{method-execute_update}{}}}
 \subsection{Method \code{execute_update()}}{
 Performs an update on the database
 \subsection{Usage}{
@@ -311,6 +321,7 @@ Performs an update on the database
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-execute_insert"></a>}}
+\if{latex}{\out{\hypertarget{method-execute_insert}{}}}
 \subsection{Method \code{execute_insert()}}{
 Performs an insert on the database
 \subsection{Usage}{
@@ -327,6 +338,7 @@ Performs an insert on the database
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-execute_command"></a>}}
+\if{latex}{\out{\hypertarget{method-execute_command}{}}}
 \subsection{Method \code{execute_command()}}{
 Performs a command on the database
 \subsection{Usage}{
@@ -343,6 +355,7 @@ Performs a command on the database
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-execute_delete"></a>}}
+\if{latex}{\out{\hypertarget{method-execute_delete}{}}}
 \subsection{Method \code{execute_delete()}}{
 Performs an deletion on the database
 \subsection{Usage}{
@@ -359,6 +372,7 @@ Performs an deletion on the database
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-retrieve"></a>}}
+\if{latex}{\out{\hypertarget{method-retrieve}{}}}
 \subsection{Method \code{retrieve()}}{
 Performs an insert on the database. This is a composite function
 \subsection{Usage}{
@@ -392,6 +406,7 @@ Performs an insert on the database. This is a composite function
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-retrieve_insert"></a>}}
+\if{latex}{\out{\hypertarget{method-retrieve_insert}{}}}
 \subsection{Method \code{retrieve_insert()}}{
 Obtain id if object exists on the database. Insert object if not.
 \subsection{Usage}{
@@ -425,6 +440,7 @@ Obtain id if object exists on the database. Insert object if not.
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-disconnect"></a>}}
+\if{latex}{\out{\hypertarget{method-disconnect}{}}}
 \subsection{Method \code{disconnect()}}{
 Disconnects the instance from the database
 \subsection{Usage}{
@@ -434,6 +450,7 @@ Disconnects the instance from the database
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
