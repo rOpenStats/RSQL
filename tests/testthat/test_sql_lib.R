@@ -96,7 +96,7 @@ test_that("sql_lib select, insert and delete with dataframe", {
                                  where_values = where_values,
                                  distinct = TRUE)
     check_df <- rsql$execute_select(check_sql)
-    expect_equal(check_df %>% group_by(mpg, cyl), update_values)
+    expect_equivalent(check_df %>% dplyr::group_by(mpg, cyl), update_values)
 
     delete.sql <- rsql$gen_delete("mtcars", c("mpg"), c("1"))
     rsql$execute_delete(delete.sql)
