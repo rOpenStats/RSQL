@@ -18,7 +18,7 @@ Collate:
 Imports: lgr,
     R6,
     DBI, 
-    RSQLite
+    RSQLite,
 Suggests: knitr,
     testthat,
     rmarkdown, 
