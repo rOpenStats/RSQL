@@ -52,7 +52,7 @@ mtcars.observed <- rsql$execute_select(query_sql)
 # Troubleshooting
 
 
-Please note that the 'RSQL' project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms.
+Please note that the 'RSQL' project is released with a [Contributor Code of Conduct](https://github.com/rOpenStats/RSQL/blob/master/CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms.
 
 
 <!--[![ropensci_footer](https://ropensci.org/public_images/ropensci_footer.png)](https://ropensci.org)-->
