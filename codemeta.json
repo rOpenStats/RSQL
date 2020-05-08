@@ -169,7 +169,10 @@
     "geometry",
     "rgl"
   ],
-  "relatedLink": ["https://CRAN.R-project.org/package=Rpolyhedra", "https://CRAN.R-project.org/package=RSQL"],
+  "relatedLink": [
+    "https://CRAN.R-project.org/package=Rpolyhedra",
+    "https://CRAN.R-project.org/package=RSQL"
+  ],
   "funder": {},
   "review": {
     "@type": "Review",
