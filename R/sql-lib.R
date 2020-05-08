@@ -476,6 +476,7 @@ add_quotes <- function(text) {
 #'
 #' @param text The string to remove quotes from
 #' @param quotes Quote characters
+#' @export
 rm_quotes <- function(text, quotes = "'") {
     if (quotes == substr(text, 1, 1) & quotes == substr(text, nchar(text), nchar(text))) {
         text <- substr(text, 2, nchar(text) - 1)
@@ -486,8 +487,9 @@ rm_quotes <- function(text, quotes = "'") {
 #' Removes quotes from data.frame columns
 #'
 #' @param text The text column to remove quotes from.
-remove_quotes <- function(text) {
-    ret <- sapply(text, FUN = rm_quotes)
+#' @export
+rm_vector_quotes <- function(text.vector) {
+    ret <- sapply(text.vector, FUN = rm_quotes)
     names(ret) <- NULL
     ret
 }

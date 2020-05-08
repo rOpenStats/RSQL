@@ -25,6 +25,11 @@ test_that("sql_lib basic test", {
     expect_equal(nrow(mtcars.observed), 12)
 })
 
+test_that("util", {
+    expect_equal(rm_vector_quotes(c("hola", "'hola'", "''lola''"))
+                 , c("hola", "hola", "'lola'"))
+})
+
 test_that("legal entities", {
 
     #dbWriteTable(rsql$conn, name = "mtcars", mtcars, overwrite = TRUE)
