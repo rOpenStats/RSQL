@@ -20,9 +20,10 @@ Imports: lgr,
     DBI, 
     RSQLite,
 Suggests: knitr,
-    testthat,
     rmarkdown, 
     dplyr,
+    pkgdown,
+    testthat,
     covr
 VignetteBuilder: knitr
 BugReports: https://github.com/rOpenStats/RSQL/issues
