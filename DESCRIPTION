@@ -19,12 +19,14 @@ Imports: lgr,
     R6,
     DBI, 
     RSQLite,
-Suggests: knitr,
-    rmarkdown, 
+    knitr
+Suggests: rmarkdown, 
     dplyr,
     pkgdown,
     testthat,
-    covr
+    covr,
+    lintr,
+    pkgdown
 VignetteBuilder: knitr
 BugReports: https://github.com/rOpenStats/RSQL/issues
 URL: https://github.com/rOpenStats/RSQL
