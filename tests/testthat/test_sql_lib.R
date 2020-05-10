@@ -26,9 +26,9 @@ test_that("sql_lib basic test", {
 })
 
 test_that("util", {
-    expect_equal(rm_vector_quotes(c("hola", "'hola'", "''lola''"))
-                 , c("hola", "hola", "'lola'"))
-})
+    expect_equal(rm_vector_quotes(c("hello", "'hello'", "''tell''"))
+                 , c("hello", "hello", "'tell'"))
+    })
 
 test_that("legal entities", {
 
