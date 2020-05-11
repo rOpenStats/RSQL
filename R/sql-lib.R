@@ -94,14 +94,14 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
         self$available.functions   <- c("max", "min", "mean", "tmean", "count")
         self$entity.field.regexp   <- "([[:alnum:]\\_]+)"
         available.functions.regexp <- paste(self$available.functions, collapse = "|")
-        field.wildcard <- paste("(?:",self$entity.field.regexp, "|\\*)", sep = "")
+        field.wildcard <- paste("(?:", self$entity.field.regexp, "|\\*)", sep = "")
         self$entity.select.regexp  <- paste("^(?:", self$entity.field.regexp, "|(",
-                                              available.functions.regexp,")\\(",
+                                              available.functions.regexp, ")\\(",
                                                 self$entity.field.regexp,
                                            "\\)", "|", "\\*)$", sep = "")
         entity.regexp <- "^(?:[[:alnum:]]\\_|(?:max|min|mean|tmean|count)\\([[:alnum:]\\_]+\\)|\\*)$"
 
-        self$entity.field.regexp   <- paste("^", self$entity.field.regexp, "$", sep ="")
+        self$entity.field.regexp   <- paste("^", self$entity.field.regexp, "$", sep = "")
       }
       self$entity.select.regexp
     },
@@ -932,7 +932,7 @@ sql_gen_joined_query <- function(dw_definition, recipe, indicator_fields) {
             sql_from <- paste(sql_from, from_sep, dw_definition$m_fact_table, " ",
                 alias, sep = "")
             from_sep <- ","
-            first_field_def <- dw_definition$m_dimensions[1, ]
+            #first_field_def <- dw_definition$m_dimensions[1, ]
             for (k in seq_len(nrow(dw_definition$m_dimensions))) {
                 current_field_def <- dw_definition$m_dimensions[k, ]
                 explicit_value <- ind_i == 1 & nchar(current_field_def$default) ==
