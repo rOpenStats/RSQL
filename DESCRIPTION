@@ -22,7 +22,6 @@ Imports: lgr,
     knitr
 Suggests: rmarkdown, 
     dplyr,
-    pkgdown,
     testthat,
     covr,
     lintr,
