@@ -19,16 +19,15 @@ test_that("sql_lib basic test", {
     query_sql <- rsql$gen_select(
         select_fields = c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am"),
         table = "mtcars",
-        where_fields = "gear",
-        where_values = 4)
+        where_values = data.frame(gear = 4))
     mtcars.observed <- rsql$execute_select(query_sql)
     expect_equal(nrow(mtcars.observed), 12)
 })
 
 test_that("util", {
-    expect_equal(rm_vector_quotes(c("hello", "'hello'", "''tell''"))
-                 , c("hello", "hello", "'tell'"))
-    })
+    expect_equal(rm_vector_quotes(c("hel'lo", "'hel'lo'", "'tell''"))
+                 , c("hel''lo", "hel''lo", "tell''"))
+})
 
 test_that("legal entities", {
 
@@ -66,14 +65,13 @@ test_that("sql_lib insert and delete test", {
     update_fields <- c("mpg", "cyl")
     update_values <- data.frame(1, 2)
 
-    where_fields <- "disp"
-    where_values <- 258.0
+    where_values <- data.frame(disp = 258.0)
     update_sql <- rsql$gen_update(table = "mtcars",
                                   update_fields = update_fields, values = update_values,
-                                  where_fields = where_fields, where_values = where_values)
+                                  where_values = where_values)
     rsql$execute_update(update_sql)
 
-    delete.sql <- rsql$gen_delete("mtcars", c("mpg"), c("1"))
+    delete.sql <- rsql$gen_delete("mtcars", where_values = data.frame(mpg = 1))
     rsql$execute_delete(delete.sql)
 })
 
@@ -89,9 +87,7 @@ test_that("sql_lib select, insert and delete with dataframe", {
     update_fields <- c("mpg", "cyl")
     update_values <- data.frame(1, 2)
     names(update_values) <- update_fields
-    where_fields <- "disp"
-    where_values <- 275.8
-    names(where_values) <- where_fields
+    where_values <- data.frame(disp = 275.8)
     update_sql <- rsql$gen_update("mtcars", values = update_values,
                                   where_values = where_values)
     rsql$execute_update(update_sql)
@@ -103,15 +99,55 @@ test_that("sql_lib select, insert and delete with dataframe", {
     check_df <- rsql$execute_select(check_sql)
     expect_equivalent(check_df %>% dplyr::group_by(mpg, cyl), update_values)
 
-    delete.sql <- rsql$gen_delete("mtcars", c("mpg"), c("1"))
+    delete.sql <- rsql$gen_delete("mtcars", where_values = data.frame(mpg = 1))
     rsql$execute_delete(delete.sql)
+
+})
+
+
+test_that("sql_lib select, insert, update and delete with dataframe and stuffed apostrophe", {
+    mtcars$model <- rownames(mtcars)
+    dbWriteTable(rsql$conn, name = "mtcars", value = mtcars, overwrite = TRUE)
+    insert_fields <- c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am",
+                       "gear", "carb")
+    insert_data <- data.frame(matrix(1: ( 11 * 7 ), ncol = 11, byrow = TRUE))
+    names(insert_data) <- insert_fields
+    insert_data$model <- paste("'car", 1:7, "'", sep ="")
+    insert_data[7,"model"] <- "'O'Connor'"
+    insert.sql <- rsql$gen_insert("mtcars", values_df = insert_data)
+    rsql$execute_insert(insert.sql)
+
+    update_fields <- c("mpg", "cyl", "model")
+    update_values <- data.frame(1, 2, "'O'Connor'")
+    names(update_values) <- update_fields
+    where_values_df <- data.frame(disp = 275.8)
+    update_sql <- rsql$gen_update("mtcars", values = update_values,
+                                  where_values = where_values_df)
+    rsql$execute_update(update_sql)
+
+
+    where_values <- data.frame(model = "'O'Connor'")
+
+    check_sql <- rsql$gen_select(update_fields,
+                                 table = "mtcars",
+                                 where_values = where_values,
+                                 distinct = TRUE)
+    check_df <- rsql$execute_select(check_sql)
+    observed_values <- check_df %>% filter(mpg == 1)
+    observed_values$model <- add_quotes(observed_values$model)
+    expect_equivalent(observed_values, update_values)
+
+    delete.where.df <- data.frame(model ="'O'Connor'")
+    delete.sql <- rsql$gen_delete("mtcars", where_values = delete.where.df)
+    rsql$execute_delete(delete.sql)
+    check_df <- rsql$execute_select(check_sql)
+    expect_equal(nrow(check_df), 0)
 
 })
 
 test_that("sql_lib select with where clause", {
     query_sql <- rsql$gen_select(table = "mtcars", select_fields = "*",
-                                where_fields = c("mpg"),
-                                where_values = 21)
+                                where_values = data.frame(mpg = 21))
     selected.mtcars <- rsql$execute_select(query_sql)
     expect_equal(selected.mtcars$drat, c(3.9, 3.9))
 })

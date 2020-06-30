@@ -6,7 +6,6 @@
 # provide a tool to do it.
 
 
-# TODO where clause  with range as mpg > 1
 
 #' The class that provides the SQL functionality.
 #'
@@ -428,13 +427,25 @@ is_quoted <- function(text, quotes_symbols = "'") {
         ret <- FALSE
         while (!ret & i <= length(quotes_symbols)) {
           quotes <- quotes_symbols[i]
-          ret <- substr(text, 1, 1) == quotes & substr(text, nchar(text), nchar(text)) ==
-            quotes
+          ret <- substr(text, 1, 1) == quotes &
+                  substr(text, nchar(text), nchar(text)) == quotes
           i <- i + 1
         }
       }
     }
     ret
+}
+
+#' Stuff quote symbol from text
+#'
+#' @param text The unquoted string to stuff quotes from.
+stuff_quote <- function(unquoted.text, quote = "'"){
+  if (is_quoted(unquoted.text)){
+    stop(paste("stuff_quote function cannot be called with quoted text", unquoted.text))
+  }
+  quoted <- FALSE
+  stuffed.text <- gsub(quote, paste(quote, quote, sep = ""), unquoted.text)
+  stuffed.text
 }
 
 #' Removes the quotes from the string
@@ -450,15 +461,18 @@ dequote <- function(text) {
 #' @param text The string
 #' @param quotes The quotes
 re_quote <- function(text, quotes = "'") {
-    quote <- FALSE
-    if (!is_quoted(text, quotes_symbols = "\""))
+    if (!is.na(text)){
+      quote <- FALSE
+      if (!is_quoted(text, quotes_symbols = "\""))
         quote <- TRUE
-    if (is_quoted(text, quotes_symbols = "'")) {
+      if (is_quoted(text, quotes_symbols = "'")) {
         text <- dequote(text)
         quote <- TRUE
-    }
-    if (quote)
+      }
+      if (quote){
         text <- paste(quotes, text, quotes, sep = "")
+      }
+    }
     text
 }
 
@@ -478,10 +492,50 @@ add_quotes <- function(text) {
 #' @param quotes Quote characters
 #' @export
 rm_quotes <- function(text, quotes = "'") {
-    if (quotes == substr(text, 1, 1) & quotes == substr(text, nchar(text), nchar(text))) {
+    if (!is.na(text)){
+      unquoted.text <- text
+      if (quotes == substr(text, 1, 1) & quotes == substr(text, nchar(text), nchar(text))) {
         text <- substr(text, 2, nchar(text) - 1)
+        unquoted.text <- text
+      }
+      text <- stuff_quote(unquoted.text)
     }
     text
+}
+
+
+#' stuff quote characters in quoted or not quoted df for DSL or DML operations
+#'
+#' @param text.df Data Frame with corresponding values and fields as colnames
+#' @export
+stuff_df_quoted <- function(text.df){
+  if (!is.null(text.df)){
+    if (!is.data.frame(text.df)){
+      stop(paste("text.df must be a data.frame but is", class(text.df)[1]))
+    }
+    cols.quoted <- apply(text.df, MARGIN = 2, FUN = function(x)vapply(x, FUN = is_quoted, FUN.VALUE = logical(1)))
+    if (nrow(text.df) > 1){
+      cols.quoted.min <- apply(cols.quoted, MARGIN = 2, FUN = min)
+      cols.quoted.max <- apply(cols.quoted, MARGIN = 2, FUN = max)
+    }
+    else{
+      cols.quoted.min <- cols.quoted
+      cols.quoted.max <- cols.quoted
+    }
+    if (min(cols.quoted.min == cols.quoted.max) == 0){
+      unsound.columns <- which(cols.quoted.min != cols.quoted.max)
+      stop("unsound quoting strategy in columns", paste(names(text.df)[unsound.columns], collapse = ","))
+    }
+    for (i in seq_len(nrow(text.df))){
+      text.df[i,] <- vapply(text.df[i,], FUN = rm_quotes, FUN.VALUE = character(1))
+    }
+    for (j in seq_len(ncol(text.df))){
+      if (cols.quoted.min[j]){
+        text.df[,j] <- vapply(text.df[,j], FUN = re_quote, FUN.VALUE = character(1))
+      }
+    }
+  }
+  text.df
 }
 
 #' Removes quotes from data.frame columns
@@ -509,6 +563,8 @@ add_grep_exact_match <- function(text) {
 #' @param where_fields The fields used in the where section
 #' @param where_values The values used in the where section
 sql_gen_delete <- function(table, where_fields = names(where_values), where_values = NULL) {
+
+    where_values <- stuff_df_quoted(where_values)
     sql_where <- sql_gen_where(where_fields, where_values)
     ret <- paste("delete from", table, sql_where)
     ret
@@ -532,6 +588,7 @@ sql_gen_select <- function(select_fields, table,
                            order_by = c(),
                            top = 0,
                            distinct = FALSE) {
+    where_values <- stuff_df_quoted(where_values)
     separator <- ""
     sql_select_fields <- ""
     for (f in select_fields) {
@@ -703,6 +760,7 @@ sql_gen_where_or <- function(where_fields = names(where_values), where_values) {
 #' @param insert_fields The fields to insert
 #' @param values_df The values to insert. Must be defined as data.frame of values
 sql_gen_insert <- function(table, values_df, insert_fields = names(values_df)) {
+    values_df <- stuff_df_quoted(values_df)
     if (length(values_df) > 1 & class(values_df) != "data.frame"){
       #debug
       print(values_df)
@@ -757,6 +815,8 @@ sql_gen_insert <- function(table, values_df, insert_fields = names(values_df)) {
 #' @param where_fields The fields for where statement
 #' @param where_values The values for where statement
 sql_gen_update <- function(table, update_fields = names(values), values, where_fields = names(where_values), where_values) {
+    values <- stuff_df_quoted(values)
+    where_values <- stuff_df_quoted(where_values)
     sql_where <- sql_gen_where(where_fields, where_values)
     ret <- paste("update ", table, " set (", paste(update_fields, collapse = ","),
                                       ")=(", paste(add_quotes(values), collapse =  ","),
