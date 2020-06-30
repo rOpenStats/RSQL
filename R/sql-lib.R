@@ -508,6 +508,8 @@ rm_quotes <- function(text, quotes = "'") {
 #' @param text.df Data Frame with corresponding values and fields as colnames
 #' @export
 stuff_df_quoted <- function(text.df){
+  #debug
+  text.df <<- text.df
   if (!is.null(text.df)){
     if (!is.data.frame(text.df)){
       stop(paste("text.df must be a data.frame but is", class(text.df)[1]))
@@ -526,11 +528,16 @@ stuff_df_quoted <- function(text.df){
       stop("unsound quoting strategy in columns", paste(names(text.df)[unsound.columns], collapse = ","))
     }
     for (i in seq_len(nrow(text.df))){
-      text.df[i, ] <- vapply(text.df[i, ], FUN = rm_quotes, FUN.VALUE = character(1))
+      text.df[i, ] <- sapply(text.df[i, ], FUN = rm_quotes)
+      # Cannot apply vapply if NA value is in scope
+      #text.df[i, ] <- vapply(text.df[i, ], FUN = rm_quotes, FUN.VALUE = character(1))
+
     }
     for (j in seq_len(ncol(text.df))){
       if (cols.quoted.min[j]){
-        text.df[, j] <- vapply(text.df[, j], FUN = re_quote, FUN.VALUE = character(1))
+        text.df[, j] <- sapply(text.df[, j], FUN = re_quote)
+        # Cannot apply vapply if NA value is in scope
+        #text.df[, j] <- vapply(text.df[, j], FUN = re_quote, FUN.VALUE = character(1))
       }
     }
   }
@@ -614,7 +621,8 @@ sql_gen_select <- function(select_fields, table,
         ret <- paste(ret, "order by", sql_order_by)
     if (top > 0)
         ret <- paste(ret, "limit", top)
-    trimws(ret)
+    ret <- replaceNAwithNULL(ret)
+    ret <- trimws(ret)
 }
 
 #' Generates a where statement to be used on a SQL statement.
@@ -802,7 +810,17 @@ sql_gen_insert <- function(table, values_df, insert_fields = names(values_df)) {
     }
     ret <- paste("insert into ", table, "(", sql_insert_fields, ") values ", sql_values,
         sep = "")
+    ret <- replaceNAwithNULL(ret)
     ret
+}
+
+#' Replace NA with NULL in sql statement
+#'
+#' @param sql.code
+replaceNAwithNULL <- function(sql.code){
+  sql.code <- gsub(",NA", ",NULL", sql.code)
+  sql.code <- gsub(", NA", ", NULL", sql.code)
+  sql.code
 }
 
 
@@ -814,13 +832,14 @@ sql_gen_insert <- function(table, values_df, insert_fields = names(values_df)) {
 #' @param where_fields The fields for where statement
 #' @param where_values The values for where statement
 sql_gen_update <- function(table, update_fields = names(values), values, where_fields = names(where_values), where_values) {
-    values <- stuff_df_quoted(values)
-    where_values <- stuff_df_quoted(where_values)
+    values <- stuff_df_quoted(text.df = values)
+    where_values <- stuff_df_quoted(text.df = where_values)
     sql_where <- sql_gen_where(where_fields, where_values)
     ret <- paste("update ", table, " set (", paste(update_fields, collapse = ","),
                                       ")=(", paste(add_quotes(values), collapse =  ","),
         ") ", sql_where, sep = "")
     ret <- gsub(",\'{,1}NA\'{,1}", ",NULL", ret)
+    ret <- replaceNAwithNULL(ret)
     ret
 }
 
