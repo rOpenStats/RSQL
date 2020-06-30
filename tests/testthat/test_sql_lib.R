@@ -112,8 +112,8 @@ test_that("sql_lib select, insert, update and delete with dataframe and stuffed 
                        "gear", "carb")
     insert_data <- data.frame(matrix(1: ( 11 * 7 ), ncol = 11, byrow = TRUE))
     names(insert_data) <- insert_fields
-    insert_data$model <- paste("'car", 1:7, "'", sep ="")
-    insert_data[7,"model"] <- "'O'Connor'"
+    insert_data$model <- paste("'car", 1:7, "'", sep = "")
+    insert_data[7, "model"] <- "'O'Connor'"
     insert.sql <- rsql$gen_insert("mtcars", values_df = insert_data)
     rsql$execute_insert(insert.sql)
 
@@ -137,7 +137,7 @@ test_that("sql_lib select, insert, update and delete with dataframe and stuffed 
     observed_values$model <- add_quotes(observed_values$model)
     expect_equivalent(observed_values, update_values)
 
-    delete.where.df <- data.frame(model ="'O'Connor'")
+    delete.where.df <- data.frame(model = "'O'Connor'")
     delete.sql <- rsql$gen_delete("mtcars", where_values = delete.where.df)
     rsql$execute_delete(delete.sql)
     check_df <- rsql$execute_select(check_sql)

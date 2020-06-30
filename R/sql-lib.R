@@ -443,7 +443,6 @@ stuff_quote <- function(unquoted.text, quote = "'"){
   if (is_quoted(unquoted.text)){
     stop(paste("stuff_quote function cannot be called with quoted text", unquoted.text))
   }
-  quoted <- FALSE
   stuffed.text <- gsub(quote, paste(quote, quote, sep = ""), unquoted.text)
   stuffed.text
 }
@@ -527,11 +526,11 @@ stuff_df_quoted <- function(text.df){
       stop("unsound quoting strategy in columns", paste(names(text.df)[unsound.columns], collapse = ","))
     }
     for (i in seq_len(nrow(text.df))){
-      text.df[i,] <- vapply(text.df[i,], FUN = rm_quotes, FUN.VALUE = character(1))
+      text.df[i, ] <- vapply(text.df[i, ], FUN = rm_quotes, FUN.VALUE = character(1))
     }
     for (j in seq_len(ncol(text.df))){
       if (cols.quoted.min[j]){
-        text.df[,j] <- vapply(text.df[,j], FUN = re_quote, FUN.VALUE = character(1))
+        text.df[, j] <- vapply(text.df[, j], FUN = re_quote, FUN.VALUE = character(1))
       }
     }
   }
