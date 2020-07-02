@@ -139,20 +139,34 @@ test_that("sql_lib select, insert, update and delete with dataframe and stuffed 
                                   where_values = where_values_df)
     rsql$execute_update(update_sql)
 
+    where.accent <- "áccent"
+    #where.accent <- "Bélgica"
+    where.df <- data.frame(model = where.accent, stringsAsFactors = FALSE)
+    exists.sql <- rsql$gen_select("id_pais", table = "pais",
+                                  where_values = where.df)
+    exists.sql
 
-    where_values <- data.frame(model = "'O'Connor'")
+
+    where_values.df <- data.frame(model = "'O'Connor'")
 
     check_sql <- rsql$gen_select(update_fields,
                                  table = "mtcars",
-                                 where_values = where_values,
+                                 where_values = where_values.df,
                                  distinct = TRUE)
+    expect_equal(check_sql, "select distinct mpg, cyl, model from mtcars where (model) in  ('O''Connor')")
     check_df <- rsql$execute_select(check_sql)
     observed_values <- check_df %>% filter(mpg == 1)
     observed_values$model <- add_quotes(observed_values$model)
     expect_equivalent(observed_values, update_values)
 
-    delete.where.df <- data.frame(model = "'O'Connor'")
+    # With or without quotes
+    delete.where.df <- data.frame(model = "O'Connor")
     delete.sql <- rsql$gen_delete("mtcars", where_values = delete.where.df)
+    expect_equal(delete.sql, "delete from mtcars where (model) in  ('O''Connor')")
+    delete.where.df <- data.frame(model = "'O'Connor'")
+    #delete.where.df <- data.frame(model = "'O'Connor'")
+    delete.sql <- rsql$gen_delete("mtcars", where_values = delete.where.df)
+    expect_equal(delete.sql, "delete from mtcars where (model) in  ('O''Connor')")
     rsql$execute_delete(delete.sql)
     check_df <- rsql$execute_select(check_sql)
     expect_equal(nrow(check_df), 0)
@@ -214,7 +228,7 @@ test_that("update symbols", {
     update.pk <- data.frame(pk = 1, stringsAsFactors = FALSE)
     update.values <- data.frame(field.1 = "a", field.2 = "b", field.3 = NA, stringsAsFactors = FALSE)
     observed.update <- sql_gen_update("foo", values = update.values, where_values = update.pk)
-    expect_equal(observed.update, "update foo set (field.1,field.2,field.3)=('a','b',NULL) where (pk) in  ( '1' )")
+    expect_equal(observed.update, "update foo set (field.1,field.2,field.3)=('a','b',NULL) where (pk) in  ('1')")
 })
 
 rsql$disconnect()

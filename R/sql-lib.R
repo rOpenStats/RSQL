@@ -468,6 +468,12 @@ dequote <- function(text) {
 #' @param text The string
 #' @param quotes The quotes
 re_quote <- function(text, quotes = "'") {
+    text.original <- text
+
+    # debug
+    text.original  <<- text.original
+
+    text <- as.character(text)
     if (!is.na(text)){
       quote <- FALSE
       if (!is_quoted(text, quotes_symbols = "\""))
@@ -480,6 +486,11 @@ re_quote <- function(text, quotes = "'") {
         text <- paste(quotes, text, quotes, sep = "")
       }
     }
+    if (substr(text, 1, 2) == "''" || substr(text, nchar(text)-1, nchar(text)) == "''"){
+      stop(paste("Text double quoted:", text, "original", text.original))
+    }
+    #debug
+    text <<- text
     text
 }
 
@@ -540,6 +551,7 @@ stuff_df_quoted <- function(text.df){
         unsound.columns <- which(cols.need.quotes.min != cols.need.quotes.max)
         stop("unsound quoting strategy in columns", paste(names(text.df)[unsound.columns], collapse = ","))
       }
+
       for (i in seq_len(nrow(text.df))){
         text.df[i, ] <- sapply(text.df[i, ], FUN = rm_quotes)
         # Cannot apply vapply if NA value is in scope
@@ -615,6 +627,9 @@ sql_gen_select <- function(select_fields, table,
 
 
     where_values.df <- stuff_df_quoted(where_values.df)
+    #debug
+    where_values.df <<- where_values.df
+
     separator <- ""
     sql_select_fields <- ""
     for (f in select_fields) {
@@ -650,69 +665,72 @@ sql_gen_select <- function(select_fields, table,
 #' @param where_fields The fields used in the where section
 #' @param where_values The values used in the where section
 sql_gen_where <- function(where_fields = names(where_values), where_values) {
-    ret <- ""
-    process <- !is.null(where_fields) & !is.null(where_values)
-    if (process){
-      if (is.data.frame(where_values)){
-        process <- nrow(where_values) > 0
+  #debug
+  print(where_values)
+  ret <- ""
+  process <- !is.null(where_fields) & !is.null(where_values)
+  if (process){
+    if (is.data.frame(where_values)){
+      process <- nrow(where_values) > 0
+    }
+    else{
+      if (!is.null(where_fields)){
+        stop(paste(gettext("sql_lib.no_where_values_specified", domain = "R-rsql")))
       }
-      else{
-        if (!is.null(where_fields)){
-          stop(paste(gettext("sql_lib.no_where_values_specified", domain = "R-rsql")))
-        }
-        if (!is.null(where_values)) {
-          stop(paste(gettext("sql_lib.no_where_values_specified", domain = "R-rsql")))
-        }
+      if (!is.null(where_values)) {
+        stop(paste(gettext("sql_lib.no_where_values_specified", domain = "R-rsql")))
       }
     }
-    if (process) {
-        # Asserts with values
-        if (!is.vector(where_fields))
-            stop(paste(gettext("sql_lib_where_files_has_to_be_a_vector",
-                               domain = "R-rsql"), str(where_fields)))
-        if (!is.list(where_values))
-            if (is.vector(where_values))
-                where_values <- data.frame(matrix(where_values,
-                                                  byrow = TRUE,
-                                                  ncol = length(where_values)),
-                  stringsAsFactors = FALSE)
-        if (length(where_fields) != ncol(where_values))
-            stop(paste(gettext("sql_lib.where_fields_num_not_eq_where_values_num", domain = "R-sql"), length(where_fields), "!=",
-                length(where_values), paste(where_fields, collapse = ","), paste(where_values,
-                  collapse = ",")))
-        # if strings values, add '
-        for (col in names(where_values)) {
-            where_values_col <- where_values[, col]
-            if (class(where_values_col) == "factor"){
-              where_values_col <- as.character(where_values_col)
-            }
-            if (max(is.character(where_values_col)) == 1) {
-                # TODO extend to multiple columns
-                # if there is at least one value character in column remove ' for normalization
-                # and adding after
-                new.values <- paste("'", sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
-                  "\\1", where_values[, col]), "'", sep = "")
-                lgr$trace(paste("col", col, "is character. Replacing values",
-                  paste(where_values[, col], collapse = ","), "with values", paste(new.values,
-                    collapse = ",")))
-                where_values[, col] <- new.values
-            }
-        }
-
-        ret <- ""
-        if (length(where_fields) > 0 & !(length(where_fields) == 1 & nchar(where_fields[1]) ==
-            0)) {
-            where_values <- as.data.frame(where_values, nrow = nrow(where_values) / length(where_fields),
+  }
+  if (process) {
+      # Asserts with values
+      if (!is.vector(where_fields))
+          stop(paste(gettext("sql_lib_where_files_has_to_be_a_vector",
+                             domain = "R-rsql"), str(where_fields)))
+      if (!is.list(where_values))
+          if (is.vector(where_values))
+              where_values <- data.frame(matrix(where_values,
+                                                byrow = TRUE,
+                                                ncol = length(where_values)),
                 stringsAsFactors = FALSE)
-            #if (nrow(where_values) > 2){
-            ret <- sql_gen_where_list(where_fields = where_fields, where_values = where_values)
-            #}
-            #else{
-            #  ret <- sql_gen_where_or(where_fields, where_values)
-            #}
-        }
-    }
-    ret
+      if (length(where_fields) != ncol(where_values))
+          stop(paste(gettext("sql_lib.where_fields_num_not_eq_where_values_num", domain = "R-sql"), length(where_fields), "!=",
+              length(where_values), paste(where_fields, collapse = ","), paste(where_values,
+                collapse = ",")))
+      # if strings values, add '
+      for (col in names(where_values)) {
+          where_values_col <- where_values[, col]
+          if (class(where_values_col) == "factor"){
+            where_values_col <- as.character(where_values_col)
+          }
+          # Removed
+          # if (max(is.character(where_values_col)) == 1) {
+          #     # TODO extend to multiple columns
+          #     # if there is at least one value character in column remove ' for normalization
+          #     # and adding after
+          #     new.values <- paste("'", sub("\\'([a-zA-Z0-9[:punct:]!'[:space:]]+)\\'",
+          #       "\\1", where_values[, col]), "'", sep = "")
+          #     lgr$trace(paste("col", col, "is character. Replacing values",
+          #       paste(where_values[, col], collapse = ","), "with values", paste(new.values,
+          #         collapse = ",")))
+          #     where_values[, col] <- new.values
+          # }
+      }
+
+      ret <- ""
+      if (length(where_fields) > 0 & !(length(where_fields) == 1 & nchar(where_fields[1]) ==
+          0)) {
+          where_values <- as.data.frame(where_values, nrow = nrow(where_values) / length(where_fields),
+              stringsAsFactors = FALSE)
+          #if (nrow(where_values) > 2){
+          ret <- sql_gen_where_list(where_fields = where_fields, where_values = where_values)
+          #}
+          #else{
+          #  ret <- sql_gen_where_or(where_fields, where_values)
+          #}
+      }
+  }
+  ret
 }
 
 #' Generates a where list statement to be used on a SQL statement.
@@ -737,8 +755,14 @@ sql_gen_where_list <- function(where_fields, where_values) {
             separator <- ""
             sql_row_where <- ""
             for (f in where_fields) {
-                if (is.na(where_values[v, i]))
-                  value <- paste(":label_", f, ":", sep = "") else value <- where_values[v, i]
+                if (is.na(where_values[v, i])){
+                  value <- paste(":label_", f, ":", sep = "")
+                }
+                else {
+                  value <- where_values[v, i]
+                }
+                #debug
+                print(value)
 
                 if (is.character(value)) {
                   value <- add_quotes(value)
@@ -752,7 +776,7 @@ sql_gen_where_list <- function(where_fields, where_values) {
             list_where <- paste(list_where, separator_list, sql_row_where, sep = "")
             separator_list <- comma.sep
         }
-        sql_where <- paste(sql_where, "(", list_where, ")")
+        sql_where <- paste(sql_where, "(", list_where, ")", sep = "")
     }
     sql_where
 }
