@@ -19,6 +19,12 @@ test_that("sql_lib basic test", {
     query_sql <- rsql$gen_select(
         select_fields = c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am"),
         table = "mtcars",
+        where_fields = "gear",
+        where_values = 4)
+
+    query_sql <- rsql$gen_select(
+        select_fields = c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am"),
+        table = "mtcars",
         where_values = data.frame(gear = 4))
     mtcars.observed <- rsql$execute_select(query_sql)
     expect_equal(nrow(mtcars.observed), 12)
@@ -176,6 +182,11 @@ test_that("retrieveInsert", {
     expect_equal(2, nrow(rsql$execute_select(rsql$gen_select("*", "retrieveInsert"))))
 
     # After insert, only execute retrieve
+    vehicle.id.observed <-
+        rsql$retrieve(table = "retrieveInsert", values_uk = values.uk,
+                      field_id = "vehicle_id")
+    expect_true(is.na(vehicle.id.observed))#
+
     vehicle.id.observed <-
         rsql$retrieve(table = "retrieveInsert", values_uk = values.uk,
                       field_id = "vehicle_id")

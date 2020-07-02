@@ -276,7 +276,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     #' @param values The values (Not used. Included for compatibility)
     #' @param field_id The field of the serial id
     retrieve = function(table, fields_uk = names(values_uk), values_uk,
-                        fields = names(values), values,
+                        fields = names(values), values = NULL,
                                field_id = "id"){
       self$checkEntitiesNames(table, entity.type = "table")
       self$checkEntitiesNames(c(fields_uk, field_id), entity.type = "field")
@@ -508,36 +508,39 @@ rm_quotes <- function(text, quotes = "'") {
 #' @param text.df Data Frame with corresponding values and fields as colnames
 #' @export
 stuff_df_quoted <- function(text.df){
-  #debug
-  text.df <<- text.df
   if (!is.null(text.df)){
     if (!is.data.frame(text.df)){
       stop(paste("text.df must be a data.frame but is", class(text.df)[1]))
     }
-    cols.quoted <- apply(text.df, MARGIN = 2, FUN = function(x)vapply(x, FUN = is_quoted, FUN.VALUE = logical(1)))
-    if (nrow(text.df) > 1){
-      cols.quoted.min <- apply(cols.quoted, MARGIN = 2, FUN = min)
-      cols.quoted.max <- apply(cols.quoted, MARGIN = 2, FUN = max)
-    }
     else{
-      cols.quoted.min <- cols.quoted
-      cols.quoted.max <- cols.quoted
+      process <- nrow(text.df) > 0
     }
-    if (min(cols.quoted.min == cols.quoted.max) == 0){
-      unsound.columns <- which(cols.quoted.min != cols.quoted.max)
-      stop("unsound quoting strategy in columns", paste(names(text.df)[unsound.columns], collapse = ","))
-    }
-    for (i in seq_len(nrow(text.df))){
-      text.df[i, ] <- sapply(text.df[i, ], FUN = rm_quotes)
-      # Cannot apply vapply if NA value is in scope
-      #text.df[i, ] <- vapply(text.df[i, ], FUN = rm_quotes, FUN.VALUE = character(1))
-
-    }
-    for (j in seq_len(ncol(text.df))){
-      if (cols.quoted.min[j]){
-        text.df[, j] <- sapply(text.df[, j], FUN = re_quote)
+    if (process){
+      cols.quoted <- apply(text.df, MARGIN = 2, FUN = function(x)vapply(x, FUN = is_quoted, FUN.VALUE = logical(1)))
+      if (nrow(text.df) > 1){
+        cols.quoted.min <- apply(cols.quoted, MARGIN = 2, FUN = min)
+        cols.quoted.max <- apply(cols.quoted, MARGIN = 2, FUN = max)
+      }
+      else{
+        cols.quoted.min <- cols.quoted
+        cols.quoted.max <- cols.quoted
+      }
+      if (min(cols.quoted.min == cols.quoted.max) == 0){
+        unsound.columns <- which(cols.quoted.min != cols.quoted.max)
+        stop("unsound quoting strategy in columns", paste(names(text.df)[unsound.columns], collapse = ","))
+      }
+      for (i in seq_len(nrow(text.df))){
+        text.df[i, ] <- sapply(text.df[i, ], FUN = rm_quotes)
         # Cannot apply vapply if NA value is in scope
-        #text.df[, j] <- vapply(text.df[, j], FUN = re_quote, FUN.VALUE = character(1))
+        #text.df[i, ] <- vapply(text.df[i, ], FUN = rm_quotes, FUN.VALUE = character(1))
+
+      }
+      for (j in seq_len(ncol(text.df))){
+        if (cols.quoted.min[j]){
+          text.df[, j] <- sapply(text.df[, j], FUN = re_quote)
+          # Cannot apply vapply if NA value is in scope
+          #text.df[, j] <- vapply(text.df[, j], FUN = re_quote, FUN.VALUE = character(1))
+        }
       }
     }
   }
@@ -569,9 +572,10 @@ add_grep_exact_match <- function(text) {
 #' @param where_fields The fields used in the where section
 #' @param where_values The values used in the where section
 sql_gen_delete <- function(table, where_fields = names(where_values), where_values = NULL) {
-
-    where_values <- stuff_df_quoted(where_values)
-    sql_where <- sql_gen_where(where_fields, where_values)
+    where_values.df <- as.data.frame(where_values)
+    names(where_values.df) <- where_fields
+    where_values.df <- stuff_df_quoted(where_values.df)
+    sql_where <- sql_gen_where(where_fields, where_values.df)
     ret <- paste("delete from", table, sql_where)
     ret
 
@@ -594,7 +598,9 @@ sql_gen_select <- function(select_fields, table,
                            order_by = c(),
                            top = 0,
                            distinct = FALSE) {
-    where_values <- stuff_df_quoted(where_values)
+    where_values.df <- as.data.frame(where_values)
+    names(where_values.df) <- where_fields
+    where_values.df <- stuff_df_quoted(where_values.df)
     separator <- ""
     sql_select_fields <- ""
     for (f in select_fields) {
@@ -604,7 +610,7 @@ sql_gen_select <- function(select_fields, table,
     if (distinct){
       sql_select_fields <- paste("distinct", sql_select_fields)
     }
-    sql_where <- sql_gen_where(where_fields, where_values)
+    sql_where <- sql_gen_where(where_fields, where_values.df)
     sql_order_by <- paste(order_by, collapse = ",")
     sql_group_by <- ""
     if (length(group_by) > 0) {
@@ -631,7 +637,21 @@ sql_gen_select <- function(select_fields, table,
 #' @param where_values The values used in the where section
 sql_gen_where <- function(where_fields = names(where_values), where_values) {
     ret <- ""
-    if (!is.null(where_fields) & !is.null(where_values)) {
+    process <- !is.null(where_fields) & !is.null(where_values)
+    if (process){
+      if (is.data.frame(where_values)){
+        process <- nrow(where_values) > 0
+      }
+      else{
+        if (!is.null(where_fields)){
+          stop(paste(gettext("sql_lib.no_where_values_specified", domain = "R-rsql")))
+        }
+        if (!is.null(where_values)) {
+          stop(paste(gettext("sql_lib.no_where_values_specified", domain = "R-rsql")))
+        }
+      }
+    }
+    if (process) {
         # Asserts with values
         if (!is.vector(where_fields))
             stop(paste(gettext("sql_lib_where_files_has_to_be_a_vector",
@@ -676,13 +696,6 @@ sql_gen_where <- function(where_fields = names(where_values), where_values) {
             #else{
             #  ret <- sql_gen_where_or(where_fields, where_values)
             #}
-        }
-    } else {
-        if (!is.null(where_fields)){
-            stop(paste(gettext("sql_lib.no_where_values_specified", domain = "R-rsql")))
-        }
-        if (!is.null(where_values)) {
-          stop(paste(gettext("sql_lib.no_where_values_specified", domain = "R-rsql")))
         }
     }
     ret
@@ -767,18 +780,20 @@ sql_gen_where_or <- function(where_fields = names(where_values), where_values) {
 #' @param insert_fields The fields to insert
 #' @param values_df The values to insert. Must be defined as data.frame of values
 sql_gen_insert <- function(table, values_df, insert_fields = names(values_df)) {
-    values_df <- stuff_df_quoted(values_df)
+    values.df <- as.data.frame(values_df)
+    names(values.df) <- insert_fields
+    values.df <- stuff_df_quoted(values.df)
     if (length(values_df) > 1 & class(values_df) != "data.frame"){
       #debug
       print(values_df)
       stop("Values must be defined as data.frames with same size of columns")
     }
     # Converts all factors to strings
-    values_df <- as.data.frame(lapply(values_df, as.character), stringsAsFactors = FALSE)
+    values.df <- as.data.frame(lapply(values.df, as.character), stringsAsFactors = FALSE)
 
     if (length(insert_fields) != ncol(values_df)) {
         stop(paste(gettext("sql_lib.incompatible_fields_and_data", domain = "R-rsql"), length(insert_fields), gettext("sql_lib.not_eq", domain = "R-rsql"),
-            ncol(values_df), paste(insert_fields, collapse = ";"), paste(values_df, collapse = ";")))
+            ncol(values_df), paste(insert_fields, collapse = ";"), paste(values.df, collapse = ";")))
     }
     separator <- ""
     sql_insert_fields <- ""
@@ -788,14 +803,14 @@ sql_gen_insert <- function(table, values_df, insert_fields = names(values_df)) {
     }
     sql_values <- ""
     separator_rows <- ""
-    for (i in seq_len(nrow(values_df))) {
+    for (i in seq_len(nrow(values.df))) {
         sql_values_row <- ""
         separator <- ""
         for (j in seq_len(length(insert_fields))) {
-            if (is.na(values_df[i, j])) {
+            if (is.na(values.df[i, j])) {
                 value <- "NA"
             } else {
-                value <- values_df[i, j]
+                value <- values.df[i, j]
                 if (is.character(value)) {
                   value <- add_quotes(value)
                 }
@@ -832,11 +847,15 @@ replaceNAwithNULL <- function(sql.code){
 #' @param where_fields The fields for where statement
 #' @param where_values The values for where statement
 sql_gen_update <- function(table, update_fields = names(values), values, where_fields = names(where_values), where_values) {
-    values <- stuff_df_quoted(text.df = values)
-    where_values <- stuff_df_quoted(text.df = where_values)
-    sql_where <- sql_gen_where(where_fields, where_values)
+    values.df <- as.data.frame(values)
+    names(values.df) <- update_fields
+    values.df <- stuff_df_quoted(text.df = values.df)
+    where_values.df <- as.data.frame(where_values)
+    names(where_values.df) <- where_fields
+    where_values.df <- stuff_df_quoted(text.df = where_values.df)
+    sql_where <- sql_gen_where(where_fields, where_values.df)
     ret <- paste("update ", table, " set (", paste(update_fields, collapse = ","),
-                                      ")=(", paste(add_quotes(values), collapse =  ","),
+                                      ")=(", paste(add_quotes(values.df), collapse =  ","),
         ") ", sql_where, sep = "")
     ret <- gsub(",\'{,1}NA\'{,1}", ",NULL", ret)
     ret <- replaceNAwithNULL(ret)
@@ -913,6 +932,16 @@ sql_retrieve <- function(table, fields_uk = names(values_uk), values_uk,
                          field_id = "id", dbconn = NULL) {
   ret <- NULL
   values_uk <- as.data.frame(values_uk, stringsAsFactors = FALSE)
+  names(values_uk) <- fields_uk
+  values_uk <- stuff_df_quoted(text.df = values_uk)
+
+  if (!is.null(values)){
+    values <- as.data.frame(values, stringsAsFactors = FALSE)
+    names(values) <- fields
+
+    values    <- stuff_df_quoted(text.df = values)
+
+  }
 
   for (i in seq_len(nrow(values_uk))) {
     # value_uk <- as.character(values_uk[i,]) value <- as.character(values[i,])
@@ -944,7 +973,12 @@ sql_retrieve_insert <- function(table, fields_uk = names(values_uk), values_uk,
                                 field_id = "id", dbconn = NULL) {
     ret <- NULL
     values_uk <- as.data.frame(values_uk, stringsAsFactors = FALSE)
+    names(values_uk) <- fields_uk
     values <- as.data.frame(values, stringsAsFactors = FALSE)
+    names(values) <- fields
+    values_uk <- stuff_df_quoted(text.df = values_uk)
+    values <- stuff_df_quoted(text.df = values)
+
     if (nrow(values) > 0 & nrow(values) != nrow(values_uk)) {
         stop(paste(gettext("sql_lib.error_nrows_values_uk_neq_nrows_values", domain = "R-rsql"), nrow(values_uk), nrow(values)))
     }
