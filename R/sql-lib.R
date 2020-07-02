@@ -470,9 +470,6 @@ dequote <- function(text) {
 re_quote <- function(text, quotes = "'") {
     text.original <- text
 
-    # debug
-    text.original  <<- text.original
-
     text <- as.character(text)
     if (!is.na(text)){
       quote <- FALSE
@@ -486,11 +483,6 @@ re_quote <- function(text, quotes = "'") {
         text <- paste(quotes, text, quotes, sep = "")
       }
     }
-    if (substr(text, 1, 2) == "''" || substr(text, nchar(text)-1, nchar(text)) == "''"){
-      stop(paste("Text double quoted:", text, "original", text.original))
-    }
-    #debug
-    text <<- text
     text
 }
 
@@ -627,8 +619,6 @@ sql_gen_select <- function(select_fields, table,
 
 
     where_values.df <- stuff_df_quoted(where_values.df)
-    #debug
-    where_values.df <<- where_values.df
 
     separator <- ""
     sql_select_fields <- ""
@@ -665,8 +655,6 @@ sql_gen_select <- function(select_fields, table,
 #' @param where_fields The fields used in the where section
 #' @param where_values The values used in the where section
 sql_gen_where <- function(where_fields = names(where_values), where_values) {
-  #debug
-  print(where_values)
   ret <- ""
   process <- !is.null(where_fields) & !is.null(where_values)
   if (process){
@@ -761,8 +749,6 @@ sql_gen_where_list <- function(where_fields, where_values) {
                 else {
                   value <- where_values[v, i]
                 }
-                #debug
-                print(value)
 
                 if (is.character(value)) {
                   value <- add_quotes(value)
@@ -822,8 +808,6 @@ sql_gen_insert <- function(table, values_df, insert_fields = names(values_df)) {
     names(values.df) <- insert_fields
     values.df <- stuff_df_quoted(values.df)
     if (length(values_df) > 1 & class(values_df) != "data.frame"){
-      #debug
-      print(values_df)
       stop("Values must be defined as data.frames with same size of columns")
     }
     # Converts all factors to strings
