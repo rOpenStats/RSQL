@@ -598,8 +598,11 @@ sql_gen_select <- function(select_fields, table,
                            order_by = c(),
                            top = 0,
                            distinct = FALSE) {
+
     where_values.df <- as.data.frame(where_values)
     names(where_values.df) <- where_fields
+
+
     where_values.df <- stuff_df_quoted(where_values.df)
     separator <- ""
     sql_select_fields <- ""

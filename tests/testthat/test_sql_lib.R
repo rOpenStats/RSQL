@@ -22,6 +22,14 @@ test_that("sql_lib basic test", {
         where_fields = "gear",
         where_values = 4)
 
+
+    # As vector casted to data.frames makes rows, next statement throws an error
+    expect_error(rsql$gen_select(
+        select_fields = c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am"),
+        table = "mtcars",
+        where_fields = c("gear", "carb"),
+        where_values = c(4, 1)))
+
     query_sql <- rsql$gen_select(
         select_fields = c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am"),
         table = "mtcars",
