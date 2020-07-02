@@ -415,6 +415,14 @@ execute_get_insert <- function(dbconn, sql_select, sql_insert, ...) {
     ret[1, ]
 }
 
+
+#' Determines string type which needs quotes in an SQL statement
+#'
+#' @param text The text to test
+needs_quotes <- function(text){
+  class(text) %in% c("Date", "character")
+}
+
 #' Determines if the string is quoted or not
 #'
 #' @param text The text to test
@@ -517,16 +525,19 @@ stuff_df_quoted <- function(text.df){
     }
     if (process){
       cols.quoted <- apply(text.df, MARGIN = 2, FUN = function(x)vapply(x, FUN = is_quoted, FUN.VALUE = logical(1)))
+      cols.need.quotes <- apply(text.df, MARGIN = 2, FUN = function(x)vapply(x, FUN = needs_quotes, FUN.VALUE = logical(1)))
+      # TODO warning when an unneeded quotes are using quotes?
+      cols.need.quotes <- cols.quoted | cols.need.quotes
       if (nrow(text.df) > 1){
-        cols.quoted.min <- apply(cols.quoted, MARGIN = 2, FUN = min)
-        cols.quoted.max <- apply(cols.quoted, MARGIN = 2, FUN = max)
+        cols.need.quotes.min <- apply(cols.need.quotes, MARGIN = 2, FUN = min)
+        cols.need.quotes.max <- apply(cols.need.quotes, MARGIN = 2, FUN = max)
       }
       else{
-        cols.quoted.min <- cols.quoted
-        cols.quoted.max <- cols.quoted
+        cols.need.quotes.min <- cols.need.quotes
+        cols.need.quotes.max <- cols.need.quotes
       }
-      if (min(cols.quoted.min == cols.quoted.max) == 0){
-        unsound.columns <- which(cols.quoted.min != cols.quoted.max)
+      if (min(cols.need.quotes.min == cols.need.quotes.max) == 0){
+        unsound.columns <- which(cols.need.quotes.min != cols.need.quotes.max)
         stop("unsound quoting strategy in columns", paste(names(text.df)[unsound.columns], collapse = ","))
       }
       for (i in seq_len(nrow(text.df))){
@@ -536,7 +547,7 @@ stuff_df_quoted <- function(text.df){
 
       }
       for (j in seq_len(ncol(text.df))){
-        if (cols.quoted.min[j]){
+        if (cols.need.quotes.min[j]){
           text.df[, j] <- sapply(text.df[, j], FUN = re_quote)
           # Cannot apply vapply if NA value is in scope
           #text.df[, j] <- vapply(text.df[, j], FUN = re_quote, FUN.VALUE = character(1))
