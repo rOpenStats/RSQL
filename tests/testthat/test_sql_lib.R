@@ -155,7 +155,7 @@ test_that("sql_lib select, insert, update and delete with dataframe and stuffed 
                                  distinct = TRUE)
     expect_equal(check_sql, "select distinct mpg, cyl, model from mtcars where (model) in ('O''Connor')")
     check_df <- rsql$execute_select(check_sql)
-    observed_values <- check_df %>% filter(mpg == 1)
+    observed_values <- check_df %>% dplyr::filter(mpg == 1)
     observed_values$model <- add_quotes(observed_values$model)
     expect_equivalent(observed_values, update_values)
 
