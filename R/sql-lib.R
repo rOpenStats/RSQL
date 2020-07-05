@@ -468,8 +468,6 @@ dequote <- function(text) {
 #' @param text The string
 #' @param quotes The quotes
 re_quote <- function(text, quotes = "'") {
-    text.original <- text
-
     text <- as.character(text)
     if (!is.na(text)){
       quote <- FALSE
