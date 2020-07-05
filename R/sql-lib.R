@@ -446,7 +446,8 @@ is_quoted <- function(text, quotes_symbols = "'") {
 
 #' Stuff quote symbol from text
 #'
-#' @param text The unquoted string to stuff quotes from.
+#' @param unquoted.text The unquoted string to stuff quotes from.
+#' @param quote The quoting symbol. Default is '
 stuff_quote <- function(unquoted.text, quote = "'"){
   if (is_quoted(unquoted.text)){
     stop(paste("stuff_quote function cannot be called with quoted text", unquoted.text))
@@ -564,7 +565,7 @@ stuff_df_quoted <- function(text.df){
 
 #' Removes quotes from data.frame columns
 #'
-#' @param text The text column to remove quotes from.
+#' @param text.vector The text vector to remove quotes from.
 #' @export
 rm_vector_quotes <- function(text.vector) {
     ret <- sapply(text.vector, FUN = rm_quotes)
@@ -853,7 +854,7 @@ sql_gen_insert <- function(table, values_df, insert_fields = names(values_df)) {
 
 #' Replace NA with NULL in sql statement
 #'
-#' @param sql.code
+#' @param sql.code code to replace NA with NULL
 replaceNAwithNULL <- function(sql.code){
   sql.code <- gsub(",NA", ",NULL", sql.code)
   sql.code <- gsub(", NA", ", NULL", sql.code)

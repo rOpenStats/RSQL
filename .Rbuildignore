@@ -1,3 +1,4 @@
+^README.Rmd$
 ^CRAN-RELEASE$
 ^doc$
 ^codemeta\.json$
@@ -8,7 +9,11 @@
 ^\.Rproj\.user$
 ^.travis.yml$
 ^.lintr$
+^_config.yml$
+^_pkgdown.yml$
 ^docs
 ^doc
 ^cran-comments\.md$
 ^docs$
+
+

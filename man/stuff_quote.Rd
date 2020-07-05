@@ -7,7 +7,9 @@
 stuff_quote(unquoted.text, quote = "'")
 }
 \arguments{
-\item{text}{The unquoted string to stuff quotes from.}
+\item{unquoted.text}{The unquoted string to stuff quotes from.}
+
+\item{quote}{The quoting symbol. Default is '}
 }
 \description{
 Stuff quote symbol from text

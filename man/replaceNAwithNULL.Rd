@@ -6,6 +6,9 @@
 \usage{
 replaceNAwithNULL(sql.code)
 }
+\arguments{
+\item{sql.code}{code to replace NA with NULL}
+}
 \description{
 Replace NA with NULL in sql statement
 }

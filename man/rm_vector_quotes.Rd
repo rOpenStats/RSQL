@@ -7,7 +7,7 @@
 rm_vector_quotes(text.vector)
 }
 \arguments{
-\item{text}{The text column to remove quotes from.}
+\item{text.vector}{The text vector to remove quotes from.}
 }
 \description{
 Removes quotes from data.frame columns
