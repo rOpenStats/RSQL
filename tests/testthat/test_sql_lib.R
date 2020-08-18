@@ -41,6 +41,11 @@ test_that("sql_lib basic test", {
 test_that("util", {
     expect_equal(rm_vector_quotes(c("hel'lo", "'hel'lo'", "'tell''"))
                  , c("hel''lo", "hel''lo", "tell''"))
+    expect_equal(replaceNAwithNULL("select NA, NA,NA from nowhere"),
+                 "select NULL, NULL,NULL from nowhere")
+    # No solution yet for this kind of typo
+    expect_equal(replaceNAwithNULL("select NNA, NA,NA, NAN from nowhere"),
+                 "select NNULL, NULL,NULL, NULLN from nowhere")
 })
 
 test_that("legal entities", {

@@ -854,8 +854,8 @@ sql_gen_insert <- function(table, values_df, insert_fields = names(values_df)) {
 #'
 #' @param sql.code code to replace NA with NULL
 replaceNAwithNULL <- function(sql.code){
-  sql.code <- gsub(",NA", ",NULL", sql.code)
-  sql.code <- gsub(", NA", ", NULL", sql.code)
+  sql.code <- gsub("(,( )?)?NA", "\\1NULL", sql.code)
+  #sql.code <- gsub(", NA", ", NULL", sql.code)
   sql.code
 }
 
