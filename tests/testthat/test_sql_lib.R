@@ -234,6 +234,11 @@ test_that("update symbols", {
     update.values <- data.frame(field.1 = "a", field.2 = "b", field.3 = NA, stringsAsFactors = FALSE)
     observed.update <- sql_gen_update("foo", values = update.values, where_values = update.pk)
     expect_equal(observed.update, "update foo set (field.1,field.2,field.3)=('a','b',NULL) where (pk) in ('1')")
+
+    update.values <- data.frame(field.1 = 99, stringsAsFactors = FALSE)
+    observed.update <- sql_gen_update("foo", values = update.values, where_values = update.pk)
+    expect_equal(observed.update, "update foo set field.1='99' where (pk) in ('1')")
+
 })
 
 rsql$disconnect()

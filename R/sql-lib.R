@@ -468,23 +468,49 @@ dequote <- function(text) {
 #'
 #' @param text The string
 #' @param quotes The quotes
-re_quote <- function(text, quotes = "'") {
-    text <- as.character(text)
-    if (!is.na(text)){
-      quote <- FALSE
-      if (!is_quoted(text, quotes_symbols = "\""))
-        quote <- TRUE
-      if (is_quoted(text, quotes_symbols = "'")) {
-        text <- dequote(text)
-        quote <- TRUE
+re_quote_alt <- function(text, quotes = "'") {
+    text <- unlist(text)
+    vapply(text, FUN = function(x){
+      if (!is.na(x)){
+        if (!is.numeric(x)){
+          quote <- FALSE
+          if (!is_quoted(x, quotes_symbols = "\""))
+            quote <- TRUE
+          if (is_quoted(x, quotes_symbols = "'")) {
+            x <- dequote(x)
+            quote <- TRUE
+          }
+          if (quote){
+            x <- paste(quotes, x, quotes, sep = "")
+          }
+        }
       }
-      if (quote){
-        text <- paste(quotes, text, quotes, sep = "")
-      }
-    }
+      as.character(x)
+    }, FUN.VALUE = character(length(1)))
     text
 }
 
+#' This functions remove original quotes and sets validated quotes for corresponding db.
+#' If it had no quotes, will only put corresponding quotes symbols
+#'
+#' @param text The string
+#' @param quotes The quotes
+re_quote <- function(text, quotes = "'") {
+    text <- as.character(text)
+    if (!is.na(text)){
+        quote <- FALSE
+        if (!is_quoted(text, quotes_symbols = "\""))
+            quote <- TRUE
+          if (is_quoted(text, quotes_symbols = "'")) {
+              text <- dequote(text)
+              quote <- TRUE
+            }
+          if (quote){
+              text <- paste(quotes, text, quotes, sep = "")
+          }
+    }
+    text
+}
 #' Adds quotes to a string
 #'
 #' @param text The string to quote
@@ -612,7 +638,6 @@ sql_gen_select <- function(select_fields, table,
                            order_by = c(),
                            top = 0,
                            distinct = FALSE) {
-
     where_values.df <- as.data.frame(where_values)
     names(where_values.df) <- where_fields
 
@@ -654,6 +679,7 @@ sql_gen_select <- function(select_fields, table,
 #' @param where_fields The fields used in the where section
 #' @param where_values The values used in the where section
 sql_gen_where <- function(where_fields = names(where_values), where_values) {
+  check_fields_values(fields = where_fields, values = where_values, min.length = 0)
   ret <- ""
   process <- !is.null(where_fields) & !is.null(where_values)
   if (process){
@@ -868,6 +894,9 @@ replaceNAwithNULL <- function(sql.code){
 #' @param where_fields The fields for where statement
 #' @param where_values The values for where statement
 sql_gen_update <- function(table, update_fields = names(values), values, where_fields = names(where_values), where_values) {
+    check_fields_values(fields = update_fields, values = values, min.length = 1)
+    check_fields_values(fields = where_fields, values = where_values, min.length = 0)
+
     values.df <- as.data.frame(values)
     names(values.df) <- update_fields
     values.df <- stuff_df_quoted(text.df = values.df)
@@ -875,9 +904,17 @@ sql_gen_update <- function(table, update_fields = names(values), values, where_f
     names(where_values.df) <- where_fields
     where_values.df <- stuff_df_quoted(text.df = where_values.df)
     sql_where <- sql_gen_where(where_fields, where_values.df)
-    ret <- paste("update ", table, " set (", paste(update_fields, collapse = ","),
-                                      ")=(", paste(add_quotes(values.df), collapse =  ","),
-        ") ", sql_where, sep = "")
+    update.fields.sql <- paste(update_fields, collapse = ",")
+    update.values.sql <- paste(add_quotes(values.df), collapse =  ",")
+
+    if (length(values.df) > 1){
+      # Was checked fields and values has same length
+      update.fields.sql <- paste("(", update.fields.sql, ")", sep = "")
+      update.values.sql <- paste("(", update.values.sql, ")", sep = "")
+    }
+    ret <- paste("update ", table, " set ", update.fields.sql,
+                                      "=", update.values.sql,
+        " ", sql_where, sep = "")
     ret <- gsub(",\'{,1}NA\'{,1}", ",NULL", ret)
     ret <- replaceNAwithNULL(ret)
     ret
@@ -1195,4 +1232,15 @@ getMtcarsdbPath <- function(copy = TRUE){
     ret <- source.path
   }
   ret
+}
+
+
+#' Check fields and values are sound
+#'
+#' @param fields Fields names to check
+#' @param values values to check
+#' @param min.length for vectors
+check_fields_values <- function(fields, values, min.length = 0) {
+  stopifnot(length(values) >= min.length)
+  stopifnot(length(fields) == length(values))
 }
