@@ -5,6 +5,7 @@ rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
 test_that("sql_lib basic test", {
 
     #dbWriteTable(rsql$conn, name = "mtcars", mtcars, overwrite = TRUE)
+    rsql$connect()
     expect_equal(dbListTables(rsql$conn), "mtcars")
 
     db.name <- getMtcarsdbPath()
@@ -36,6 +37,8 @@ test_that("sql_lib basic test", {
         where_values = data.frame(gear = 4))
     mtcars.observed <- rsql$execute_select(query_sql)
     expect_equal(nrow(mtcars.observed), 12)
+    rsql$disconnect()
+
 })
 
 test_that("util", {
@@ -49,6 +52,7 @@ test_that("util", {
 })
 
 test_that("legal entities", {
+    rsql$connect()
 
     #dbWriteTable(rsql$conn, name = "mtcars", mtcars, overwrite = TRUE)
     query_sql <- rsql$gen_select(select_fields = c("mpg", "cyl", "disp", "hp", "drat", "wt"),
@@ -72,9 +76,12 @@ test_that("legal entities", {
     expect_equal(query_sql,  "select min(d_date) from legal")
     expect_error(query_sql <- rsql$gen_select(select_fields = c("illegal(legal)"),
                                  table = "legal"))
+    rsql$disconnect()
+
 })
 
 test_that("sql_lib insert and delete test", {
+    rsql$connect()
     insert_fields <- c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am",
         "gear", "carb")
     insert_data <- data.frame(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
@@ -92,10 +99,12 @@ test_that("sql_lib insert and delete test", {
 
     delete.sql <- rsql$gen_delete("mtcars", where_values = data.frame(mpg = 1))
     rsql$execute_delete(delete.sql)
+    rsql$disconnect()
 })
 
 
 test_that("sql_lib select, insert and delete with dataframe", {
+    rsql$connect()
     insert_fields <- c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am",
                        "gear", "carb")
     insert_data <- data.frame(matrix(1: ( 11 * 7 ), ncol = 11, byrow = TRUE))
@@ -120,11 +129,12 @@ test_that("sql_lib select, insert and delete with dataframe", {
 
     delete.sql <- rsql$gen_delete("mtcars", where_values = data.frame(mpg = 1))
     rsql$execute_delete(delete.sql)
-
+    rsql$disconnect()
 })
 
 
 test_that("sql_lib select, insert, update and delete with dataframe and stuffed apostrophe", {
+    rsql$connect()
     mtcars$model <- rownames(mtcars)
     dbWriteTable(rsql$conn, name = "mtcars", value = mtcars, overwrite = TRUE)
     insert_fields <- c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am",
@@ -175,18 +185,21 @@ test_that("sql_lib select, insert, update and delete with dataframe and stuffed 
     rsql$execute_delete(delete.sql)
     check_df <- rsql$execute_select(check_sql)
     expect_equal(nrow(check_df), 0)
-
+    rsql$disconnect()
 })
 
 test_that("sql_lib select with where clause", {
+    rsql$connect()
     query_sql <- rsql$gen_select(table = "mtcars", select_fields = "*",
                                 where_values = data.frame(mpg = 21))
     selected.mtcars <- rsql$execute_select(query_sql)
     expect_equal(selected.mtcars$drat, c(3.9, 3.9))
+    rsql$disconnect()
 })
 
 
 test_that("retrieveInsert", {
+    rsql$connect()
     retrieve.insert.df <- data.frame(vehicle_id = 0, uk = "car",
                                      color = "red", stringsAsFactors = FALSE)
     dbWriteTable(rsql$conn, name = "retrieveInsert", retrieve.insert.df, overwrite = TRUE)
@@ -227,9 +240,11 @@ test_that("retrieveInsert", {
         rsql$retrieve_insert(table = "retrieveInsert", values_uk = values.uk,
                              values = values.color, field_id = "vehicle_id")
     expect_equal(1, vehicle.id.observed)
+    rsql$disconnect()
 })
 
 test_that("update symbols", {
+    rsql$connect()
     update.pk <- data.frame(pk = 1, stringsAsFactors = FALSE)
     update.values <- data.frame(field.1 = "a", field.2 = "b", field.3 = NA, stringsAsFactors = FALSE)
     observed.update <- sql_gen_update("foo", values = update.values, where_values = update.pk)
@@ -238,9 +253,8 @@ test_that("update symbols", {
     update.values <- data.frame(field.1 = 99, stringsAsFactors = FALSE)
     observed.update <- sql_gen_update("foo", values = update.values, where_values = update.pk)
     expect_equal(observed.update, "update foo set field.1='99' where (pk) in ('1')")
+    rsql$disconnect()
 
 })
-
-rsql$disconnect()
 
 # TODO group by

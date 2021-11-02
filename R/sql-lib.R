@@ -54,6 +54,8 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     #state
     #' @field conn  The connection handler
     conn = NULL,
+    #' @field valid.conn Checks if connection is valid
+    valid.conn = NULL,
     #' @field last.query The last query
     last.query = NA,
     #' @field last.rs  The last resultset
@@ -81,8 +83,22 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
         user = NULL, password = NULL, host = NULL, port = NULL) {
         self$db.name <- dbname
         self$driver <- drv
+        self$valid.conn <- dbCanConnect(drv = self$driver, dbname = self$db.name,
+                                     user = user, password = password, host = host, port = port)
+        self$valid.conn
+    },
+    #' @description
+    #' Function which connects to database
+    #' @return conn object
+    connect = function(){
+      if (is.null(self$conn)){
+        if (!self$valid.conn){
+          stop("Database connection is not valid. Check status and credentials!")
+        }
         self$conn <- dbConnect(drv = self$driver, dbname = self$db.name,
                                      user = user, password = password, host = host, port = port)
+      }
+      self$conn
     },
     #' @description
     #' initialize regexp for scraping entities
@@ -163,6 +179,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
                           order_by = c(),
                           top = 0,
                           distinct = FALSE) {
+      self$connect()
       self$checkEntitiesNames(select_fields, entity.type = "select")
       self$checkEntitiesNames(table, entity.type = "table")
       self$checkEntitiesNames(c(where_fields, group_by, order_by), entity.type = "field")
@@ -183,6 +200,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     #' @param table The table to insert into
     #' @param insert_fields the fields to insert into
     gen_insert = function(table, values_df, insert_fields  = names(values_df)) {
+      self$connect()
       self$checkEntitiesNames(table, entity.type = "table")
       self$checkEntitiesNames(insert_fields, entity.type = "field")
        sql_gen_insert(table = table, values_df = values_df, insert_fields = insert_fields)
@@ -198,6 +216,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     gen_update = function(table,
                              update_fields = names(values), values,
                              where_fields = names(where_values), where_values = NULL) {
+      self$connect()
       self$checkEntitiesNames(table, entity.type = "table")
       self$checkEntitiesNames(c(update_fields, where_fields), entity.type = "field")
       sql_gen_update(table = table,
@@ -211,6 +230,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     #' @param where_values the fields to add to the where clause
     #' @param where_fields a where clause to the insert
     gen_delete = function(table, where_fields = names(where_values), where_values = NULL) {
+      self$connect()
       self$checkEntitiesNames(table, entity.type = "table")
       self$checkEntitiesNames(c(where_fields), entity.type = "field")
 
@@ -221,36 +241,40 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     #' Performs an execution on the database
     #' @param sql_select the sql select statement to perform
     execute_select = function(sql_select) {
-        self$last.query <- sql_select
-        self$last.rs <- sql_execute_select(sql_select, dbconn = self$conn)
-        self$select.counter <- self$select.counter + 1
-        self$last.rs
+      self$connect()
+      self$last.query <- sql_select
+      self$last.rs <- sql_execute_select(sql_select, dbconn = self$conn)
+      self$select.counter <- self$select.counter + 1
+      self$last.rs
     },
     #'@description
     #'
     #' Performs an update on the database
     #' @param sql_update the sql update statement to perform
     execute_update = function(sql_update) {
-        self$last.query <- sql_update
-        self$last.rs <- sql_execute_update(sql_update = sql_update, dbconn = self$conn)
-        self$update.counter <- self$update.counter + 1
-        self$last.rs
+      self$connect()
+      self$last.query <- sql_update
+      self$last.rs <- sql_execute_update(sql_update = sql_update, dbconn = self$conn)
+      self$update.counter <- self$update.counter + 1
+      self$last.rs
     },
     #'@description
     #'
     #' Performs an insert on the database
     #' @param sql_insert the sql insert statement to perform
     execute_insert = function(sql_insert) {
-        self$last.query <- sql_insert
-        self$last.rs <- sql_execute_insert(sql_insert = sql_insert, dbconn = self$conn)
-        self$insert.counter <- self$insert.counter + 1
-        self$last.rs
+      self$connect()
+      self$last.query <- sql_insert
+      self$last.rs <- sql_execute_insert(sql_insert = sql_insert, dbconn = self$conn)
+      self$insert.counter <- self$insert.counter + 1
+      self$last.rs
     },
     #'@description
     #'
     #' Performs a command on the database
     #' @param sql_command the sql statement to perform
     execute_command = function(sql_command){
+      self$connect()
       self$last.query <- sql_command
       self$last.rs <- sql_execute_insert(sql_command, dbconn = self$conn)
       self$command.counter <- self$command.counter + 1
@@ -261,10 +285,11 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     #' Performs an deletion on the database
     #' @param sql_delete the sql delete statement to perform
     execute_delete = function(sql_delete) {
-        self$last.query <- sql_delete
-        self$last.rs <- sql_execute_delete(sql_delete, dbconn = self$conn)
-        self$delete.counter <- self$delete.counter + 1
-        self$last.rs
+      self$connect()
+      self$last.query <- sql_delete
+      self$last.rs <- sql_execute_delete(sql_delete, dbconn = self$conn)
+      self$delete.counter <- self$delete.counter + 1
+      self$last.rs
     },
     #'@description
     #'
@@ -278,6 +303,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     retrieve = function(table, fields_uk = names(values_uk), values_uk,
                         fields = names(values), values = NULL,
                                field_id = "id"){
+      self$connect()
       self$checkEntitiesNames(table, entity.type = "table")
       self$checkEntitiesNames(c(fields_uk, field_id), entity.type = "field")
       sql_retrieve(table = table, fields_uk = fields_uk, values_uk = values_uk,
@@ -296,6 +322,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     retrieve_insert = function(table, fields_uk = names(values_uk), values_uk,
                                fields = names(values), values,
                                field_id = "id"){
+      self$connect()
       self$checkEntitiesNames(table, entity.type = "table")
       self$checkEntitiesNames(c(fields_uk, fields, field_id), entity.type = "field")
       sql_retrieve_insert(table = table, fields_uk = fields_uk, values_uk = values_uk,
@@ -315,7 +342,6 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
         DBI::dbDisconnect(self$conn)
         self$conn <- NULL
       }
-
     }))
 
 #' Produces a RSQL object

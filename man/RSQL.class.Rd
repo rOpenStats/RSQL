@@ -47,6 +47,8 @@ mtcars.observed
 
 \item{\code{conn}}{The connection handler}
 
+\item{\code{valid.conn}}{Checks if connection is valid}
+
 \item{\code{last.query}}{The last query}
 
 \item{\code{last.rs}}{The last resultset}
@@ -67,6 +69,7 @@ mtcars.observed
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{RSQL.class$new()}}
+\item \href{#method-connect}{\code{RSQL.class$connect()}}
 \item \href{#method-setupRegexp}{\code{RSQL.class$setupRegexp()}}
 \item \href{#method-finalize}{\code{RSQL.class$finalize()}}
 \item \href{#method-checkEntitiesNames}{\code{RSQL.class$checkEntitiesNames()}}
@@ -117,6 +120,19 @@ Initializes a connection
 \item{\code{port}}{port number}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-connect"></a>}}
+\if{latex}{\out{\hypertarget{method-connect}{}}}
+\subsection{Method \code{connect()}}{
+Function which connects to database
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$connect()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+conn object
 }
 }
 \if{html}{\out{<hr>}}
