@@ -1,7 +1,7 @@
 Package: RSQL
 Type: Package
 Title: Database Agnostic Package to Generate and Process 'SQL' Queries in R
-Version: 0.1.4
+Version: 0.1.5
 Language: en-US
 Authors@R: c(
     person("Alejandro", "Baranek",,"abaranek@dc.uba.ar", c("cre", "aut")),
