@@ -43,7 +43,15 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
   #' @field driver driver  name
   driver = NA,
   #' @field db.name database name
-  db.name = NA,
+  db.name  = NA,
+  #' @field db user
+  user     = NA,
+  #' @field db user password
+  password = NA,
+  #' @field db host
+  host     = NA,
+  #' @field db host port
+  port     = NA,
   # regexp
   #'
   #' @field available.functions for generating select expressions
@@ -82,11 +90,16 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
   #' @param port port number
   initialize = function(drv, dbname,
                         user = NULL, password = NULL, host = NULL, port = NULL) {
-    self$db.name <- dbname
-    self$driver <- drv
+    self$db.name  <- dbname
+    self$driver   <- drv
+    self$user     <- user
+    self$password <- password
+    self$host     <- host
+    self$port     <- port
     self$valid.conn <- dbCanConnect(
       drv = self$driver, dbname = self$db.name,
-      user = user, password = password, host = host, port = port
+      user = self$user, password = self$password,
+      host = self$host, port = self$port
     )
     self$valid.conn
   },
@@ -100,7 +113,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
       }
       self$conn <- dbConnect(
         drv = self$driver, dbname = self$db.name,
-        user = user, password = password, host = host, port = port
+        user = self$user, password = self$password, host = self$host, port = self$port
       )
     }
     self$conn

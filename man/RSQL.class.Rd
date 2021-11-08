@@ -12,25 +12,26 @@ db.name <- getMtcarsdbPath(copy = TRUE)
 rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
 where_values_df <- data.frame(carb = 8, stringsAsFactors = FALSE)
 select_sql <- rsql$gen_select(
- select_fields = "*", #c("wt", "qsec"),
- table = "mtcars",
- where_values = where_values_df)
+  select_fields = "*", # c("wt", "qsec"),
+  table = "mtcars",
+  where_values = where_values_df
+)
 mtcars.observed <- rsql$execute_select(select_sql)
- mtcars.observed
+mtcars.observed
 
- mtcars.new <- mtcars.observed
+mtcars.new <- mtcars.observed
 mtcars.new$carb <- 9
 insert_sql <- rsql$gen_insert(table = "mtcars", values_df = mtcars.new)
 rsql$execute_insert(sql_insert = insert_sql)
 
 where_values_df <- data.frame(carb = 9, stringsAsFactors = FALSE)
 select_sql <- rsql$gen_select(
-  select_fields = "*", #c("wt", "qsec"),
- table = "mtcars",
- where_values = where_values_df)
+  select_fields = "*", # c("wt", "qsec"),
+  table = "mtcars",
+  where_values = where_values_df
+)
 mtcars.observed <- rsql$execute_select(select_sql)
 mtcars.observed
-
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -38,6 +39,14 @@ mtcars.observed
 \item{\code{driver}}{driver  name}
 
 \item{\code{db.name}}{database name}
+
+\item{\code{db}}{user}
+
+\item{\code{db}}{user password}
+
+\item{\code{db}}{host}
+
+\item{\code{db}}{host port}
 
 \item{\code{available.functions}}{for generating select expressions}
 
@@ -62,6 +71,19 @@ mtcars.observed
 \item{\code{delete.counter}}{An instance delete counter}
 
 \item{\code{command.counter}}{An instance command counter}
+}
+\if{html}{\out{</div>}}
+}
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{db}}{user}
+
+\item{\code{db}}{user password}
+
+\item{\code{db}}{host}
+
+\item{\code{db}}{host port}
 }
 \if{html}{\out{</div>}}
 }
