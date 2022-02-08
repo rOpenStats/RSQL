@@ -347,7 +347,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
   #' @param values The values
   #' @param field_id The field of the serial id
   retrieve_insert = function(table, fields_uk = names(values_uk), values_uk,
-                             fields = names(values), values,
+                             fields = names(values), values = data.frame(),
                              field_id = "id") {
     self$connect()
     self$checkEntitiesNames(table, entity.type = "table")
