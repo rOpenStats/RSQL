@@ -453,7 +453,7 @@ Obtain id if object exists on the database. Insert object if not.
   fields_uk = names(values_uk),
   values_uk,
   fields = names(values),
-  values,
+  values = data.frame(),
   field_id = "id"
 )}\if{html}{\out{</div>}}
 }
