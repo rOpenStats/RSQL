@@ -11,7 +11,7 @@ library(RSQL)
 library(RSQLite)
 db.name <- getMtcarsdbPath(copy = TRUE)
 rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
-where_values_df <- data.frame(carb = 8, stringsAsFactors = FALSE)
+where_values_df <- data.frame(carb = 8)
 select_sql <- rsql$gen_select(
   select_fields = "*", # c("wt", "qsec"),
   table = "mtcars",
@@ -25,7 +25,7 @@ mtcars.new$carb <- 9
 insert_sql <- rsql$gen_insert(table = "mtcars", values_df = mtcars.new)
 rsql$execute_insert(sql_insert = insert_sql)
 
-where_values_df <- data.frame(carb = 9, stringsAsFactors = FALSE)
+where_values_df <- data.frame(carb = 9)
 select_sql <- rsql$gen_select(
   select_fields = "*", # c("wt", "qsec"),
   table = "mtcars",

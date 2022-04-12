@@ -4,10 +4,20 @@
 #'
 #' @docType package
 #' @name RSQL
-#' @import R6 lgr DBI
-#' @importFrom utils str
+#' @examples
+#' library(RSQL)
+#' library(RSQLite)
+#' db.name <- getMtcarsdbPath(copy = TRUE)
+#' rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
+#' select_sql <- rsql$gen_select(
+#'   select_fields = "*", # c("wt", "qsec"),
+#'   table = "mtcars",
+#'   where_values = where_values_df
+#' )
+#' mtcars.observed <- rsql$execute_select(select_sql)
+#' mtcars.observed
+#'
 #' @author Alejandro Baranek <abaranek@dc.uba.ar>, Leonardo Javier Belen <leobelen@gmail.com>
-
 #' Executes code while loading the package.
 #'
 #' @param libname Library name

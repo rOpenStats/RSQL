@@ -2,7 +2,7 @@
 % Please edit documentation in R/sql-lib.R
 \name{rm_quotes}
 \alias{rm_quotes}
-\title{Removes quotes from the String}
+\title{rm_quotes}
 \usage{
 rm_quotes(text, quotes = "'")
 }

@@ -11,12 +11,13 @@
 #'
 #' @description
 #' This class is intended to simplify SQL commands.
+#'
 #' @examples
 #' library(RSQL)
 #' library(RSQLite)
 #' db.name <- getMtcarsdbPath(copy = TRUE)
 #' rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
-#' where_values_df <- data.frame(carb = 8, stringsAsFactors = FALSE)
+#' where_values_df <- data.frame(carb = 8)
 #' select_sql <- rsql$gen_select(
 #'   select_fields = "*", # c("wt", "qsec"),
 #'   table = "mtcars",
@@ -30,7 +31,7 @@
 #' insert_sql <- rsql$gen_insert(table = "mtcars", values_df = mtcars.new)
 #' rsql$execute_insert(sql_insert = insert_sql)
 #'
-#' where_values_df <- data.frame(carb = 9, stringsAsFactors = FALSE)
+#' where_values_df <- data.frame(carb = 9)
 #' select_sql <- rsql$gen_select(
 #'   select_fields = "*", # c("wt", "qsec"),
 #'   table = "mtcars",
@@ -38,8 +39,8 @@
 #' )
 #' mtcars.observed <- rsql$execute_select(select_sql)
 #' mtcars.observed
-#' @export
 #' @importFrom R6 R6Class
+#' @export
 RSQL.class <- R6::R6Class("RSQL", public = list(
   #' @field driver driver  name
   driver = NA,
@@ -588,6 +589,8 @@ re_quote <- function(text, quotes = "'") {
   }
   text
 }
+#' add_quotes
+#' @description
 #' Adds quotes to a string
 #'
 #' @param text The string to quote
@@ -598,11 +601,12 @@ add_quotes <- function(text) {
   ret
 }
 
+#' rm_quotes
+#' @description
 #' Removes quotes from the String
 #'
 #' @param text The string to remove quotes from
 #' @param quotes Quote characters
-#' @export
 rm_quotes <- function(text, quotes = "'") {
   if (!is.na(text)) {
     unquoted.text <- text
@@ -616,10 +620,11 @@ rm_quotes <- function(text, quotes = "'") {
 }
 
 
+#' stuff_df_quoted
+#' @description
 #' stuff quote characters in quoted or not quoted df for DSL or DML operations
 #'
 #' @param text.df Data Frame with corresponding values and fields as colnames
-#' @export
 stuff_df_quoted <- function(text.df) {
   if (!is.null(text.df)) {
     if (!is.data.frame(text.df)) {
@@ -661,10 +666,11 @@ stuff_df_quoted <- function(text.df) {
   text.df
 }
 
+#' rm_vector_quotes
+#' @description
 #' Removes quotes from data.frame columns
 #'
 #' @param text.vector The text vector to remove quotes from.
-#' @export
 rm_vector_quotes <- function(text.vector) {
   ret <- sapply(text.vector, FUN = rm_quotes)
   names(ret) <- NULL
@@ -680,6 +686,8 @@ add_grep_exact_match <- function(text) {
   paste("^", text, "$", sep = "")
 }
 
+#' sql_gen_delete
+#' @description
 #' Generates a Delete Statement
 #'
 #' @param table The table from which the delete statement will be generated
@@ -694,6 +702,8 @@ sql_gen_delete <- function(table, where_fields = names(where_values), where_valu
   ret
 }
 
+#' sql_gen_select
+#' @description
 #' Generates a Select Statement
 #'
 #' @param select_fields The fields to be selected
@@ -749,6 +759,8 @@ sql_gen_select <- function(select_fields, table,
   ret <- trimws(ret)
 }
 
+#' sql_gen_where
+#' @description
 #' Generates a where statement to be used on a SQL statement.
 #'
 #' @param where_fields The fields used in the where section
@@ -832,6 +844,8 @@ sql_gen_where <- function(where_fields = names(where_values), where_values) {
   ret
 }
 
+#' sql_gen_where_list
+#' @description
 #' Generates a where list statement to be used on a SQL statement.
 #'
 #' @param where_fields The fields used in the where section
@@ -878,6 +892,8 @@ sql_gen_where_list <- function(where_fields, where_values) {
   sql_where
 }
 
+#' sql_gen_where_or
+#' @description
 #' Generates a where (or) statement to be used on a SQL statement.
 #'
 #' @param where_fields The fields used in the where section
@@ -913,6 +929,8 @@ sql_gen_where_or <- function(where_fields = names(where_values), where_values) {
 
 
 
+#' sql_gen_insert
+#' @description
 #' Generates an insert statement.
 #'
 #' @param table The table to be affected
@@ -926,7 +944,7 @@ sql_gen_insert <- function(table, values_df, insert_fields = names(values_df)) {
     stop("Values must be defined as data.frames with same size of columns")
   }
   # Converts all factors to strings
-  values.df <- as.data.frame(lapply(values.df, as.character), stringsAsFactors = FALSE)
+  values.df <- as.data.frame(lapply(values.df, as.character))
 
   if (length(insert_fields) != ncol(values_df)) {
     stop(paste(
@@ -969,6 +987,8 @@ sql_gen_insert <- function(table, values_df, insert_fields = names(values_df)) {
   ret
 }
 
+#' replaceNAwithNULL
+#' @description
 #' Replace NA with NULL in sql statement
 #'
 #' @param sql.code code to replace NA with NULL
@@ -979,6 +999,8 @@ replaceNAwithNULL <- function(sql.code) {
 }
 
 
+#' sql_gen_update
+#' @description
 #' Generates an update statement
 #'
 #' @param table The table to update
@@ -1016,11 +1038,15 @@ sql_gen_update <- function(table, update_fields = names(values), values, where_f
 }
 
 
+#' trim_leading
+#' @description
 #' Returns string w/o leading whitespace
 #'
 #' @param x The string
 trim_leading <- function(x) sub("^\\s+", "", x)
 
+#' trim_trailing
+#' @description
 #' Returns string w/o trailing whitespace
 #'
 #' @param x The string
@@ -1032,6 +1058,8 @@ trim_trailing <- function(x) sub("\\s+$", "", x)
 #' @param x The string
 trim <- function(x) gsub("^\\s+|\\s+$", "", x)
 
+#' rename_col
+#' @description
 #' renames a column on a data.frame
 #'
 #' @param df The date.frame
@@ -1047,7 +1075,7 @@ rename_col <- function(df, name, replace_name) {
 #'
 #' @param ... The parameters
 cbind_coerced <- function(...) {
-  ret <- cbind(..., stringsAsFactors = FALSE)
+  ret <- cbind(...)
   if ("stringsAsFactors" %in% names(ret)) {
     ret <- ret[, -which(names(ret) == "stringsAsFactors")]
   }
@@ -1089,12 +1117,12 @@ sql_retrieve <- function(table, fields_uk = names(values_uk), values_uk,
                          fields = names(values), values = NULL,
                          field_id = "id", dbconn = NULL) {
   ret <- NULL
-  values_uk <- as.data.frame(values_uk, stringsAsFactors = FALSE)
+  values_uk <- as.data.frame(values_uk)
   names(values_uk) <- fields_uk
   values_uk <- stuff_df_quoted(text.df = values_uk)
 
   if (!is.null(values)) {
-    values <- as.data.frame(values, stringsAsFactors = FALSE)
+    values <- as.data.frame(values)
     names(values) <- fields
 
     values <- stuff_df_quoted(text.df = values)
@@ -1102,7 +1130,7 @@ sql_retrieve <- function(table, fields_uk = names(values_uk), values_uk,
 
   for (i in seq_len(nrow(values_uk))) {
     # value_uk <- as.character(values_uk[i,]) value <- as.character(values[i,])
-    value_uk <- as.data.frame(values_uk[i, ], stringsAsFactors = FALSE)
+    value_uk <- as.data.frame(values_uk[i, ])
 
     select_statement <- sql_gen_select(field_id, table,
       where_fields = fields_uk,
@@ -1131,9 +1159,9 @@ sql_retrieve_insert <- function(table, fields_uk = names(values_uk), values_uk,
                                 fields = names(values), values = NULL,
                                 field_id = "id", dbconn = NULL) {
   ret <- NULL
-  values_uk <- as.data.frame(values_uk, stringsAsFactors = FALSE)
+  values_uk <- as.data.frame(values_uk)
   names(values_uk) <- fields_uk
-  values <- as.data.frame(values, stringsAsFactors = FALSE)
+  values <- as.data.frame(values)
   names(values) <- fields
   values_uk <- stuff_df_quoted(text.df = values_uk)
   values <- stuff_df_quoted(text.df = values)
@@ -1145,7 +1173,7 @@ sql_retrieve_insert <- function(table, fields_uk = names(values_uk), values_uk,
 
   for (i in seq_len(nrow(values_uk))) {
     # value_uk <- as.character(values_uk[i,]) value <- as.character(values[i,])
-    value_uk <- as.data.frame(values_uk[i, ], stringsAsFactors = FALSE)
+    value_uk <- as.data.frame(values_uk[i, ])
     value <- values[i, ]
     values_insert <- cbind_coerced(value_uk, value)
 
@@ -1259,7 +1287,6 @@ sql_gen_joined_query <- function(dw_definition, recipe, indicator_fields) {
 #'
 #' @param where_clause_list The list of params
 #' @import lgr
-#' @export
 parse_where_clause <- function(where_clause_list = c()) {
   where_df <- data.frame(
     lhs = character(), comp = character(), rhs = character(),

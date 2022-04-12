@@ -17,6 +17,7 @@ jobs:
         include:
           - {os: macOS-latest}
           - {os: ubuntu-latest}
+          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
           - {os: windows-latest}
 
     runs-on: ${{ matrix.os }}
