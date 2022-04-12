@@ -2,7 +2,7 @@
 % Please edit documentation in R/sql-lib.R
 \name{replaceNAwithNULL}
 \alias{replaceNAwithNULL}
-\title{Replace NA with NULL in sql statement}
+\title{replaceNAwithNULL}
 \usage{
 replaceNAwithNULL(sql.code)
 }

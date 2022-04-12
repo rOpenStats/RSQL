@@ -2,7 +2,7 @@
 % Please edit documentation in R/sql-lib.R
 \name{stuff_df_quoted}
 \alias{stuff_df_quoted}
-\title{stuff quote characters in quoted or not quoted df for DSL or DML operations}
+\title{stuff_df_quoted}
 \usage{
 stuff_df_quoted(text.df)
 }

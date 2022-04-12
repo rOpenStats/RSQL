@@ -2,7 +2,7 @@
 % Please edit documentation in R/sql-lib.R
 \name{sql_gen_delete}
 \alias{sql_gen_delete}
-\title{Generates a Delete Statement}
+\title{sql_gen_delete}
 \usage{
 sql_gen_delete(table, where_fields = names(where_values), where_values = NULL)
 }

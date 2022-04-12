@@ -2,7 +2,7 @@
 % Please edit documentation in R/sql-lib.R
 \name{sql_gen_select}
 \alias{sql_gen_select}
-\title{Generates a Select Statement}
+\title{sql_gen_select}
 \usage{
 sql_gen_select(
   select_fields,

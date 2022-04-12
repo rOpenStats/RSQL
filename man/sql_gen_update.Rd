@@ -2,7 +2,7 @@
 % Please edit documentation in R/sql-lib.R
 \name{sql_gen_update}
 \alias{sql_gen_update}
-\title{Generates an update statement}
+\title{sql_gen_update}
 \usage{
 sql_gen_update(
   table,

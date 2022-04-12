@@ -2,7 +2,7 @@
 % Please edit documentation in R/sql-lib.R
 \name{rm_vector_quotes}
 \alias{rm_vector_quotes}
-\title{Removes quotes from data.frame columns}
+\title{rm_vector_quotes}
 \usage{
 rm_vector_quotes(text.vector)
 }

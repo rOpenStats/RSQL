@@ -24,7 +24,7 @@ rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
 select_sql <- rsql$gen_select(
   select_fields = "*", # c("wt", "qsec"),
   table = "mtcars",
-  where_values = where_values_df
+  where_values = data.frame(carb = 8)
 )
 mtcars.observed <- rsql$execute_select(select_sql)
 mtcars.observed

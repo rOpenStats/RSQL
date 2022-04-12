@@ -17,11 +17,10 @@
 #' library(RSQLite)
 #' db.name <- getMtcarsdbPath(copy = TRUE)
 #' rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
-#' where_values_df <- data.frame(carb = 8)
 #' select_sql <- rsql$gen_select(
 #'   select_fields = "*", # c("wt", "qsec"),
 #'   table = "mtcars",
-#'   where_values = where_values_df
+#'   where_values = data.frame(carb = 8)
 #' )
 #' mtcars.observed <- rsql$execute_select(select_sql)
 #' mtcars.observed
@@ -35,7 +34,7 @@
 #' select_sql <- rsql$gen_select(
 #'   select_fields = "*", # c("wt", "qsec"),
 #'   table = "mtcars",
-#'   where_values = where_values_df
+#'   where_values = data.frame(carb = 8)
 #' )
 #' mtcars.observed <- rsql$execute_select(select_sql)
 #' mtcars.observed
@@ -762,9 +761,9 @@ sql_gen_select <- function(select_fields, table,
 #' sql_gen_where
 #' @description
 #' Generates a where statement to be used on a SQL statement.
-#'
 #' @param where_fields The fields used in the where section
 #' @param where_values The values used in the where section
+#' @importFrom utils str
 sql_gen_where <- function(where_fields = names(where_values), where_values) {
   check_fields_values(fields = where_fields, values = where_values, min.length = 0)
   ret <- ""

@@ -2,7 +2,7 @@
 % Please edit documentation in R/sql-lib.R
 \name{trim_trailing}
 \alias{trim_trailing}
-\title{Returns string w/o trailing whitespace}
+\title{trim_trailing}
 \usage{
 trim_trailing(x)
 }

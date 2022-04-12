@@ -2,7 +2,7 @@
 % Please edit documentation in R/sql-lib.R
 \name{trim_leading}
 \alias{trim_leading}
-\title{Returns string w/o leading whitespace}
+\title{trim_leading}
 \usage{
 trim_leading(x)
 }

@@ -1,3 +1,11 @@
+RSQL 0.2.0
+============
+
+### NEW FEATURES
+
+- CI moved to github actions
+- Improved test coverage and compliance to pkgcheck 
+
 RSQL 0.1.4
 ============
 

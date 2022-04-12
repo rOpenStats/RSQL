@@ -2,7 +2,7 @@
 % Please edit documentation in R/sql-lib.R
 \name{sql_gen_where_or}
 \alias{sql_gen_where_or}
-\title{Generates a where (or) statement to be used on a SQL statement.}
+\title{sql_gen_where_or}
 \usage{
 sql_gen_where_or(where_fields = names(where_values), where_values)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/sql-lib.R
 \name{add_quotes}
 \alias{add_quotes}
-\title{Adds quotes to a string}
+\title{add_quotes}
 \usage{
 add_quotes(text)
 }

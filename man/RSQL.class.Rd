@@ -11,11 +11,10 @@ library(RSQL)
 library(RSQLite)
 db.name <- getMtcarsdbPath(copy = TRUE)
 rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
-where_values_df <- data.frame(carb = 8)
 select_sql <- rsql$gen_select(
   select_fields = "*", # c("wt", "qsec"),
   table = "mtcars",
-  where_values = where_values_df
+  where_values = data.frame(carb = 8)
 )
 mtcars.observed <- rsql$execute_select(select_sql)
 mtcars.observed
@@ -29,7 +28,7 @@ where_values_df <- data.frame(carb = 9)
 select_sql <- rsql$gen_select(
   select_fields = "*", # c("wt", "qsec"),
   table = "mtcars",
-  where_values = where_values_df
+  where_values = data.frame(carb = 8)
 )
 mtcars.observed <- rsql$execute_select(select_sql)
 mtcars.observed

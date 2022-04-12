@@ -2,7 +2,7 @@
 % Please edit documentation in R/sql-lib.R
 \name{sql_gen_insert}
 \alias{sql_gen_insert}
-\title{Generates an insert statement.}
+\title{sql_gen_insert}
 \usage{
 sql_gen_insert(table, values_df, insert_fields = names(values_df))
 }

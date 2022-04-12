@@ -2,7 +2,7 @@
 % Please edit documentation in R/sql-lib.R
 \name{sql_gen_where_list}
 \alias{sql_gen_where_list}
-\title{Generates a where list statement to be used on a SQL statement.}
+\title{sql_gen_where_list}
 \usage{
 sql_gen_where_list(where_fields, where_values)
 }
