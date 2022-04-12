@@ -41,8 +41,55 @@ test_that("sql_lib basic test", {
   )
   mtcars.observed <- rsql$execute_select(query_sql)
   expect_equal(nrow(mtcars.observed), 12)
+  df_verify(mtcars.observed,
+            c("mpg", "cyl", "disp", "hp", "drat", "wt",  "qsec", "vs",  "am"))
+
+
+
+  # Testing group by
+  query_sql <- rsql$gen_select(
+    select_fields = c("mpg"),
+    table = "mtcars",
+    where_fields = "gear",
+    where_values = 4,
+    group_by = "mpg",
+    order_by = "mpg",
+    top = 5
+  )
+  mtcars.groupby.observed <- rsql$execute_select(query_sql)
+  expect_equal(mtcars.groupby.observed$mpg, c(17.8, 19.2, 21.0, 21.4, 22.8))
+
+
+  query_sql <- rsql$gen_select(
+    select_fields = c("*"),
+    table = "mtcars",
+    where_values = data.frame(gear = c(4, 3), carb = c(4, 2))
+  )
+  mtcars.observed <- rsql$execute_select(query_sql)
+  mtcars.observed
+
+  sql_gen_where_or
   rsql$disconnect()
 })
+
+test_that("sql_lib unconnected functions or to correct", {
+  # This should be corrected
+  parsed.where <- parse_where_clause("mpg >= 10 AND cyl <= 4")
+  expect_equal(parsed.where$rhs, "' 4'")
+  parsed.where <- parse_where_clause("mpg <= 10 AND cyl <= 4 ")
+  expect_equal(parsed.where$rhs, character(0))
+  parsed.where <- parse_where_clause("mpg = 10 AND cyl = 4 ")
+  expect_equal(parsed.where$rhs, character(0))
+  parsed.where <- parse_where_clause("mpg < 10 AND cyl < 4 ")
+  expect_equal(parsed.where$rhs, character(0))
+
+  expect_equal(sql_gen_where_or(where_values = data.frame(gear = c(4, 3), carb = c(4, 2))),
+               "where  ( gear=4 and carb=4 )  or  ( gear=3 and carb=2 )")
+  expect_equal(c("mpg", "cyl", "disp", "hp", "drat", "wt",  "qsec", "vs",  "am") %IN%
+    c("wt",  "qsec", "vs",  "am", "mpg", "cyl", "disp", "hp", "drat"),
+    rep(TRUE, 9))
+})
+
 
 test_that("util", {
   expect_equal(
@@ -58,6 +105,14 @@ test_that("util", {
     replaceNAwithNULL("select NNA, NA,NA, NAN from nowhere"),
     "select NNULL, NULL,NULL, NULLN from nowhere"
   )
+
+  # Trivial requote
+  expect_equal(re_quote_alt(text = "\"quoted\"", quotes = "\""), "\"quoted\"")
+  expect_equal(re_quote_alt(text = "'quoted'", quotes = "'"), "'quoted'")
+  # Replace quotes
+  expect_equal(re_quote_alt(text = "\"quoted\"", quotes = "'"), "'quoted'")
+  expect_equal(re_quote_alt(text = "'quoted'", quotes = "\""), "\"quoted\"")
+
 })
 
 test_that("legal entities", {
@@ -125,6 +180,25 @@ test_that("sql_lib insert and delete test", {
 
   delete.sql <- rsql$gen_delete("mtcars", where_values = data.frame(mpg = 1))
   rsql$execute_delete(delete.sql)
+
+
+  where_values <- data.frame(mpg = 99.9)
+  get_select_sql <- rsql$gen_select(
+    select_fields = "*",
+    table = "mtcars",
+    where_values = where_values
+  )
+
+  get_insert_sql <- rsql$gen_insert(
+    table = "mtcars",
+    values_df = where_values
+  )
+  rsql$execute_get_insert(get_select_sql, get_insert_sql)
+  res <- rsql$execute_get_insert(get_select_sql, get_insert_sql)
+  expect_equal(res$mpg, 99.9)
+
+  res <- rsql$execute_command("vacuum");
+  expect_true(inherits(res, "SQLiteResult"))
   rsql$disconnect()
 })
 
@@ -307,5 +381,7 @@ test_that("update symbols", {
   expect_equal(observed.update, "update foo set field.1='99' where (pk) in ('1')")
   rsql$disconnect()
 })
+
+
 
 # TODO group by

@@ -13,6 +13,7 @@
 #' This class is intended to simplify SQL commands.
 #' @examples
 #' library(RSQL)
+#' library(RSQLite)
 #' db.name <- getMtcarsdbPath(copy = TRUE)
 #' rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
 #' where_values_df <- data.frame(carb = 8, stringsAsFactors = FALSE)
@@ -296,6 +297,20 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
   },
   #' @description
   #'
+  #' Performs a select statement, if not exists, executes insert statement
+  #' @param sql_select the sql select statement to perform
+  #' @param sql_insert the sql insert statement to perform
+  execute_get_insert = function(sql_select, sql_insert) {
+    self$connect()
+    self$last.query <- sql_select
+    self$last.rs <- sql_execute_get_insert(sql_select = sql_select,
+                                           sql_insert = sql_insert,
+                                           dbconn = self$conn)
+    self$select.counter <- self$select.counter + 1
+    self$last.rs
+  },
+  #' @description
+  #'
   #' Performs a command on the database
   #' @param sql_command the sql statement to perform
   execute_command = function(sql_command) {
@@ -393,7 +408,7 @@ createRSQL <- function(drv, dbname, user = NULL, password = NULL, host = NULL, p
 #' @import lgr
 #' @param sql_insert The SQL String
 #' @param dbconn The Database Connection to run the query against
-sql_execute_insert <- function(sql_insert, dbconn = NULL) {
+sql_execute_insert <- function(sql_insert, dbconn) {
   sql_insert <- gsub(",NA", ",NULL", sql_insert)
   sql_insert <- gsub(", NA", ",NULL", sql_insert)
   sql_insert <- paste(sql_insert, ";", sep = "")
@@ -439,6 +454,8 @@ sql_execute_delete <- function(sql_delete, dbconn = NULL) {
   ret
 }
 
+#' sql_execute_select
+#' @description
 #' Executes a select on the database
 #'
 #' @import DBI
@@ -455,17 +472,19 @@ sql_execute_select <- function(sql_select, dbconn = NULL) {
   ret
 }
 
+#' sql_execute_get_insert
+#' @description
 #' Executes the insert statement
 #'
 #' @param dbconn The db connection
 #' @param sql_select The SQL select query
 #' @param sql_insert The SQL insert query
 #' @param ... other variables to considered.
-execute_get_insert <- function(dbconn, sql_select, sql_insert, ...) {
-  ret <- sql_execute_select(sql_select, dbconn)
+sql_execute_get_insert <- function(dbconn, sql_select, sql_insert, ...) {
+  ret <- sql_execute_select(sql_select, dbconn = dbconn)
   if (nrow(ret) == 0) {
-    sql_execute_insert(sql_insert)
-    ret <- sql_execute_select(sql_select, ...)
+    sql_execute_insert(sql_insert, dbconn = dbconn)
+    ret <- sql_execute_select(sql_select, dbconn = dbconn)
   }
   ret[1, ]
 }
@@ -525,11 +544,12 @@ dequote <- function(text) {
 #' @param quotes The quotes
 re_quote_alt <- function(text, quotes = "'") {
   text <- unlist(text)
-  vapply(text, FUN = function(x) {
+  ret <- vapply(text, FUN = function(x) {
     if (!is.na(x)) {
       if (!is.numeric(x)) {
         quote <- FALSE
-        if (!is_quoted(x, quotes_symbols = "\"")) {
+        if (is_quoted(x, quotes_symbols = "\"")) {
+          x <- dequote(x)
           quote <- TRUE
         }
         if (is_quoted(x, quotes_symbols = "'")) {
@@ -543,7 +563,7 @@ re_quote_alt <- function(text, quotes = "'") {
     }
     as.character(x)
   }, FUN.VALUE = character(length(1)))
-  text
+  unname(ret)
 }
 
 #' This functions remove original quotes and sets validated quotes for corresponding db.

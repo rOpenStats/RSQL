@@ -8,6 +8,7 @@ This class is intended to simplify SQL commands.
 }
 \examples{
 library(RSQL)
+library(RSQLite)
 db.name <- getMtcarsdbPath(copy = TRUE)
 rsql <- createRSQL(drv = RSQLite::SQLite(), dbname = db.name)
 where_values_df <- data.frame(carb = 8, stringsAsFactors = FALSE)
@@ -102,6 +103,7 @@ mtcars.observed
 \item \href{#method-execute_select}{\code{RSQL.class$execute_select()}}
 \item \href{#method-execute_update}{\code{RSQL.class$execute_update()}}
 \item \href{#method-execute_insert}{\code{RSQL.class$execute_insert()}}
+\item \href{#method-execute_get_insert}{\code{RSQL.class$execute_get_insert()}}
 \item \href{#method-execute_command}{\code{RSQL.class$execute_command()}}
 \item \href{#method-execute_delete}{\code{RSQL.class$execute_delete()}}
 \item \href{#method-retrieve}{\code{RSQL.class$retrieve()}}
@@ -369,6 +371,25 @@ Performs an insert on the database
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{sql_insert}}{the sql insert statement to perform}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-execute_get_insert"></a>}}
+\if{latex}{\out{\hypertarget{method-execute_get_insert}{}}}
+\subsection{Method \code{execute_get_insert()}}{
+Performs a select statement, if not exists, executes insert statement
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$execute_get_insert(sql_select, sql_insert)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{sql_select}}{the sql select statement to perform}
+
 \item{\code{sql_insert}}{the sql insert statement to perform}
 }
 \if{html}{\out{</div>}}

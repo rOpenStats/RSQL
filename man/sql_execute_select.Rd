@@ -2,7 +2,7 @@
 % Please edit documentation in R/sql-lib.R
 \name{sql_execute_select}
 \alias{sql_execute_select}
-\title{Executes a select on the database}
+\title{sql_execute_select}
 \usage{
 sql_execute_select(sql_select, dbconn = NULL)
 }

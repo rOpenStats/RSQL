@@ -10,8 +10,8 @@ delete ‘SQL’ queries the underlying database without having to
 explicitly write ‘SQL’ code.
 
 | Release                                                                                      | Usage                                                                                                    | Development                                                                                                                                                                                            |
-| :------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|                                                                                              | [![minimal R version](https://img.shields.io/badge/R%3E%3D-3.4.0-blue.svg)](https://cran.r-project.org/) | [![Travis](https://travis-ci.org/rOpenStats/RSQL.svg?branch=master)](https://travis-ci.org/rOpenStats/RSQL)                                                                                            |
+|:---------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|                                                                                              | [![minimal R version](https://img.shields.io/badge/R%3E%3D-3.4.0-blue.svg)](https://cran.r-project.org/) | [![R-CMD-check](https://github.com/rOpenStats/RSQL/workflows/R-CMD-check/badge.svg)](https://github.com/rOpenStats/RSQL/actions)                                                                       |
 | [![CRAN](http://www.r-pkg.org/badges/version/RSQL)](https://cran.r-project.org/package=RSQL) |                                                                                                          | [![codecov](https://codecov.io/gh/rOpenStats/RSQL/branch/master/graph/badge.svg)](https://codecov.io/gh/rOpenStats/RSQL)                                                                               |
 |                                                                                              |                                                                                                          | [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) |
 
@@ -53,7 +53,7 @@ query_sql <- rsql$gen_select(
     where_fields = "gear",
     where_values = 4)
 query_sql
-#> [1] "select mpg, cyl, disp, hp, drat, wt, qsec, vs, am from mtcars where (gear) in  ( 4 )"
+#> [1] "select mpg, cyl, disp, hp, drat, wt, qsec, vs, am from mtcars where (gear) in ('4')"
 
 rsql$execute_select(query_sql)
 #>     mpg cyl  disp  hp drat    wt  qsec vs am
@@ -79,10 +79,10 @@ update_sql <- rsql$gen_update(
     where_fields = "gear",
     where_values = 4)
 update_sql
-#> [1] "update mtcars set (vs)=('1') where (gear) in  ( 4 )"
+#> [1] "update mtcars set vs='1' where (gear) in ('4')"
 rsql$execute_update(update_sql)
 #> <SQLiteResult>
-#>   SQL  update mtcars set (vs)=('1') where (gear) in  ( 4 )
+#>   SQL  update mtcars set vs='1' where (gear) in ('4')
 #>   ROWS Fetched: 0 [complete]
 #>        Changed: 12
 rsql$execute_select(query_sql)

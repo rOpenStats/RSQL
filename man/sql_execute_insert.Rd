@@ -4,7 +4,7 @@
 \alias{sql_execute_insert}
 \title{Executes a statement on the database.}
 \usage{
-sql_execute_insert(sql_insert, dbconn = NULL)
+sql_execute_insert(sql_insert, dbconn)
 }
 \arguments{
 \item{sql_insert}{The SQL String}
