@@ -41,8 +41,10 @@ test_that("sql_lib basic test", {
   )
   mtcars.observed <- rsql$execute_select(query_sql)
   expect_equal(nrow(mtcars.observed), 12)
-  df_verify(mtcars.observed,
-            c("mpg", "cyl", "disp", "hp", "drat", "wt",  "qsec", "vs",  "am"))
+  df_verify(
+    mtcars.observed,
+    c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am")
+  )
 
 
 
@@ -83,11 +85,15 @@ test_that("sql_lib unconnected functions or to correct", {
   parsed.where <- parse_where_clause("mpg < 10 AND cyl < 4 ")
   expect_equal(parsed.where$rhs, character(0))
 
-  expect_equal(sql_gen_where_or(where_values = data.frame(gear = c(4, 3), carb = c(4, 2))),
-               "where  ( gear=4 and carb=4 )  or  ( gear=3 and carb=2 )")
-  expect_equal(c("mpg", "cyl", "disp", "hp", "drat", "wt",  "qsec", "vs",  "am") %IN%
-    c("wt",  "qsec", "vs",  "am", "mpg", "cyl", "disp", "hp", "drat"),
-    rep(TRUE, 9))
+  expect_equal(
+    sql_gen_where_or(where_values = data.frame(gear = c(4, 3), carb = c(4, 2))),
+    "where  ( gear=4 and carb=4 )  or  ( gear=3 and carb=2 )"
+  )
+  expect_equal(
+    c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am") %IN%
+      c("wt", "qsec", "vs", "am", "mpg", "cyl", "disp", "hp", "drat"),
+    rep(TRUE, 9)
+  )
 })
 
 
@@ -112,7 +118,6 @@ test_that("util", {
   # Replace quotes
   expect_equal(re_quote_alt(text = "\"quoted\"", quotes = "'"), "'quoted'")
   expect_equal(re_quote_alt(text = "'quoted'", quotes = "\""), "\"quoted\"")
-
 })
 
 test_that("legal entities", {
@@ -197,7 +202,7 @@ test_that("sql_lib insert and delete test", {
   res <- rsql$execute_get_insert(get_select_sql, get_insert_sql)
   expect_equal(res$mpg, 99.9)
 
-  res <- rsql$execute_command("vacuum");
+  res <- rsql$execute_command("vacuum")
   expect_true(inherits(res, "SQLiteResult"))
   rsql$disconnect()
 })

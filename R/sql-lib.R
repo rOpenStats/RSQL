@@ -44,15 +44,15 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
   #' @field driver driver  name
   driver = NA,
   #' @field db.name database name
-  db.name  = NA,
+  db.name = NA,
   #' @field db user
-  user     = NA,
+  user = NA,
   #' @field db user password
   password = NA,
   #' @field db host
-  host     = NA,
+  host = NA,
   #' @field db host port
-  port     = NA,
+  port = NA,
   # regexp
   #'
   #' @field available.functions for generating select expressions
@@ -91,12 +91,12 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
   #' @param port port number
   initialize = function(drv, dbname,
                         user = NULL, password = NULL, host = NULL, port = NULL) {
-    self$db.name  <- dbname
-    self$driver   <- drv
-    self$user     <- user
+    self$db.name <- dbname
+    self$driver <- drv
+    self$user <- user
     self$password <- password
-    self$host     <- host
-    self$port     <- port
+    self$host <- host
+    self$port <- port
     self$valid.conn <- dbCanConnect(
       drv = self$driver, dbname = self$db.name,
       user = self$user, password = self$password,
@@ -303,9 +303,11 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
   execute_get_insert = function(sql_select, sql_insert) {
     self$connect()
     self$last.query <- sql_select
-    self$last.rs <- sql_execute_get_insert(sql_select = sql_select,
-                                           sql_insert = sql_insert,
-                                           dbconn = self$conn)
+    self$last.rs <- sql_execute_get_insert(
+      sql_select = sql_select,
+      sql_insert = sql_insert,
+      dbconn = self$conn
+    )
     self$select.counter <- self$select.counter + 1
     self$last.rs
   },
