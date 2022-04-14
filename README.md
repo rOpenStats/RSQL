@@ -3,6 +3,9 @@
 
 # RSQL
 
+[![Downloads](http://cranlogs.r-pkg.org/badges/RSQL?color=brightgreen)](https://www.r-pkg.org:443/pkg/RSQL)
+[![Downloads](http://cranlogs.r-pkg.org/badges/grand-total/RSQL?color=brightgreen)](https://www.r-pkg.org:443/pkg/RSQL)
+
 <!-- Database Agnostic Package to Generate and Process 'SQL' Queries in R. -->
 
 Allows the user to generate and execute select, insert, update and
@@ -79,10 +82,10 @@ update_sql <- rsql$gen_update(
     where_fields = "gear",
     where_values = 4)
 update_sql
-#> [1] "update mtcars set vs='1' where (gear) in ('4')"
+#> [1] "update mtcars set (vs)=('1') where (gear) in ('4')"
 rsql$execute_update(update_sql)
 #> <SQLiteResult>
-#>   SQL  update mtcars set vs='1' where (gear) in ('4')
+#>   SQL  update mtcars set (vs)=('1') where (gear) in ('4')
 #>   ROWS Fetched: 0 [complete]
 #>        Changed: 12
 rsql$execute_select(query_sql)
