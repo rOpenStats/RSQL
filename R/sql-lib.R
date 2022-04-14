@@ -810,7 +810,7 @@ sql_gen_where <- function(where_fields = names(where_values), where_values) {
     # if strings values, add '
     for (col in names(where_values)) {
       where_values_col <- where_values[, col]
-      if (class(where_values_col) == "factor") {
+      if (inherits(where_values_col, "factor")) {
         where_values_col <- as.character(where_values_col)
       }
       # Removed
