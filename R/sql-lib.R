@@ -995,7 +995,7 @@ sql_gen_insert <- function(table, values_df, insert_fields = names(values_df)) {
   values.df <- as.data.frame(values_df)
   names(values.df) <- insert_fields
   values.df <- stuff_df_quoted(values.df)
-  if (length(values_df) > 1 & class(values_df) != "data.frame") {
+  if (length(values_df) > 1 & !inherits(values_df, "data.frame")) {
     stop("Values must be defined as data.frames with same size of columns")
   }
   # Converts all factors to strings
