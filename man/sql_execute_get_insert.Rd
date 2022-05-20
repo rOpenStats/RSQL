@@ -18,3 +18,6 @@ sql_execute_get_insert(dbconn, sql_select, sql_insert, ...)
 \description{
 Executes the insert statement
 }
+\author{
+ken4rab
+}

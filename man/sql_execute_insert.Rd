@@ -14,3 +14,6 @@ sql_execute_insert(sql_insert, dbconn)
 \description{
 Executes a statement on the database.
 }
+\author{
+ken4rab
+}

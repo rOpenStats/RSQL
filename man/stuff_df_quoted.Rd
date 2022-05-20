@@ -12,3 +12,6 @@ stuff_df_quoted(text.df)
 \description{
 stuff quote characters in quoted or not quoted df for DSL or DML operations
 }
+\author{
+ken4rab
+}

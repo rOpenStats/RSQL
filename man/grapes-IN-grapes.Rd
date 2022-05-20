@@ -7,10 +7,13 @@
 x \%IN\% y
 }
 \arguments{
-\item{x}{TEST}
+\item{x}{vector x}
 
-\item{y}{TEST}
+\item{y}{vector y}
 }
 \description{
 Operator IN for multiple columns
+}
+\author{
+ken4rab
 }

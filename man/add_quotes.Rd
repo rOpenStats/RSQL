@@ -12,3 +12,6 @@ add_quotes(text)
 \description{
 Adds quotes to a string
 }
+\author{
+ken4rab
+}

@@ -12,3 +12,6 @@ replaceNAwithNULL(sql.code)
 \description{
 Replace NA with NULL in sql statement
 }
+\author{
+ken4rab
+}

@@ -32,3 +32,6 @@ sql_retrieve_insert(
 \description{
 Retrieves or insert Statement
 }
+\author{
+ken4rab
+}

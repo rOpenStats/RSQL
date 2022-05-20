@@ -26,3 +26,6 @@ sql_gen_update(
 \description{
 Generates an update statement
 }
+\author{
+ken4rab
+}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/sql-lib.R
 \name{cbind_coerced}
 \alias{cbind_coerced}
-\title{TODO: WHAT DOES THIS DO AGAIN?}
+\title{cbind_coerced}
 \usage{
 cbind_coerced(...)
 }
@@ -10,5 +10,8 @@ cbind_coerced(...)
 \item{...}{The parameters}
 }
 \description{
-TODO: WHAT DOES THIS DO AGAIN?
+cbind_coerced
+}
+\author{
+ken4rab
 }

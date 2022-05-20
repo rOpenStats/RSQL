@@ -14,3 +14,6 @@ sql_execute_delete(sql_delete, dbconn = NULL)
 \description{
 Executes a delete on the Database
 }
+\author{
+ken4rab
+}

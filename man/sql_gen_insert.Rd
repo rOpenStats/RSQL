@@ -16,3 +16,6 @@ sql_gen_insert(table, values_df, insert_fields = names(values_df))
 \description{
 Generates an insert statement.
 }
+\author{
+ken4rab
+}

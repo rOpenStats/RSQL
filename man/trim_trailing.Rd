@@ -12,3 +12,6 @@ trim_trailing(x)
 \description{
 Returns string w/o trailing whitespace
 }
+\author{
+ken4rab
+}

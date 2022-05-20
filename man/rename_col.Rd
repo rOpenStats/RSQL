@@ -16,3 +16,6 @@ rename_col(df, name, replace_name)
 \description{
 renames a column on a data.frame
 }
+\author{
+ken4rab
+}

@@ -14,3 +14,6 @@ sql_gen_where(where_fields = names(where_values), where_values)
 \description{
 Generates a where statement to be used on a SQL statement.
 }
+\author{
+ken4rab
+}

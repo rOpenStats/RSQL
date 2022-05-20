@@ -16,3 +16,6 @@ sql_gen_delete(table, where_fields = names(where_values), where_values = NULL)
 \description{
 Generates a Delete Statement
 }
+\author{
+ken4rab
+}

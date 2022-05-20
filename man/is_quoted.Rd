@@ -14,3 +14,6 @@ is_quoted(text, quotes_symbols = "'")
 \description{
 Determines if the string is quoted or not
 }
+\author{
+ken4rab
+}

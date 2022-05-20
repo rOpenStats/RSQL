@@ -35,3 +35,6 @@ sql_gen_select(
 \description{
 Generates a Select Statement
 }
+\author{
+ken4rab
+}

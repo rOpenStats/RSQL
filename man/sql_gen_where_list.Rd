@@ -14,3 +14,6 @@ sql_gen_where_list(where_fields, where_values)
 \description{
 Generates a where list statement to be used on a SQL statement.
 }
+\author{
+ken4rab
+}

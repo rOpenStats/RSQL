@@ -14,3 +14,6 @@ rm_quotes(text, quotes = "'")
 \description{
 Removes quotes from the String
 }
+\author{
+ken4rab
+}

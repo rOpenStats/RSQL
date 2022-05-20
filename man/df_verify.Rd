@@ -14,3 +14,6 @@ df_verify(dataframe, columns)
 \description{
 Checks that the columns are in the data.frame
 }
+\author{
+ken4rab
+}

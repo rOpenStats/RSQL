@@ -12,3 +12,6 @@ rm_vector_quotes(text.vector)
 \description{
 Removes quotes from data.frame columns
 }
+\author{
+ken4rab
+}

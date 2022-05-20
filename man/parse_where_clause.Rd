@@ -12,3 +12,6 @@ parse_where_clause(where_clause_list = c())
 \description{
 Parses a where clause.
 }
+\author{
+ken4rab
+}

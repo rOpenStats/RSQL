@@ -14,3 +14,6 @@ sql_execute_select(sql_select, dbconn = NULL)
 \description{
 Executes a select on the database
 }
+\author{
+ken4rab
+}

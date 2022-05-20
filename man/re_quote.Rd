@@ -16,3 +16,6 @@ re_quote(text, quotes = "'")
 This functions remove original quotes and sets validated quotes for corresponding db.
 If it had no quotes, will only put corresponding quotes symbols
 }
+\author{
+ken4rab
+}

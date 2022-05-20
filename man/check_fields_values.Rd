@@ -16,3 +16,6 @@ check_fields_values(fields, values, min.length = 0)
 \description{
 Check fields and values are sound
 }
+\author{
+ken4rab
+}

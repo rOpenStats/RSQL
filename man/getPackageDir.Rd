@@ -9,3 +9,6 @@ getPackageDir()
 \description{
 Gets the path of package data.
 }
+\author{
+ken4rab
+}

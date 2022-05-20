@@ -39,6 +39,7 @@
 #' mtcars.observed <- rsql$execute_select(select_sql)
 #' mtcars.observed
 #' @importFrom R6 R6Class
+#' @author ken4rab
 #' @export
 RSQL.class <- R6::R6Class("RSQL", public = list(
   #' @field driver driver  name
@@ -428,6 +429,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
 #' @param password Database password
 #' @param host Database host
 #' @param port Database port
+#' @author ken4rab
 #' @export
 createRSQL <- function(drv, dbname, user = NULL, password = NULL, host = NULL, port = NULL) {
   RSQL.class$new(drv, dbname, user, password, host, port)
@@ -439,6 +441,7 @@ createRSQL <- function(drv, dbname, user = NULL, password = NULL, host = NULL, p
 #' @import lgr
 #' @param sql_insert The SQL String
 #' @param dbconn The Database Connection to run the query against
+#' @author ken4rab
 sql_execute_insert <- function(sql_insert, dbconn) {
   sql_insert <- gsub(",NA", ",NULL", sql_insert)
   sql_insert <- gsub(", NA", ",NULL", sql_insert)
@@ -465,6 +468,7 @@ sql_execute_insert <- function(sql_insert, dbconn) {
 #'
 #' @param sql_update The update SQL
 #' @param dbconn The Database Connection to run the query against
+#' @author ken4rab
 sql_execute_update <- function(sql_update, dbconn = NULL) {
   ret <- DBI::dbSendQuery(dbconn, sql_update)
   ret
@@ -477,6 +481,7 @@ sql_execute_update <- function(sql_update, dbconn = NULL) {
 #'
 #' @param sql_delete The delete SQL
 #' @param dbconn The Database Connection to run the query against
+#' @author ken4rab
 sql_execute_delete <- function(sql_delete, dbconn = NULL) {
   sql_delete <- gsub(",NA", ",NULL", sql_delete)
   sql_delete <- gsub(", NA", ",NULL", sql_delete)
@@ -492,6 +497,7 @@ sql_execute_delete <- function(sql_delete, dbconn = NULL) {
 #' @import DBI
 #' @param sql_select The delete SQL
 #' @param dbconn The Database Connection to run the query against
+#' @author ken4rab
 sql_execute_select <- function(sql_select, dbconn = NULL) {
   # debug sql_select <- 'select price from v_quotes_id_completed where
   # symbol='alua' order by date DESC LIMIT 1' sql_select <- 'select * from
@@ -511,6 +517,7 @@ sql_execute_select <- function(sql_select, dbconn = NULL) {
 #' @param sql_select The SQL select query
 #' @param sql_insert The SQL insert query
 #' @param ... other variables to considered.
+#' @author ken4rab
 sql_execute_get_insert <- function(dbconn, sql_select, sql_insert, ...) {
   ret <- sql_execute_select(sql_select, dbconn = dbconn)
   if (nrow(ret) == 0) {
@@ -525,6 +532,7 @@ sql_execute_get_insert <- function(dbconn, sql_select, sql_insert, ...) {
 #' Determines string type which needs quotes in an SQL statement
 #'
 #' @param text The text to test
+#' @author ken4rab
 needs_quotes <- function(text) {
   class(text) %in% c("Date", "character")
 }
@@ -533,6 +541,7 @@ needs_quotes <- function(text) {
 #'
 #' @param text The text to test
 #' @param quotes_symbols The quotation characters
+#' @author ken4rab
 is_quoted <- function(text, quotes_symbols = "'") {
   ret <- TRUE
   i <- 1
@@ -554,6 +563,7 @@ is_quoted <- function(text, quotes_symbols = "'") {
 #'
 #' @param unquoted.text The unquoted string to stuff quotes from.
 #' @param quote The quoting symbol. Default is '
+#' @author ken4rab
 stuff_quote <- function(unquoted.text, quote = "'") {
   if (is_quoted(unquoted.text)) {
     stop(paste("stuff_quote function cannot be called with quoted text", unquoted.text))
@@ -565,6 +575,7 @@ stuff_quote <- function(unquoted.text, quote = "'") {
 #' Removes the quotes from the string
 #'
 #' @param text The string to remove the quotes from.
+#' @author ken4rab
 dequote <- function(text) {
   substr(text, 2, nchar(text) - 1)
 }
@@ -574,6 +585,7 @@ dequote <- function(text) {
 #'
 #' @param text The string
 #' @param quotes The quotes
+#' @author ken4rab
 re_quote_alt <- function(text, quotes = "'") {
   text <- unlist(text)
   ret <- vapply(text, FUN = function(x) {
@@ -603,6 +615,7 @@ re_quote_alt <- function(text, quotes = "'") {
 #'
 #' @param text The string
 #' @param quotes The quotes
+#' @author ken4rab
 re_quote <- function(text, quotes = "'") {
   text <- as.character(text)
   if (!is.na(text)) {
@@ -625,6 +638,7 @@ re_quote <- function(text, quotes = "'") {
 #' Adds quotes to a string
 #'
 #' @param text The string to quote
+#' @author ken4rab
 #' @export
 add_quotes <- function(text) {
   ret <- sapply(text, FUN = re_quote)
@@ -638,6 +652,7 @@ add_quotes <- function(text) {
 #'
 #' @param text The string to remove quotes from
 #' @param quotes Quote characters
+#' @author ken4rab
 rm_quotes <- function(text, quotes = "'") {
   if (!is.na(text)) {
     unquoted.text <- text
@@ -656,6 +671,7 @@ rm_quotes <- function(text, quotes = "'") {
 #' stuff quote characters in quoted or not quoted df for DSL or DML operations
 #'
 #' @param text.df Data Frame with corresponding values and fields as colnames
+#' @author ken4rab
 stuff_df_quoted <- function(text.df) {
   if (!is.null(text.df)) {
     if (!is.data.frame(text.df)) {
@@ -702,6 +718,7 @@ stuff_df_quoted <- function(text.df) {
 #' Removes quotes from data.frame columns
 #'
 #' @param text.vector The text vector to remove quotes from.
+#' @author ken4rab
 rm_vector_quotes <- function(text.vector) {
   ret <- sapply(text.vector, FUN = rm_quotes)
   names(ret) <- NULL
@@ -712,6 +729,7 @@ rm_vector_quotes <- function(text.vector) {
 #' add_grep_exact_match
 #'
 #' @param text TEST
+#' @author ken4rab
 add_grep_exact_match <- function(text) {
   text <- gsub("(\\^|\\%)", "\\\\\\1", text)
   paste("^", text, "$", sep = "")
@@ -724,6 +742,7 @@ add_grep_exact_match <- function(text) {
 #' @param table The table from which the delete statement will be generated
 #' @param where_fields The fields used in the where section
 #' @param where_values The values used in the where section
+#' @author ken4rab
 sql_gen_delete <- function(table, where_fields = names(where_values), where_values = NULL) {
   where_values.df <- as.data.frame(where_values)
   names(where_values.df) <- where_fields
@@ -745,6 +764,7 @@ sql_gen_delete <- function(table, where_fields = names(where_values), where_valu
 #' @param order_by Order by fields
 #' @param top Retrieve top records
 #' @param distinct it adds a distinct clause to the query.
+#' @author ken4rab
 sql_gen_select <- function(select_fields, table,
                            where_fields = names(where_values),
                            where_values = NULL,
@@ -796,6 +816,7 @@ sql_gen_select <- function(select_fields, table,
 #' @param where_fields The fields used in the where section
 #' @param where_values The values used in the where section
 #' @importFrom utils str
+#' @author ken4rab
 sql_gen_where <- function(where_fields = names(where_values), where_values) {
   check_fields_values(fields = where_fields, values = where_values, min.length = 0)
   ret <- ""
@@ -881,6 +902,7 @@ sql_gen_where <- function(where_fields = names(where_values), where_values) {
 #'
 #' @param where_fields The fields used in the where section
 #' @param where_values The values used in the where section
+#' @author ken4rab
 sql_gen_where_list <- function(where_fields, where_values) {
   sql_where <- ""
   comma.sep <- ", "
@@ -929,6 +951,7 @@ sql_gen_where_list <- function(where_fields, where_values) {
 #'
 #' @param where_fields The fields used in the where section
 #' @param where_values The values used in the where section
+#' @author ken4rab
 sql_gen_where_or <- function(where_fields = names(where_values), where_values) {
   sql_where <- ""
   if (length(where_fields) > 0) {
@@ -967,6 +990,7 @@ sql_gen_where_or <- function(where_fields = names(where_values), where_values) {
 #' @param table The table to be affected
 #' @param insert_fields The fields to insert
 #' @param values_df The values to insert. Must be defined as data.frame of values
+#' @author ken4rab
 sql_gen_insert <- function(table, values_df, insert_fields = names(values_df)) {
   values.df <- as.data.frame(values_df)
   names(values.df) <- insert_fields
@@ -1023,6 +1047,7 @@ sql_gen_insert <- function(table, values_df, insert_fields = names(values_df)) {
 #' Replace NA with NULL in sql statement
 #'
 #' @param sql.code code to replace NA with NULL
+#' @author ken4rab
 replaceNAwithNULL <- function(sql.code) {
   sql.code <- gsub("(,( )?)?NA", "\\1NULL", sql.code)
   # sql.code <- gsub(", NA", ", NULL", sql.code)
@@ -1039,6 +1064,7 @@ replaceNAwithNULL <- function(sql.code) {
 #' @param values The values to update
 #' @param where_fields The fields for where statement
 #' @param where_values The values for where statement
+#' @author ken4rab
 sql_gen_update <- function(table, update_fields = names(values), values, where_fields = names(where_values), where_values) {
   check_fields_values(fields = update_fields, values = values, min.length = 1)
   check_fields_values(fields = where_fields, values = where_values, min.length = 0)
@@ -1074,6 +1100,7 @@ sql_gen_update <- function(table, update_fields = names(values), values, where_f
 #' Returns string w/o leading whitespace
 #'
 #' @param x The string
+#' @author ken4rab
 trim_leading <- function(x) sub("^\\s+", "", x)
 
 #' trim_trailing
@@ -1081,12 +1108,14 @@ trim_leading <- function(x) sub("^\\s+", "", x)
 #' Returns string w/o trailing whitespace
 #'
 #' @param x The string
+#' @author ken4rab
 trim_trailing <- function(x) sub("\\s+$", "", x)
 
 
 #' Returns string w/o leading or trailing whitespace
 #'
 #' @param x The string
+#' @author ken4rab
 trim <- function(x) gsub("^\\s+|\\s+$", "", x)
 
 #' rename_col
@@ -1096,15 +1125,17 @@ trim <- function(x) gsub("^\\s+|\\s+$", "", x)
 #' @param df The date.frame
 #' @param name The name of the column
 #' @param replace_name The new name of the column
+#' @author ken4rab
 rename_col <- function(df, name, replace_name) {
   i <- which(names(df) == name)
   names(df)[i] <- replace_name
   df
 }
 
-#' TODO: WHAT DOES THIS DO AGAIN?
+#' cbind_coerced
 #'
 #' @param ... The parameters
+#' @author ken4rab
 cbind_coerced <- function(...) {
   ret <- cbind(...)
   if ("stringsAsFactors" %in% names(ret)) {
@@ -1118,6 +1149,7 @@ cbind_coerced <- function(...) {
 #'
 #' @param dataframe The data.frame
 #' @param columns The columns to check
+#' @author ken4rab
 df_verify <- function(dataframe, columns) {
   ret <- NULL
   dataframe_names <- names(dataframe)
@@ -1144,6 +1176,7 @@ df_verify <- function(dataframe, columns) {
 #' @param fields The fields (Not used. Included for compatibility)
 #' @param values The values (Not used. Included for compatibility)
 #' @param dbconn The database connection
+#' @author ken4rab
 sql_retrieve <- function(table, fields_uk = names(values_uk), values_uk,
                          fields = names(values), values = NULL,
                          field_id = "id", dbconn = NULL) {
@@ -1186,6 +1219,7 @@ sql_retrieve <- function(table, fields_uk = names(values_uk), values_uk,
 #' @param values The values
 #' @param field_id The field of the serial id
 #' @param dbconn The database connection
+#' @author ken4rab
 sql_retrieve_insert <- function(table, fields_uk = names(values_uk), values_uk,
                                 fields = names(values), values = NULL,
                                 field_id = "id", dbconn = NULL) {
@@ -1242,6 +1276,7 @@ sql_retrieve_insert <- function(table, fields_uk = names(values_uk), values_uk,
 #' @param recipe TEST
 #' @param indicator_fields TEST
 #' @noRd
+#' @author ken4rab
 sql_gen_joined_query <- function(dw_definition, recipe, indicator_fields) {
   # sql_gen_select <- function(select_fields, table, where_fields='',
   # where_values=NULL,group_by=c()){
@@ -1321,6 +1356,7 @@ sql_gen_joined_query <- function(dw_definition, recipe, indicator_fields) {
 #'
 #' @param where_clause_list The list of params
 #' @import lgr
+#' @author ken4rab
 parse_where_clause <- function(where_clause_list = c()) {
   where_df <- data.frame(
     lhs = character(), comp = character(), rhs = character(),
@@ -1394,14 +1430,16 @@ parse_where_clause <- function(where_clause_list = c()) {
 
 #' Operator IN for multiple columns
 #'
-#' @param x TEST
-#' @param y TEST
+#' @param x vector x
+#' @param y vector y
+#' @author ken4rab
 "%IN%" <- function(x, y) interaction(x) %in% interaction(y)
 
 
 #' Get package directory
 #'
 #' Gets the path of package data.
+#' @author ken4rab
 #' @export
 getPackageDir <- function() {
   home.dir <- find.package("RSQL", lib.loc = NULL, quiet = TRUE)
@@ -1414,6 +1452,7 @@ getPackageDir <- function() {
 
 #' getCarsdbPath
 #' @param copy a boolean that states whether it should be copied to the home directory or not.
+#' @author ken4rab
 #' @export
 getMtcarsdbPath <- function(copy = TRUE) {
   db.filename <- "mtcars.db"
@@ -1434,6 +1473,7 @@ getMtcarsdbPath <- function(copy = TRUE) {
 #' @param fields Fields names to check
 #' @param values values to check
 #' @param min.length for vectors
+#' @author ken4rab
 check_fields_values <- function(fields, values, min.length = 0) {
   stopifnot(length(values) >= min.length)
   stopifnot(length(fields) == length(values))

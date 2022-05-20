@@ -12,3 +12,6 @@ trim(x)
 \description{
 Returns string w/o leading or trailing whitespace
 }
+\author{
+ken4rab
+}

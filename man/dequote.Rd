@@ -12,3 +12,6 @@ dequote(text)
 \description{
 Removes the quotes from the string
 }
+\author{
+ken4rab
+}

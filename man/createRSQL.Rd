@@ -22,3 +22,6 @@ createRSQL(drv, dbname, user = NULL, password = NULL, host = NULL, port = NULL)
 \description{
 Produces a RSQL object
 }
+\author{
+ken4rab
+}

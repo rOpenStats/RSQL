@@ -12,3 +12,6 @@ add_grep_exact_match(text)
 \description{
 add_grep_exact_match
 }
+\author{
+ken4rab
+}

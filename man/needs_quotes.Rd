@@ -12,3 +12,6 @@ needs_quotes(text)
 \description{
 Determines string type which needs quotes in an SQL statement
 }
+\author{
+ken4rab
+}

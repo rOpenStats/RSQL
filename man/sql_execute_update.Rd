@@ -14,3 +14,6 @@ sql_execute_update(sql_update, dbconn = NULL)
 \description{
 Executes an update on the database
 }
+\author{
+ken4rab
+}

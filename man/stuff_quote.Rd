@@ -14,3 +14,6 @@ stuff_quote(unquoted.text, quote = "'")
 \description{
 Stuff quote symbol from text
 }
+\author{
+ken4rab
+}

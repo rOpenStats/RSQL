@@ -33,6 +33,9 @@ select_sql <- rsql$gen_select(
 mtcars.observed <- rsql$execute_select(select_sql)
 mtcars.observed
 }
+\author{
+ken4rab
+}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
