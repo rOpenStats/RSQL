@@ -6,6 +6,9 @@
 \usage{
 getLogger(r6.object)
 }
+\arguments{
+\item{r6.object}{a R6 object with a logger member}
+}
 \description{
 getLogger
 }

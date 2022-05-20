@@ -1,4 +1,5 @@
 #' genLogger
+#' @param r6.object a R6 object with a logger member
 #' @import lgr
 #' @author ken4rab
 #' @export
@@ -7,6 +8,7 @@ genLogger <- function(r6.object) {
 }
 
 #' getLogger
+#' @param r6.object a R6 object with a logger member
 #' @import lgr
 #' @author ken4rab
 #' @export
