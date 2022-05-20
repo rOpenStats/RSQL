@@ -1,8 +1,5 @@
 {
-  "@context": [
-    "https://doi.org/10.5063/schema/codemeta-2.0",
-    "http://schema.org"
-  ],
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "RSQL",
   "description": "Allows the user to generate and execute select, insert, update and delete 'SQL' queries the underlying database without having to explicitly write 'SQL' code. ",
@@ -10,13 +7,13 @@
   "codeRepository": "https://github.com/rOpenStats/RSQL",
   "issueTracker": "https://github.com/rOpenStats/RSQL/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.1.4",
+  "version": "0.2.1",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.0.2 (2020-06-22)",
+  "runtimePlatform": "R version 4.2.0 (2022-04-22)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -37,8 +34,6 @@
       "email": "leobelen@gmail.com"
     }
   ],
-  "contributor": {},
-  "copyrightHolder": {},
   "maintainer": [
     {
       "@type": "Person",
@@ -48,6 +43,30 @@
     }
   ],
   "softwareSuggestions": [
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "RSQLite",
+      "name": "RSQLite",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=RSQLite"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "knitr",
+      "name": "knitr",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=knitr"
+    },
     {
       "@type": "SoftwareApplication",
       "identifier": "rmarkdown",
@@ -121,8 +140,8 @@
       "sameAs": "https://CRAN.R-project.org/package=pkgdown"
     }
   ],
-  "softwareRequirements": [
-    {
+  "softwareRequirements": {
+    "1": {
       "@type": "SoftwareApplication",
       "identifier": "lgr",
       "name": "lgr",
@@ -134,7 +153,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=lgr"
     },
-    {
+    "2": {
       "@type": "SoftwareApplication",
       "identifier": "R6",
       "name": "R6",
@@ -146,7 +165,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=R6"
     },
-    {
+    "3": {
       "@type": "SoftwareApplication",
       "identifier": "DBI",
       "name": "DBI",
@@ -158,44 +177,12 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=DBI"
     },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "RSQLite",
-      "name": "RSQLite",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=RSQLite"
-    },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "knitr",
-      "name": "knitr",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=knitr"
-    }
-  ],
-  "contIntegration": ["https://travis-ci.org/rOpenStats/RSQL", "https://codecov.io/gh/rOpenStats/RSQL"],
-  "keywords": [
-    "polyhedra-database",
-    "geometry",
-    "rgl"
-  ],
-  "relatedLink": [
-    "https://CRAN.R-project.org/package=Rpolyhedra",
-    "https://CRAN.R-project.org/package=RSQL"
-  ],
-  "funder": {},
-  "developmentStatus": "https://www.repostatus.org/#active",
+    "SystemRequirements": null
+  },
+  "fileSize": "118.479KB",
   "releaseNotes": "https://github.com/rOpenStats/RSQL/blob/master/NEWS.md",
   "readme": "https://github.com/rOpenStats/RSQL/blob/master/README.md",
-  "fileSize": "0KB"
+  "contIntegration": ["https://github.com/rOpenStats/RSQL/actions", "https://app.codecov.io/gh/rOpenStats/RSQL"],
+  "developmentStatus": "https://www.repostatus.org/#active",
+  "relatedLink": "https://CRAN.R-project.org/package=RSQL"
 }
