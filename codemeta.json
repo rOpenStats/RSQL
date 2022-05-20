@@ -179,9 +179,8 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "118.479KB",
+  "fileSize": "122.653KB",
   "releaseNotes": "https://github.com/rOpenStats/RSQL/blob/master/NEWS.md",
-  "readme": "https://github.com/rOpenStats/RSQL/blob/master/README.md",
   "contIntegration": ["https://github.com/rOpenStats/RSQL/actions", "https://app.codecov.io/gh/rOpenStats/RSQL"],
   "developmentStatus": "https://www.repostatus.org/#active",
   "relatedLink": "https://CRAN.R-project.org/package=RSQL"
