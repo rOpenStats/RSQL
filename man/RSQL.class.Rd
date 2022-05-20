@@ -78,6 +78,8 @@ ken4rab
 \item{\code{command.counter}}{An instance command counter}
 
 \item{\code{clear.rs.counter}}{An instance clear.rs.counter}
+
+\item{\code{logger}}{is conigured logger for current class}
 }
 \if{html}{\out{</div>}}
 }

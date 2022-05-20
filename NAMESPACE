@@ -3,6 +3,8 @@
 export(RSQL.class)
 export(add_quotes)
 export(createRSQL)
+export(genLogger)
+export(getLogger)
 export(getMtcarsdbPath)
 export(getPackageDir)
 import(DBI)

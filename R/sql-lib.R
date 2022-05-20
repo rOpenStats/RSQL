@@ -86,6 +86,8 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
   command.counter = 0,
   #' @field clear.rs.counter   An instance clear.rs.counter
   clear.rs.counter = 0,
+  #' @field logger is conigured logger for current class
+  logger = NA,
   #' @description
   #' Initializes a connection
   #' @param drv driver name
@@ -107,6 +109,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
       user = self$user, password = self$password,
       host = self$host, port = self$port
     )
+    self$logger <- genLogger(self)
     self$valid.conn
   },
   #' @description
@@ -133,13 +136,17 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
   #' @return RSQL object
 
   setupResultClassFromDriver = function(){
+    logger <- getLogger(self)
     # SQLite
     if (inherits(self$driver, "SQLiteDriver")){
       self$results.class <- "SQLiteResult"
     }
     # Postgres
-    if (inherits(self$driver, "PqConnection")){
+    if (inherits(self$driver, "PqDriver")){
       self$results.class <- "PqResult"
+    }
+    if (is.null(self$results.class)){
+      logger$warn("Driver Result class not implemented yet", driver = class(self$driver))
     }
     self
   },
