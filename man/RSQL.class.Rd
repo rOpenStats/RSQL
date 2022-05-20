@@ -40,13 +40,13 @@ mtcars.observed
 
 \item{\code{db.name}}{database name}
 
-\item{\code{db}}{user}
+\item{\code{user}}{db user}
 
-\item{\code{db}}{user password}
+\item{\code{password}}{db password}
 
-\item{\code{db}}{host}
+\item{\code{host}}{db host}
 
-\item{\code{db}}{host port}
+\item{\code{port}}{db port}
 
 \item{\code{available.functions}}{for generating select expressions}
 
@@ -73,19 +73,6 @@ mtcars.observed
 \item{\code{delete.counter}}{An instance delete counter}
 
 \item{\code{command.counter}}{An instance command counter}
-}
-\if{html}{\out{</div>}}
-}
-\section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{db}}{user}
-
-\item{\code{db}}{user password}
-
-\item{\code{db}}{host}
-
-\item{\code{db}}{host port}
 }
 \if{html}{\out{</div>}}
 }
@@ -166,10 +153,14 @@ conn object
 \if{html}{\out{<a id="method-setupResultClassFromDriver"></a>}}
 \if{latex}{\out{\hypertarget{method-setupResultClassFromDriver}{}}}
 \subsection{Method \code{setupResultClassFromDriver()}}{
+Infer ResultsClass from corresponding driver. Implemented for SQLiteDriver & PqConnection
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RSQL.class$setupResultClassFromDriver()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+RSQL object
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-setupRegexp"></a>}}

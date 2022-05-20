@@ -45,13 +45,13 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
   driver = NA,
   #' @field db.name database name
   db.name = NA,
-  #' @field db user
+  #' @field user db user
   user = NA,
-  #' @field db user password
+  #' @field password db password
   password = NA,
-  #' @field db host
+  #' @field host db host
   host = NA,
-  #' @field db host port
+  #' @field port db port
   port = NA,
   # regexp
   #'
@@ -125,6 +125,10 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     }
     self$conn
   },
+  #' @description
+  #' Infer ResultsClass from corresponding driver. Implemented for SQLiteDriver & PqConnection
+  #' @return RSQL object
+
   setupResultClassFromDriver = function(){
     # SQLite
     if (inherits(self$driver, "SQLiteDriver")){
@@ -134,6 +138,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     if (inherits(self$driver, "PqConnection")){
       self$results.class <- "PqResult"
     }
+    self
   },
   #' @description
   #' initialize regexp for scraping entities

@@ -1,3 +1,9 @@
+RSQL 0.2.1
+============
+### BUGFIXES
+
+Closes all open results sets
+
 RSQL 0.2.0
 ============
 

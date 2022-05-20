@@ -1,4 +1,4 @@
-── R CMD check results ──────────────────────────────────────────── RSQL 0.2.0 ────
-Duration: 27.3s
+── R CMD check results ──────────────────────────────────────────────────────────── RSQL 0.2.1 ────
+Duration: 29.5s
 
-0 errors ✓ | 0 warnings ✓ | 0 notes ✓
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
