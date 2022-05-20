@@ -76,6 +76,8 @@ ken4rab
 \item{\code{delete.counter}}{An instance delete counter}
 
 \item{\code{command.counter}}{An instance command counter}
+
+\item{\code{clear.rs.counter}}{An instance clear.rs.counter}
 }
 \if{html}{\out{</div>}}
 }
@@ -101,6 +103,7 @@ ken4rab
 \item \href{#method-retrieve}{\code{RSQL.class$retrieve()}}
 \item \href{#method-retrieve_insert}{\code{RSQL.class$retrieve_insert()}}
 \item \href{#method-clearLastResult}{\code{RSQL.class$clearLastResult()}}
+\item \href{#method-getSummary}{\code{RSQL.class$getSummary()}}
 \item \href{#method-disconnect}{\code{RSQL.class$disconnect()}}
 \item \href{#method-clone}{\code{RSQL.class$clone()}}
 }
@@ -508,8 +511,19 @@ Obtain id if object exists on the database. Insert object if not.
 \if{latex}{\out{\hypertarget{method-clearLastResult}{}}}
 \subsection{Method \code{clearLastResult()}}{
 clearLast Result for avoiding nasty warning
+getSummary
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RSQL.class$clearLastResult()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getSummary"></a>}}
+\if{latex}{\out{\hypertarget{method-getSummary}{}}}
+\subsection{Method \code{getSummary()}}{
+get RSQL summary string
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$getSummary()}\if{html}{\out{</div>}}
 }
 
 }

@@ -84,6 +84,8 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
   delete.counter = 0,
   #' @field command.counter   An instance command counter
   command.counter = 0,
+  #' @field clear.rs.counter   An instance clear.rs.counter
+  clear.rs.counter = 0,
   #' @description
   #' Initializes a connection
   #' @param drv driver name
@@ -404,9 +406,24 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     if (!is.null(self$results.class) & !is.null(self$last.rs)){
       if (inherits(self$last.rs, self$results.class)){
         dbClearResult(self$last.rs)
+        self$clear.rs.counter <- self$clear.rs.counter + 1
       }
       self$last.rs <- NULL
     }
+  },
+  #' getSummary
+  #' @description
+  #'
+  #' get RSQL summary string
+  getSummary = function(){
+    ret <- paste("RSQL ", class(self$conn),
+                 ". selects: ", self$select.counter,
+                 ". inserts: ", self$insert.counter,
+                 ". updates: ", self$update.counter,
+                 ". delete: ", self$delete.counter,
+                 ". commands: ", self$command.counter,
+                 ". clearRS: ", self$clear.rs.counter, sep = "")
+    ret
   },
   #' @description
   #'
