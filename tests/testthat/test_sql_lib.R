@@ -186,7 +186,6 @@ test_that("sql_lib insert and delete test", {
   delete.sql <- rsql$gen_delete("mtcars", where_values = data.frame(mpg = 1))
   rsql$execute_delete(delete.sql)
 
-
   where_values <- data.frame(mpg = 99.9)
   get_select_sql <- rsql$gen_select(
     select_fields = "*",

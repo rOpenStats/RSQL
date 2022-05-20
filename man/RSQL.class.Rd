@@ -62,6 +62,8 @@ mtcars.observed
 
 \item{\code{last.rs}}{The last resultset}
 
+\item{\code{results.class}}{Expected class for db results for running dbClearResult}
+
 \item{\code{select.counter}}{An instance select counter}
 
 \item{\code{insert.counter}}{An instance insert counter}
@@ -92,6 +94,7 @@ mtcars.observed
 \itemize{
 \item \href{#method-new}{\code{RSQL.class$new()}}
 \item \href{#method-connect}{\code{RSQL.class$connect()}}
+\item \href{#method-setupResultClassFromDriver}{\code{RSQL.class$setupResultClassFromDriver()}}
 \item \href{#method-setupRegexp}{\code{RSQL.class$setupRegexp()}}
 \item \href{#method-finalize}{\code{RSQL.class$finalize()}}
 \item \href{#method-checkEntitiesNames}{\code{RSQL.class$checkEntitiesNames()}}
@@ -107,6 +110,7 @@ mtcars.observed
 \item \href{#method-execute_delete}{\code{RSQL.class$execute_delete()}}
 \item \href{#method-retrieve}{\code{RSQL.class$retrieve()}}
 \item \href{#method-retrieve_insert}{\code{RSQL.class$retrieve_insert()}}
+\item \href{#method-clearLastResult}{\code{RSQL.class$clearLastResult()}}
 \item \href{#method-disconnect}{\code{RSQL.class$disconnect()}}
 \item \href{#method-clone}{\code{RSQL.class$clone()}}
 }
@@ -157,6 +161,15 @@ Function which connects to database
 \subsection{Returns}{
 conn object
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setupResultClassFromDriver"></a>}}
+\if{latex}{\out{\hypertarget{method-setupResultClassFromDriver}{}}}
+\subsection{Method \code{setupResultClassFromDriver()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$setupResultClassFromDriver()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-setupRegexp"></a>}}
@@ -495,6 +508,16 @@ Obtain id if object exists on the database. Insert object if not.
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clearLastResult"></a>}}
+\if{latex}{\out{\hypertarget{method-clearLastResult}{}}}
+\subsection{Method \code{clearLastResult()}}{
+clearLast Result for avoiding nasty warning
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$clearLastResult()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-disconnect"></a>}}

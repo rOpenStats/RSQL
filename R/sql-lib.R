@@ -69,7 +69,9 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
   #' @field last.query The last query
   last.query = NA,
   #' @field last.rs  The last resultset
-  last.rs = NA,
+  last.rs = NULL,
+  #' @field results.class  Expected class for db results for running dbClearResult
+  results.class = NULL,
   # counters
   #' @field select.counter  An instance select counter
   select.counter = 0,
@@ -116,8 +118,22 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
         drv = self$driver, dbname = self$db.name,
         user = self$user, password = self$password, host = self$host, port = self$port
       )
+      self$setupResultClassFromDriver()
+    }
+    else{
+      self$clearLastResult()
     }
     self$conn
+  },
+  setupResultClassFromDriver = function(){
+    # SQLite
+    if (inherits(self$driver, "SQLiteDriver")){
+      self$results.class <- "SQLiteResult"
+    }
+    # Postgres
+    if (inherits(self$driver, "PqConnection")){
+      self$results.class <- "PqResult"
+    }
   },
   #' @description
   #' initialize regexp for scraping entities
@@ -377,16 +393,24 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
   },
   #' @description
   #'
+  #' clearLast Result for avoiding nasty warning
+  clearLastResult = function(){
+    if (!is.null(self$results.class) & !is.null(self$last.rs)){
+      if (inherits(self$last.rs, self$results.class)){
+        dbClearResult(self$last.rs)
+      }
+      self$last.rs <- NULL
+    }
+  },
+  #' @description
+  #'
   #' Disconnects the instance from the database
   disconnect = function() {
     if (!is.null(self$conn)) {
-      if (!is.null(self$last.rs)) {
-        # TODO Fix this call
-        # DBI::dbClearResult(self$last.rs)
-        self$last.rs <- NULL
-      }
+      self$clearLastResult()
       DBI::dbDisconnect(self$conn)
       self$conn <- NULL
+      self$results.class <- NULL
     }
   }
 ))
@@ -469,8 +493,8 @@ sql_execute_select <- function(sql_select, dbconn = NULL) {
   # v_quotes'
   sql_select <- gsub(",NA", ",NULL", sql_select)
   sql_select <- gsub(", NA", ",NULL", sql_select)
-
   ret <- DBI::dbGetQuery(dbconn, sql_select)
+  #BI:::dbClearResult(ret)
   ret
 }
 
@@ -485,7 +509,8 @@ sql_execute_select <- function(sql_select, dbconn = NULL) {
 sql_execute_get_insert <- function(dbconn, sql_select, sql_insert, ...) {
   ret <- sql_execute_select(sql_select, dbconn = dbconn)
   if (nrow(ret) == 0) {
-    sql_execute_insert(sql_insert, dbconn = dbconn)
+    insert.rs <- sql_execute_insert(sql_insert, dbconn = dbconn)
+    dbClearResult(insert.rs)
     ret <- sql_execute_select(sql_select, dbconn = dbconn)
   }
   ret[1, ]
@@ -1192,11 +1217,14 @@ sql_retrieve_insert <- function(table, fields_uk = names(values_uk), values_uk,
     lgr$trace("Retrieved", rows = nrow(row))
     if (nrow(row) == 0) {
       lgr$trace(paste("executing", insert_statement))
-      sql_execute_insert(insert_statement, dbconn = dbconn)
+      # TODO solve dbClearResult in case of sql_retrieve_insert
+      #dbClearResult(row)
+      insert.rs <- sql_execute_insert(insert_statement, dbconn = dbconn)
+      dbClearResult(insert.rs)
       row <- sql_execute_select(select_statement, dbconn = dbconn)
     }
-
     ret <- c(ret, as.numeric(row[, field_id]))
+    #dbClearResult(row)
     i <- i + 1
   }
   ret
