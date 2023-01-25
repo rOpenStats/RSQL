@@ -1,7 +1,7 @@
 Package: RSQL
 Type: Package
 Title: Database Agnostic Package to Generate and Process 'SQL' Queries in R
-Version: 0.2.1
+Version: 0.2.2
 Language: en-US
 Authors@R: c(
     person("Alejandro", "Baranek",,"abaranek@dc.uba.ar", c("cre", "aut")),
@@ -11,8 +11,8 @@ Description: Allows the user to generate and execute select, insert, update and 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-LazyDataCompression:xz
-RoxygenNote: 7.1.2
+LazyDataCompression: xz
+RoxygenNote: 7.2.3
 Collate:
     'sql-lib.R'
     'util-lib.R'
@@ -21,6 +21,8 @@ Imports: lgr,
     R6,
     DBI
 Suggests: RSQLite,
+          RMySQL,
+          RPostgres,
     knitr,
     rmarkdown, 
     dplyr,

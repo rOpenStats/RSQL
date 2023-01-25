@@ -145,6 +145,10 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     if (inherits(self$driver, "PqDriver")){
       self$results.class <- "PqResult"
     }
+    # Postgres
+    if (inherits(self$driver, "MySQLDriver")){
+      self$results.class <- "MySQLResult"
+    }
     if (is.null(self$results.class)){
       logger$warn("Driver Result class not implemented yet", driver = class(self$driver))
     }

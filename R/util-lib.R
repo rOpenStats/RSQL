@@ -27,8 +27,8 @@ getLogger <- function(r6.object) {
 }
 
 #' loggerSetupFile
-#' @param log.file
-#' @param default.threshold
+#' @param log.file filename to log on
+#' @param default.threshold default threshold for logger
 #' @import lgr
 #' @author kenarab
 #' @export
