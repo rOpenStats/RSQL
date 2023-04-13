@@ -104,12 +104,26 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
     self$password <- password
     self$host <- host
     self$port <- port
+    self$logger <- genLogger(self)
+    self$checkConnection()
+    self$valid.conn
+  },
+  #' @description
+  #' Function which check if db connection is valid
+  #' @return conn object
+  checkConnection = function()
+  {
+    logger <- getLogger(self)
     self$valid.conn <- dbCanConnect(
       drv = self$driver, dbname = self$db.name,
       user = self$user, password = self$password,
       host = self$host, port = self$port
     )
-    self$logger <- genLogger(self)
+    if (!self$valid.conn){
+      str(self$valid.conn)
+      logger$warn("db connection is not valid",
+                  message = attr(self$valid.conn, "reason"))
+    }
     self$valid.conn
   },
   #' @description

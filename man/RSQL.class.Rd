@@ -87,6 +87,7 @@ ken4rab
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-RSQL-new}{\code{RSQL.class$new()}}
+\item \href{#method-RSQL-checkConnection}{\code{RSQL.class$checkConnection()}}
 \item \href{#method-RSQL-connect}{\code{RSQL.class$connect()}}
 \item \href{#method-RSQL-setupResultClassFromDriver}{\code{RSQL.class$setupResultClassFromDriver()}}
 \item \href{#method-RSQL-setupRegexp}{\code{RSQL.class$setupRegexp()}}
@@ -142,6 +143,19 @@ Initializes a connection
 \item{\code{port}}{port number}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-RSQL-checkConnection"></a>}}
+\if{latex}{\out{\hypertarget{method-RSQL-checkConnection}{}}}
+\subsection{Method \code{checkConnection()}}{
+Function which check if db connection is valid
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RSQL.class$checkConnection()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+conn object
 }
 }
 \if{html}{\out{<hr>}}
