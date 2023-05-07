@@ -134,6 +134,11 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
       if (!self$valid.conn) {
         stop("Database connection is not valid. Check status and credentials!")
       }
+      timezone.statement <- ""
+      # Postgres
+      if (inherits(self$driver, "PqDriver")){
+        self$results.class <- "PqResult"
+      }
       timezone.statement <- paste("-c timezone='", Sys.timezone(), "'", sep = "")
       self$conn <- dbConnect(
         drv = self$driver, dbname = self$db.name,
