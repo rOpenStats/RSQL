@@ -79,6 +79,8 @@ ken4rab
 
 \item{\code{clear.rs.counter}}{An instance clear.rs.counter}
 
+\item{\code{tz}}{local timezone}
+
 \item{\code{logger}}{is conigured logger for current class}
 }
 \if{html}{\out{</div>}}
@@ -123,7 +125,8 @@ Initializes a connection
   user = NULL,
   password = NULL,
   host = NULL,
-  port = NULL
+  port = NULL,
+  tz = Sys.timezone()
 )}\if{html}{\out{</div>}}
 }
 
