@@ -141,12 +141,13 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
       timezone.statement <- ""
       # Postgres
       if (inherits(self$driver, "PqDriver")){
-        timezone.statement <- paste("-c timezone=", Sys.timezone(), "", sep = "")
+        #timezone.statement <- paste("-c timezone=", Sys.timezone(), "", sep = "")
       }
       self$conn <- dbConnect(
         drv = self$driver, dbname = self$db.name,
         user = self$user, password = self$password, host = self$host, port = self$port,
-        options = timezone.statement
+        options = timezone.statement,
+        timezone = Sys.timezone()
       )
       self$setupResultClassFromDriver()
     }
