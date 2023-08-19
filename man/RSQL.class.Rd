@@ -144,6 +144,8 @@ Initializes a connection
 \item{\code{host}}{host name}
 
 \item{\code{port}}{port number}
+
+\item{\code{tz}}{actual time zone}
 }
 \if{html}{\out{</div>}}
 }

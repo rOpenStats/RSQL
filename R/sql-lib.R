@@ -98,6 +98,7 @@ RSQL.class <- R6::R6Class("RSQL", public = list(
   #' @param password password
   #' @param host host name
   #' @param port port number
+  #' @param tz   actual time zone
   initialize = function(drv, dbname,
                         user = NULL, password = NULL, host = NULL, port = NULL,
                         tz = Sys.timezone()) {

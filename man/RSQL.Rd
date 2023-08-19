@@ -4,6 +4,7 @@
 \name{RSQL}
 \alias{RSQL}
 \alias{.onLoad}
+\alias{RSQL-package}
 \title{rsql}
 \usage{
 .onLoad(libname, pkgname)

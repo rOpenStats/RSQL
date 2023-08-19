@@ -4,6 +4,7 @@
 #'
 #' @docType package
 #' @name RSQL
+#' @aliases RSQL-package
 #' @examples
 #' library(RSQL)
 #' library(RSQLite)
