@@ -7,7 +7,7 @@
 is.POSIXct(x)
 }
 \arguments{
-\item{text.df}{Data Frame with corresponding values and fields as colnames}
+\item{x}{value to be checked as a POSIXct}
 }
 \description{
 This function returns true if x is a POSIXct object type

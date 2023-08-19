@@ -7,7 +7,7 @@
 assessRSqlDf(values.df)
 }
 \arguments{
-\item{text.df}{Data Frame with corresponding values and fields as colnames}
+\item{values.df}{Data Frame with corresponding values and fields as colnames}
 }
 \description{
 This function prepares data frame to be inserted in a db

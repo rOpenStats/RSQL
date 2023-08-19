@@ -1,3 +1,10 @@
+RSQL 0.2.2
+============
+### NEW FEATURES
+- Better management of timezones in db
+### BUGFIXES
+- Minor improvements when db is not available
+
 RSQL 0.2.1
 ============
 ### BUGFIXES

@@ -7,7 +7,7 @@
 times_to_utc(values.df)
 }
 \arguments{
-\item{text.df}{Data Frame with corresponding values and fields as colnames}
+\item{values.df}{Data Frame with corresponding values and fields as colnames}
 }
 \description{
 This function converts POSIXct columns to UTC for inserting in a database

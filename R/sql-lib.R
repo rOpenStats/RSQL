@@ -772,7 +772,7 @@ stuff_df_quoted <- function(text.df) {
 #' @description
 #' This function returns true if x is a POSIXct object type
 #'
-#' @param text.df Data Frame with corresponding values and fields as colnames
+#' @param x value to be checked as a POSIXct
 #' @author ken4rab
 is.POSIXct <- function(x) inherits(x, "POSIXct")
 
@@ -780,7 +780,7 @@ is.POSIXct <- function(x) inherits(x, "POSIXct")
 #' @description
 #' This function converts POSIXct columns to UTC for inserting in a database
 #'
-#' @param text.df Data Frame with corresponding values and fields as colnames
+#' @param values.df Data Frame with corresponding values and fields as colnames
 #' @author ken4rab
 times_to_utc <- function(values.df)
 {
@@ -800,7 +800,7 @@ times_to_utc <- function(values.df)
 #' @description
 #' This function prepares data frame to be inserted in a db
 #'
-#' @param text.df Data Frame with corresponding values and fields as colnames
+#' @param values.df Data Frame with corresponding values and fields as colnames
 #' @author ken4rab
 assessRSqlDf <- function(values.df)
 {
@@ -1293,7 +1293,7 @@ sql_retrieve <- function(table, fields_uk = names(values_uk), values_uk,
   if (!is.null(values)) {
     values <- as.data.frame(values)
     names(values) <- fields
-    values <- stuff_df_quoted(values.df = values)
+    values <- stuff_df_quoted(text.df = values)
   }
 
   for (i in seq_len(nrow(values_uk))) {
