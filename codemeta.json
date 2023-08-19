@@ -7,13 +7,13 @@
   "codeRepository": "https://github.com/rOpenStats/RSQL",
   "issueTracker": "https://github.com/rOpenStats/RSQL/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.2.0 (2022-04-22)",
+  "runtimePlatform": "R version 4.3.1 (2023-06-16)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -54,6 +54,30 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=RSQLite"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "RMySQL",
+      "name": "RMySQL",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=RMySQL"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "RPostgres",
+      "name": "RPostgres",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=RPostgres"
     },
     {
       "@type": "SoftwareApplication",
@@ -179,7 +203,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "122.653KB",
+  "fileSize": "130.051KB",
   "releaseNotes": "https://github.com/rOpenStats/RSQL/blob/master/NEWS.md",
   "contIntegration": ["https://github.com/rOpenStats/RSQL/actions", "https://app.codecov.io/gh/rOpenStats/RSQL"],
   "developmentStatus": "https://www.repostatus.org/#active",
